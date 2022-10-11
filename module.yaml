@@ -6,12 +6,23 @@ notests *default:
       name: dotnet
 
   install:
-    - Vostok.Hosting.Aspnetcore/bin/Release/netstandard2.0/Vostok.Hosting.Aspnetcore.dll
+    - Vostok.Hosting.Aspnetcore/bin/Release/net6.0/Vostok.Hosting.Aspnetcore.dll
 
   deps:
     - vostok.devtools
+    - vostok.hosting@web-application-app-hosting
+    - vostok.hosting.abstractions 
+    - vostok.applications.aspnetcore@web-application-app-hosting
+    - vostok.logging.microsoft
+    - vostok.logging.abstractions
+    - vostok.servicediscovery.abstractions
+    - vostok.servicediscovery
 
 full-build > notests:
+  deps:
+    - -vostok.devtools
+    - vostok.devtools@with-net6.0
+
   build:
     target: Vostok.Hosting.Aspnetcore.sln
     configuration: Release
