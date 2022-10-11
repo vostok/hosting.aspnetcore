@@ -12,13 +12,15 @@ namespace Vostok.Hosting.Aspnetcore.Builder;
 [PublicAPI]
 public static class WebHostBuilderExtensions
 {
-    public static void SetupWebHost(this WebApplicationBuilder webApplicationBuilder,
-        IVostokHostingEnvironment environment, List<IDisposable> disposables)
+    public static void SetupWebHost(
+        this WebApplicationBuilder webApplicationBuilder,
+        IVostokHostingEnvironment environment,
+        List<IDisposable> disposables)
     {
         var (_, _, middlewaresBuilder, vostokWebHostBuilder) =
             VostokWebHostBuilderFactory.Create<EmptyStartup>(environment, disposables);
-        
-        middlewaresBuilder.Customize(PingApiSettingsSetup.Get(environment, webApplicationBuilder.GetType()));
+
+        middlewaresBuilder.Customize(PingApiSettingsSetup.Get(environment, webApplicationBuilder.GetType(), () => false));
 
         vostokWebHostBuilder.ConfigureWebHost(webApplicationBuilder);
     }
