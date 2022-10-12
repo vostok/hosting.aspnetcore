@@ -10,13 +10,13 @@ notests *default:
     - module vostok.applications.aspnetcore
     - module vostok.hosting
     - module vostok.hosting.abstractions
-    - vostok.servicediscovery 
+    - vostok.servicediscovery
 
   deps:
     - vostok.devtools
     - vostok.hosting@web-application-app-hosting
     - vostok.hosting.abstractions 
-    - vostok.applications.aspnetcore@web-application-app-hosting
+    - vostok.applications.aspnetcore@web-application-app-hosting/v6_0
     - vostok.logging.microsoft
     - vostok.logging.abstractions
     - vostok.servicediscovery.abstractions

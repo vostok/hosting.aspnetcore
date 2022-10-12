@@ -1,23 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-
     <Import Project="..\..\vostok.devtools\library-common-props\Main-Project.props"/>
     <Import Project="..\..\vostok.devtools\git-commit-to-assembly-title\Vostok.Tools.GitCommit2AssemblyTitle.props"/>
-
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFrameworks>net6.0</TargetFrameworks>
         <Configurations>Debug;Release</Configurations>
     </PropertyGroup>
-
     <PropertyGroup>
         <VersionPrefix>0.0.1</VersionPrefix>
     </PropertyGroup>
-
     <PropertyGroup>
         <Title>Vostok.Hosting.Aspnetcore</Title>
         <Description>Entry point for create Vostok-compatible services with ASP.NET Core 6 hosting model</Description>
     </PropertyGroup>
-
     <PropertyGroup>
         <PackageProjectUrl>https://github.com/vostok/hosting.aspnetcore.git</PackageProjectUrl>
         <PackageLicenseUrl>https://github.com/vostok/hosting.aspnetcore.git/blob/master/LICENSE</PackageLicenseUrl>
@@ -36,35 +31,34 @@
     <ItemGroup>
         <Compile Include="..\..\vostok.commons.time\Vostok.Commons.Time\TimeSpanConversions.cs" Link="Commons\TimeSpanConversions.cs" />
     </ItemGroup>
-
     <ItemGroup>
         <Reference Include="Vostok.Hosting">
             <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\vostok.hosting\Vostok.Hosting\bin\Release\$(TargetFramework)\Vostok.Hosting.dll</HintPath>
+            <HintPath>..\..\vostok.hosting\Vostok.Hosting\bin\Release\$(ReferencesFramework)\Vostok.Hosting.dll</HintPath>
         </Reference>
         <Reference Include="Vostok.Applications.AspNetCore">
             <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore\bin\Release\$(TargetFramework)\Vostok.Applications.AspNetCore.dll</HintPath>
+            <HintPath>..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore\bin\Release\$(ReferencesFramework)\Vostok.Applications.AspNetCore.dll</HintPath>
         </Reference>
         <Reference Include="Vostok.Hosting.Abstractions">
             <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\vostok.hosting.abstractions\Vostok.Hosting.Abstractions\bin\Release\$(TargetFramework)\Vostok.Hosting.Abstractions.dll</HintPath>
+            <HintPath>..\..\vostok.hosting.abstractions\Vostok.Hosting.Abstractions\bin\Release\$(ReferencesFramework)\Vostok.Hosting.Abstractions.dll</HintPath>
         </Reference>
         <Reference Include="Vostok.Logging.Microsoft">
             <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\vostok.logging.microsoft\Vostok.Logging.Microsoft\bin\Release\$(TargetFramework)\Vostok.Logging.Microsoft.dll</HintPath>
+            <HintPath>..\..\vostok.logging.microsoft\Vostok.Logging.Microsoft\bin\Release\$(ReferencesFramework)\Vostok.Logging.Microsoft.dll</HintPath>
         </Reference>
         <Reference Include="Vostok.Logging.Abstractions">
             <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\vostok.logging.abstractions\Vostok.Logging.Abstractions\bin\Release\$(TargetFramework)\Vostok.Logging.Abstractions.dll</HintPath>
+            <HintPath>..\..\vostok.logging.abstractions\Vostok.Logging.Abstractions\bin\Release\$(ReferencesFramework)\Vostok.Logging.Abstractions.dll</HintPath>
         </Reference>
         <Reference Include="Vostok.ServiceDiscovery.Abstractions">
             <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\vostok.servicediscovery.abstractions\Vostok.ServiceDiscovery.Abstractions\bin\Release\$(TargetFramework)\Vostok.ServiceDiscovery.Abstractions.dll</HintPath>
+            <HintPath>..\..\vostok.servicediscovery.abstractions\Vostok.ServiceDiscovery.Abstractions\bin\Release\$(ReferencesFramework)\Vostok.ServiceDiscovery.Abstractions.dll</HintPath>
         </Reference>
         <Reference Include="Vostok.ServiceDiscovery">
             <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\vostok.servicediscovery\Vostok.ServiceDiscovery\bin\Release\$(TargetFramework)\Vostok.ServiceDiscovery.dll</HintPath>
+            <HintPath>..\..\vostok.servicediscovery\Vostok.ServiceDiscovery\bin\Release\$(ReferencesFramework)\Vostok.ServiceDiscovery.dll</HintPath>
         </Reference>
     </ItemGroup>
 </Project>
