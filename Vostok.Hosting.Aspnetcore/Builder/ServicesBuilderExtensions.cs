@@ -12,7 +12,8 @@ public static class ServicesBuilderExtensions
 {
     public static IServiceCollection SetupVostok(
         this IServiceCollection services,
-        IVostokHostingEnvironment environment)
+        IVostokHostingEnvironment environment
+    )
     {
         services
             .AddVostokEnvironment(environment)
@@ -22,8 +23,8 @@ public static class ServicesBuilderExtensions
 
     public static IServiceCollection SetupVostokShutdown(
         this IServiceCollection services,
-        IVostokHostingEnvironment environment,
-        CancellationTokenSource shutdownTokenSource)
+        CancellationTokenSource shutdownTokenSource
+    )
     {
         services.AddSingleton(new VostokHostShutdown(shutdownTokenSource));
         return services;
