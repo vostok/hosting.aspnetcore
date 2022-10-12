@@ -1,6 +1,10 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Hosting.Server.Features;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Vostok.Commons.Time;
 using Vostok.Hosting.Abstractions;
@@ -15,6 +19,7 @@ internal class VostokApplicationLifeTimeService : IHostedService
 {
     private readonly IHostApplicationLifetime applicationLifetime;
     private readonly IVostokHostingEnvironment environment;
+    private readonly IServiceProvider services;
     private readonly DisposableContainer disposableContainer;
     private readonly IVostokHostShutdown vostokHostShutdown;
 
@@ -23,12 +28,14 @@ internal class VostokApplicationLifeTimeService : IHostedService
     public VostokApplicationLifeTimeService(
         IHostApplicationLifetime applicationLifetime,
         IVostokHostingEnvironment environment,
-        DisposableContainer disposableContainer,
-        IVostokHostShutdown vostokHostShutdown
+        IServiceProvider services
+        //DisposableContainer disposableContainer,
+        //IVostokHostShutdown vostokHostShutdown
     )
     {
         this.applicationLifetime = applicationLifetime;
         this.environment = environment;
+        this.services = services;
         this.disposableContainer = disposableContainer;
         this.vostokHostShutdown = vostokHostShutdown;
 
@@ -55,6 +62,10 @@ internal class VostokApplicationLifeTimeService : IHostedService
     {
         log.Info("OnStarted application life time cycle event");
 
+        var server = services.GetRequiredService<IServer>();
+        var addressFeature = server.Features.Get<IServerAddressesFeature>();
+        var addresses = addressFeature.Addresses.ToList();
+        
         environment.ServiceBeacon.Start();
 
         if (environment.ServiceBeacon is ServiceBeacon convertedBeacon)

@@ -2,12 +2,15 @@ using System;
 using System.Threading;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Vostok.Commons.Time;
 using Vostok.Hosting.Abstractions;
 using Vostok.Hosting.Abstractions.Helpers;
+using Vostok.Hosting.Aspnetcore.Application;
 using Vostok.Hosting.Setup;
 using Vostok.Logging.Abstractions;
 using Vostok.Logging.Microsoft;
@@ -74,6 +77,8 @@ public static class WebApplicationBuilderExtensions
 
             collection.AddSingleton(services =>
                 services.GetService<IVostokHostingEnvironment>()!.Log);
+
+            collection.AddHostedService<VostokApplicationLifeTimeService>();
             
             collection.AddSingleton<ILoggerFactory>(services =>
             {

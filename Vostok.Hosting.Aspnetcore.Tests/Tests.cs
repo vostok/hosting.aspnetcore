@@ -39,7 +39,17 @@ internal class Tests : TestsBase
                 return "Hello World!";
             });
 
-        Task.Run(() => app.RunAsync($"http://localhost:{Port}"));
+        Task.Run(async () =>
+        {
+            try
+            {
+                await app.RunAsync($"http://localhost:{Port}");
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+            }
+        });
 
         await Task.Delay(5.Seconds());
         var response = await Client.SendAsync(Request.Get("/"));
