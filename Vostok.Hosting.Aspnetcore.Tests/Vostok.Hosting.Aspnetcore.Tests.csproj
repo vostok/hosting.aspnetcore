@@ -22,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Include="..\..\vostok.commons.helpers\Vostok.Commons.Helpers\Network\FreeTcpPortFinder.cs" Link="Commons\FreeTcpPortFinder.cs"/>
+        <Compile Include="..\..\vostok.commons.helpers\Vostok.Commons.Helpers\Network\FreeTcpPortFinder.cs" Link="Commons\FreeTcpPortFinder.cs" />
     </ItemGroup>
 
     <ItemGroup>
