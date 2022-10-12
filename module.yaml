@@ -7,6 +7,10 @@ notests *default:
 
   install:
     - Vostok.Hosting.Aspnetcore/bin/Release/net6.0/Vostok.Hosting.Aspnetcore.dll
+    - module vostok.applications.aspnetcore
+    - module vostok.hosting
+    - module vostok.hosting.abstractions
+    - vostok.servicediscovery 
 
   deps:
     - vostok.devtools
