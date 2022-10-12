@@ -1,11 +1,43 @@
+using System;
 using System.Threading;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Vostok.Commons.Time;
+using Vostok.Hosting.Abstractions;
 using Vostok.Hosting.Abstractions.Helpers;
 using Vostok.Hosting.Setup;
+using Vostok.Logging.Abstractions;
+using Vostok.Logging.Microsoft;
 
 namespace Vostok.Hosting.Aspnetcore.Builder;
+
+internal class VostokLoggerFactory : ILoggerFactory
+{
+    private readonly VostokLoggerProvider vostokLoggerProvider;
+
+    public VostokLoggerFactory(ILog log)
+    {
+        vostokLoggerProvider = new VostokLoggerProvider(log);
+    }
+    
+    public void Dispose()
+    {
+        vostokLoggerProvider.Dispose();
+    }
+
+    public void AddProvider(ILoggerProvider provider)
+    {
+        
+    }
+
+    public ILogger CreateLogger(string categoryName)
+    {
+        return vostokLoggerProvider.CreateLogger(categoryName);
+    }
+}
 
 [PublicAPI]
 public static class WebApplicationBuilderExtensions
@@ -21,14 +53,36 @@ public static class WebApplicationBuilderExtensions
         [NotNull] VostokHostingEnvironmentFactorySettings settings
     )
     {
-        var environment = VostokHostingEnvironmentFactory.Create(
-            WrapSetupDelegate(setupEnvironment, webApplicationBuilder),
-            settings);
+        // var environment = VostokHostingEnvironmentFactory.Create(
+        //     WrapSetupDelegate(setupEnvironment, webApplicationBuilder),
+        //     settings);
 
-        webApplicationBuilder.Logging.SetupVostok(environment);
-        webApplicationBuilder.Configuration.SetupVostok(environment);
-        webApplicationBuilder.SetupWebHost(environment);
-        webApplicationBuilder.Services.SetupVostok(environment);
+        // webApplicationBuilder.Logging.SetupVostok(environment);
+        // webApplicationBuilder.Configuration.SetupVostok(environment);
+        // webApplicationBuilder.SetupWebHost(environment);
+        // webApplicationBuilder.Services.SetupVostok(environment);
+        
+        webApplicationBuilder.Host.ConfigureServices((context, collection) =>
+        {
+            collection.AddSingleton(services =>
+            {
+                var factorySettingsOptions = services.GetService<IOptions<VostokHostingEnvironmentFactorySettings>>();
+                var factorySettings = factorySettingsOptions?.Value ?? new VostokHostingEnvironmentFactorySettings();
+                
+                return VostokHostingEnvironmentFactory.Create(setupEnvironment, factorySettings);
+            });
+
+            collection.AddSingleton(services =>
+                services.GetService<IVostokHostingEnvironment>()!.Log);
+            
+            collection.AddSingleton<ILoggerFactory>(services =>
+            {
+                var log = services.GetService<ILog>();
+                var factory = new VostokLoggerFactory(log);
+                return factory;
+            });
+
+        });
     }
 
     public static void SetupShutdownToken(
