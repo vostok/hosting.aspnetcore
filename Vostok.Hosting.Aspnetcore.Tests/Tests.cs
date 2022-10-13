@@ -43,7 +43,8 @@ internal class Tests : TestsBase
         {
             try
             {
-                await app.RunAsync($"http://localhost:{Port}");
+                //await app.RunAsync($"http://localhost:{Port}");
+                await app.RunAsync();
             }
             catch (Exception e)
             {
