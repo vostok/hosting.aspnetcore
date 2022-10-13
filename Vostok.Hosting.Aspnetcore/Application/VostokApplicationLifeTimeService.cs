@@ -12,6 +12,7 @@ using Vostok.Hosting.Abstractions.Helpers;
 using Vostok.Hosting.Helpers;
 using Vostok.Logging.Abstractions;
 using Vostok.ServiceDiscovery;
+using Vostok.ServiceDiscovery.Abstractions;
 
 namespace Vostok.Hosting.Aspnetcore.Application;
 
@@ -40,6 +41,11 @@ internal class VostokApplicationLifeTimeService : IHostedService
         this.vostokHostShutdown = vostokHostShutdown;
 
         log = this.environment.Log.ForContext<VostokApplicationLifeTimeService>();
+        
+        var server = services.GetRequiredService<IServer>();
+        var addressFeature = server.Features.Get<IServerAddressesFeature>();
+        if (environment.ServiceBeacon.ReplicaInfo.TryGetUrl(out var url))
+            addressFeature.Addresses.Add(url.ToString());
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
