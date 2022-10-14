@@ -50,7 +50,7 @@ internal class VostokApplicationLifeTimeService : IHostedService
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        environment.Warmup(log);
+        environment.Warmup(new VostokHostingEnvironmentWarmupSettings());
 
         applicationLifetime.ApplicationStarted.Register(OnStartedAsync);
         applicationLifetime.ApplicationStopping.Register(OnStopping);
