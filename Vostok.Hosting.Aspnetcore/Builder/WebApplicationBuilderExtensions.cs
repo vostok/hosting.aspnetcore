@@ -2,9 +2,8 @@ using System;
 using System.Threading;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting.Server;
-using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Vostok.Commons.Time;
@@ -25,7 +24,7 @@ internal class VostokLoggerFactory : ILoggerFactory
     {
         vostokLoggerProvider = new VostokLoggerProvider(log);
     }
-    
+
     public void Dispose()
     {
         vostokLoggerProvider.Dispose();
@@ -33,7 +32,6 @@ internal class VostokLoggerFactory : ILoggerFactory
 
     public void AddProvider(ILoggerProvider provider)
     {
-        
     }
 
     public ILogger CreateLogger(string categoryName)
@@ -64,42 +62,60 @@ public static class WebApplicationBuilderExtensions
         // webApplicationBuilder.Configuration.SetupVostok(environment);
         // webApplicationBuilder.SetupWebHost(environment);
         // webApplicationBuilder.Services.SetupVostok(environment);
+        var shutdownTokenSource = new CancellationTokenSource();
         
-        webApplicationBuilder.Host.ConfigureServices((context, collection) =>
-        {
-            collection.AddSingleton(services =>
+        webApplicationBuilder.Host
+            .ConfigureAppConfiguration((context, configuration) => {})
+            .ConfigureServices((context, collection) =>
             {
-                var factorySettingsOptions = services.GetService<IOptions<VostokHostingEnvironmentFactorySettings>>();
-                var factorySettings = factorySettingsOptions?.Value ?? new VostokHostingEnvironmentFactorySettings();
+                collection.AddSingleton<IVostokHostShutdown>(_ => new VostokHostShutdown(shutdownTokenSource));
                 
-                return VostokHostingEnvironmentFactory.Create(setupEnvironment, factorySettings);
+                // Will be called at WebApplicationBuilder.Build()
+                collection.AddSingleton(services =>
+                {
+                    var factorySettingsOptions = services.GetService<IOptions<VostokHostingEnvironmentFactorySettings>>();
+                    var factorySettings = factorySettingsOptions?.Value ?? new VostokHostingEnvironmentFactorySettings();
+
+                    return VostokHostingEnvironmentFactory.Create(
+                        WrapSetupDelegate(setupEnvironment, webApplicationBuilder, shutdownTokenSource, context), 
+                        factorySettings);
+                });
+
+                collection.AddSingleton(services =>
+                    services.GetService<IVostokHostingEnvironment>()!.Log);
+
+                collection.AddHostedService<VostokApplicationLifeTimeService>();
+
+                collection.AddSingleton<ILoggerFactory>(services =>
+                {
+                    var log = services.GetService<ILog>();
+                    var factory = new VostokLoggerFactory(log);
+                    return factory;
+                });
             });
-
-            collection.AddSingleton(services =>
-                services.GetService<IVostokHostingEnvironment>()!.Log);
-
-            collection.AddHostedService<VostokApplicationLifeTimeService>();
-            
-            collection.AddSingleton<ILoggerFactory>(services =>
-            {
-                var log = services.GetService<ILog>();
-                var factory = new VostokLoggerFactory(log);
-                return factory;
-            });
-
-        });
     }
 
-    public static void SetupShutdownToken(
-        [NotNull] this WebApplicationBuilder webApplicationBuilder,
-        IVostokHostingEnvironmentBuilder environmentBuilder
-    )
+    private static VostokHostingEnvironmentSetup WrapSetupDelegate(
+        VostokHostingEnvironmentSetup setup,
+        WebApplicationBuilder webApplicationBuilder,
+        CancellationTokenSource shutdownTokenSource,
+        HostBuilderContext context)
     {
-        var shutdownTokenSource = new CancellationTokenSource();
+        return builder =>
+        {
+            setup(builder);
+            // TODO cannot get ShutdownTimeout from HostBuilderContext. WebHostOptions is internal class.
+            builder.SetupShutdownToken(15.Seconds(), shutdownTokenSource);
+        };
+    }
 
+    private static void SetupShutdownToken(
+        [NotNull] this IVostokHostingEnvironmentBuilder environmentBuilder,
+        TimeSpan shutdownTimeout,
+        CancellationTokenSource shutdownTokenSource)
+    {
         environmentBuilder.SetupShutdownToken(shutdownTokenSource.Token);
-        environmentBuilder.SetupShutdownTimeout(15.Seconds());
-        // builder.SetupShutdownTimeout(ShutdownConstants.DefaultShutdownTimeout);
+        environmentBuilder.SetupShutdownTimeout(shutdownTimeout);
         environmentBuilder.SetupHostExtensions(
             extensions =>
             {
@@ -107,17 +123,5 @@ public static class WebApplicationBuilderExtensions
                 extensions.Add(vostokHostShutdown);
                 extensions.Add(typeof(IVostokHostShutdown), vostokHostShutdown);
             });
-        webApplicationBuilder.Services.SetupVostokShutdown(shutdownTokenSource);
-    }
-
-    private static VostokHostingEnvironmentSetup WrapSetupDelegate(
-        VostokHostingEnvironmentSetup setup,
-        WebApplicationBuilder webApplicationBuilder)
-    {
-        return builder =>
-        {
-            webApplicationBuilder.SetupShutdownToken(builder);
-            setup(builder);
-        };
     }
 }

@@ -20,13 +20,4 @@ public static class ServicesBuilderExtensions
             .AddHostedService<VostokApplicationLifeTimeService>();
         return services;
     }
-
-    public static IServiceCollection SetupVostokShutdown(
-        this IServiceCollection services,
-        CancellationTokenSource shutdownTokenSource
-    )
-    {
-        services.AddSingleton(new VostokHostShutdown(shutdownTokenSource));
-        return services;
-    }
 }
