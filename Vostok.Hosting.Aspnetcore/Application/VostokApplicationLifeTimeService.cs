@@ -21,7 +21,7 @@ internal class VostokApplicationLifeTimeService : IHostedService
     private readonly IHostApplicationLifetime applicationLifetime;
     private readonly IVostokHostingEnvironment environment;
     private readonly IServiceProvider services;
-    private readonly DisposableContainer disposableContainer;
+    // private readonly DisposableContainer disposableContainer;
     private readonly IVostokHostShutdown vostokHostShutdown;
 
     private readonly ILog log;
@@ -29,23 +29,43 @@ internal class VostokApplicationLifeTimeService : IHostedService
     public VostokApplicationLifeTimeService(
         IHostApplicationLifetime applicationLifetime,
         IVostokHostingEnvironment environment,
-        IServiceProvider services
+        IServiceProvider services,
         //DisposableContainer disposableContainer,
-        //IVostokHostShutdown vostokHostShutdown
+        IVostokHostShutdown vostokHostShutdown
     )
     {
         this.applicationLifetime = applicationLifetime;
         this.environment = environment;
         this.services = services;
-        this.disposableContainer = disposableContainer;
         this.vostokHostShutdown = vostokHostShutdown;
+        // this.disposableContainer = disposableContainer;
 
         log = this.environment.Log.ForContext<VostokApplicationLifeTimeService>();
-        
+
         var server = services.GetRequiredService<IServer>();
         var addressFeature = server.Features.Get<IServerAddressesFeature>();
-        if (environment.ServiceBeacon.ReplicaInfo.TryGetUrl(out var url))
-            addressFeature.Addresses.Add(url.ToString());
+
+        if (environment.ServiceBeacon.ReplicaInfo.TryGetUrl(out var serviceBeaconUri))
+        {
+            var address = addressFeature.Addresses.FirstOrDefault(address =>
+            {
+                if (Uri.TryCreate(address, UriKind.Absolute, out var uri))
+                {
+                    return uri.Scheme != serviceBeaconUri.Scheme || uri.Port != serviceBeaconUri.Port;
+                }
+
+                return false;
+            });
+            if (address != null)
+            {
+                throw new ArgumentException($"Duplicated configuration for port or url." +
+                                            $"ServiceBeacon url: {serviceBeaconUri}, application url: {address}");
+            }
+            
+            addressFeature.Addresses.Add($"{serviceBeaconUri.Scheme}://{serviceBeaconUri.Host}:{serviceBeaconUri.Port}/");
+            // addressFeature.Addresses.Add(serviceBeaconUri.ToString());
+        }
+        // TODO else - try set serviceBeacon replicaInfo url from address.
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
@@ -71,7 +91,7 @@ internal class VostokApplicationLifeTimeService : IHostedService
         var server = services.GetRequiredService<IServer>();
         var addressFeature = server.Features.Get<IServerAddressesFeature>();
         var addresses = addressFeature.Addresses.ToList();
-        
+
         environment.ServiceBeacon.Start();
 
         if (environment.ServiceBeacon is ServiceBeacon convertedBeacon)
@@ -85,7 +105,7 @@ internal class VostokApplicationLifeTimeService : IHostedService
     private void OnStopping()
     {
         log.Info("OnStopping application life time cycle event");
-        
+
         vostokHostShutdown?.Initiate();
     }
 
@@ -94,6 +114,6 @@ internal class VostokApplicationLifeTimeService : IHostedService
         log.Info("OnStopped application life time cycle event");
 
         (environment as IDisposable)?.Dispose();
-        disposableContainer.DoDispose();
+        // disposableContainer.DoDispose();
     }
 }

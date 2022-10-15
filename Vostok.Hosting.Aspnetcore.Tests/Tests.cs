@@ -39,7 +39,7 @@ internal class Tests : TestsBase
                 return "Hello World!";
             });
 
-        Task.Run(async () =>
+        await Task.Run(async () =>
         {
             try
             {
