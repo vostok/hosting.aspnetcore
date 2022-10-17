@@ -17,7 +17,8 @@ public static class ServicesBuilderExtensions
     {
         services
             .AddVostokEnvironment(environment)
-            .AddHostedService<VostokApplicationLifeTimeService>();
+            .AddHostedService<VostokApplicationLifeTimeService>()
+            .AddSingleton(new DisposableContainer());
         return services;
     }
 

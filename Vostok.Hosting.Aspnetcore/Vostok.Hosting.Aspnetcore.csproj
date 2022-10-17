@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-    <Import Project="..\..\vostok.devtools\library-common-props\Main-Project.props"/>
-    <Import Project="..\..\vostok.devtools\git-commit-to-assembly-title\Vostok.Tools.GitCommit2AssemblyTitle.props"/>
+    <Import Project="..\..\vostok.devtools\library-common-props\Main-Project.props" />
+    <Import Project="..\..\vostok.devtools\git-commit-to-assembly-title\Vostok.Tools.GitCommit2AssemblyTitle.props" />
     <PropertyGroup>
         <TargetFrameworks>net6.0</TargetFrameworks>
         <Configurations>Debug;Release</Configurations>
@@ -21,15 +21,16 @@
         <RepositoryUrl>https://github.com/vostok/hosting.aspnetcore.git</RepositoryUrl>
     </PropertyGroup>
     <ItemGroup>
-        <Folder Include="PublicAPI"/>
-        <AdditionalFiles Include="PublicAPI/$(TargetFramework)/PublicAPI.Shipped.txt"/>
-        <AdditionalFiles Include="PublicAPI/$(TargetFramework)/PublicAPI.Unshipped.txt"/>
+        <Folder Include="PublicAPI" />
+        <AdditionalFiles Include="PublicAPI/$(TargetFramework)/PublicAPI.Shipped.txt" />
+        <AdditionalFiles Include="PublicAPI/$(TargetFramework)/PublicAPI.Unshipped.txt" />
     </ItemGroup>
     <ItemGroup>
-        <FrameworkReference Include="Microsoft.AspNetCore.App"/>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
     <ItemGroup>
         <Compile Include="..\..\vostok.commons.time\Vostok.Commons.Time\TimeSpanConversions.cs" Link="Commons\TimeSpanConversions.cs" />
+        <Compile Include="..\..\vostok.commons.time\Vostok.Commons.Time\TimeSpanArithmetics.cs" Link="Commons\TimeSpanArithmetics.cs" />
     </ItemGroup>
     <ItemGroup>
         <Reference Include="Vostok.Hosting">
