@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using NSubstitute.Extensions;
 using NUnit.Framework;
 using Vostok.Clusterclient.Core.Model;
@@ -25,10 +26,10 @@ internal class Tests : TestsBase
         
         builder.SetupVostok(SetupEnvironmentDefaults);
 
-        builder.Services.Configure<VostokHostingEnvironmentFactorySettings>(s =>
-        {
-            s.BeaconShutdownTimeout = 3.33.Seconds();
-        });
+        builder.Services.Configure<VostokHostingEnvironmentFactorySettings>(
+            environmentFactorySettings => environmentFactorySettings.BeaconShutdownTimeout = 3.33.Seconds());
+        builder.Services.Configure<HostOptions>(
+            hostOptions => hostOptions.ShutdownTimeout = 4.44.Seconds());
 
         var app = builder.Build();
 
@@ -39,7 +40,7 @@ internal class Tests : TestsBase
                 return "Hello World!";
             });
 
-        await Task.Run(async () =>
+        Task.Run(async () =>
         {
             try
             {
