@@ -5,11 +5,11 @@ namespace Vostok.Hosting.Aspnetcore.Application;
 
 internal class DisposableContainer
 {
-    private readonly List<IDisposable> disposables;
+    private readonly List<IDisposable> disposables = new();
 
-    public DisposableContainer(List<IDisposable> disposables)
+    public void AddAll(List<IDisposable> list)
     {
-        this.disposables = disposables;
+        disposables.AddRange(list);
     }
 
     public void DoDispose()

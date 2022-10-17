@@ -2,12 +2,10 @@ static Vostok.Hosting.Aspnetcore.Builder.ConfigurationBuilderExtensions.SetupVos
 static Vostok.Hosting.Aspnetcore.Builder.LoggingBuilderExtensions.SetupVostok(this Microsoft.Extensions.Logging.ILoggingBuilder builder, Vostok.Hosting.Abstractions.IVostokHostingEnvironment environment) -> void
 static Vostok.Hosting.Aspnetcore.Builder.ServicesBuilderExtensions.SetupVostok(this Microsoft.Extensions.DependencyInjection.IServiceCollection services, Vostok.Hosting.Abstractions.IVostokHostingEnvironment environment) -> Microsoft.Extensions.DependencyInjection.IServiceCollection
 static Vostok.Hosting.Aspnetcore.Builder.ServicesBuilderExtensions.SetupVostokShutdown(this Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.Threading.CancellationTokenSource shutdownTokenSource) -> Microsoft.Extensions.DependencyInjection.IServiceCollection
-static Vostok.Hosting.Aspnetcore.Builder.WebApplicationBuilderExtensions.SetupShutdownToken(this Microsoft.AspNetCore.Builder.WebApplicationBuilder webApplicationBuilder, Vostok.Hosting.Setup.IVostokHostingEnvironmentBuilder environmentBuilder) -> void
 static Vostok.Hosting.Aspnetcore.Builder.WebApplicationBuilderExtensions.SetupVostok(this Microsoft.AspNetCore.Builder.WebApplicationBuilder webApplicationBuilder, Vostok.Hosting.Setup.VostokHostingEnvironmentSetup setupEnvironment) -> void
 static Vostok.Hosting.Aspnetcore.Builder.WebApplicationBuilderExtensions.SetupVostok(this Microsoft.AspNetCore.Builder.WebApplicationBuilder webApplicationBuilder, Vostok.Hosting.Setup.VostokHostingEnvironmentSetup setupEnvironment, Vostok.Hosting.VostokHostingEnvironmentFactorySettings settings) -> void
-static Vostok.Hosting.Aspnetcore.Builder.WebHostBuilderExtensions.SetupWebHost(this Microsoft.AspNetCore.Builder.WebApplicationBuilder webApplicationBuilder, Vostok.Hosting.Abstractions.IVostokHostingEnvironment environment) -> void
+static Vostok.Hosting.Aspnetcore.Builder.WebApplicationBuilderExtensions.SetupVostokWebApplication(this Microsoft.AspNetCore.Builder.WebApplicationBuilder webApplicationBuilder, Vostok.Applications.AspNetCore.Helpers.VostokAspNetCoreWebApplicationSetup setupWebApplication) -> void
 Vostok.Hosting.Aspnetcore.Builder.ConfigurationBuilderExtensions
 Vostok.Hosting.Aspnetcore.Builder.LoggingBuilderExtensions
 Vostok.Hosting.Aspnetcore.Builder.ServicesBuilderExtensions
 Vostok.Hosting.Aspnetcore.Builder.WebApplicationBuilderExtensions
-Vostok.Hosting.Aspnetcore.Builder.WebHostBuilderExtensions
