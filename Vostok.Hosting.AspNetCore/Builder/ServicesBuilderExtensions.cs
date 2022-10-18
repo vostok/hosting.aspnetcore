@@ -3,9 +3,9 @@ using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Vostok.Applications.AspNetCore.Helpers;
 using Vostok.Hosting.Abstractions;
-using Vostok.Hosting.Aspnetcore.Application;
+using Vostok.Hosting.AspNetCore.Application;
 
-namespace Vostok.Hosting.Aspnetcore.Builder;
+namespace Vostok.Hosting.AspNetCore.Builder;
 
 [PublicAPI]
 public static class ServicesBuilderExtensions
