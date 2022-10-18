@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Vostok.Hosting.Aspnetcore.Application;
+namespace Vostok.Hosting.AspNetCore.Application;
 
 internal class DisposableContainer
 {

@@ -3,9 +3,9 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Builder;
 using NUnit.Framework;
 using Vostok.Clusterclient.Core.Model;
-using Vostok.Hosting.Aspnetcore.Builder;
+using Vostok.Hosting.AspNetCore.Builder;
 
-namespace Vostok.Hosting.Aspnetcore.Tests;
+namespace Vostok.Hosting.AspNetCore.Tests;
 
 [TestFixture]
 internal class Tests : TestsBase
