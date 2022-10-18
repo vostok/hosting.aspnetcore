@@ -10,7 +10,7 @@
         <VersionPrefix>0.0.1</VersionPrefix>
     </PropertyGroup>
     <PropertyGroup>
-        <Title>Vostok.Hosting.Aspnetcore</Title>
+        <Title>Vostok.Hosting.AspNetCore</Title>
         <Description>Entry point for create Vostok-compatible services with ASP.NET Core 6 hosting model</Description>
     </PropertyGroup>
     <PropertyGroup>

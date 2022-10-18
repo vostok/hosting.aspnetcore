@@ -13,7 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Vostok.Hosting.Aspnetcore\Vostok.Hosting.Aspnetcore.csproj" />
+        <ProjectReference Include="..\Vostok.Hosting.AspNetCore\Vostok.Hosting.AspNetCore.csproj" />
     </ItemGroup>
 
     <ItemGroup>
