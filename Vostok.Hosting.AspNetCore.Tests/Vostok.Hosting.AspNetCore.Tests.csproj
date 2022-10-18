@@ -13,14 +13,17 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Vostok.Hosting.Aspnetcore\Vostok.Hosting.Aspnetcore.csproj" />
+        <ProjectReference Include="..\Vostok.Hosting.AspNetCore\Vostok.Hosting.AspNetCore.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Include="..\..\vostok.commons.helpers\Vostok.Commons.Helpers\Network\FreeTcpPortFinder.cs" Link="Commons\FreeTcpPortFinder.cs"/>
+        <Compile Include="..\..\vostok.commons.helpers\Vostok.Commons.Helpers\Network\FreeTcpPortFinder.cs" Link="Commons\FreeTcpPortFinder.cs" />
     </ItemGroup>
 
     <ItemGroup>
+        <Reference Include="Vostok.Applications.AspNetCore">
+          <HintPath>..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore\bin\Release\net6.0\Vostok.Applications.AspNetCore.dll</HintPath>
+        </Reference>
         <Reference Include="Vostok.ClusterClient.Core">
             <SpecificVersion>False</SpecificVersion>
             <HintPath>..\..\vostok.clusterclient.core\Vostok.ClusterClient.Core\bin\Release\$(ReferencesFramework)\Vostok.ClusterClient.Core.dll</HintPath>

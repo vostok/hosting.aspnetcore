@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Vostok.Applications.AspNetCore.Helpers;
 using Vostok.Hosting.Abstractions;
 
-namespace Vostok.Hosting.Aspnetcore.Builder;
+namespace Vostok.Hosting.AspNetCore.Builder;
 
 [PublicAPI]
 public static class ConfigurationBuilderExtensions

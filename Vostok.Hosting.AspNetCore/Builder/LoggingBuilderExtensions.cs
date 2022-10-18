@@ -4,7 +4,7 @@ using Vostok.Applications.AspNetCore.Helpers;
 using Vostok.Hosting.Abstractions;
 using Vostok.Logging.Microsoft;
 
-namespace Vostok.Hosting.Aspnetcore.Builder;
+namespace Vostok.Hosting.AspNetCore.Builder;
 
 [PublicAPI]
 public static class LoggingBuilderExtensions

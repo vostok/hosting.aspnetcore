@@ -7,10 +7,10 @@ using Vostok.Applications.AspNetCore.Helpers;
 using Vostok.Commons.Time;
 using Vostok.Hosting.Abstractions;
 using Vostok.Hosting.Abstractions.Helpers;
-using Vostok.Hosting.Aspnetcore.Application;
+using Vostok.Hosting.AspNetCore.Application;
 using Vostok.Hosting.Setup;
 
-namespace Vostok.Hosting.Aspnetcore.Builder;
+namespace Vostok.Hosting.AspNetCore.Builder;
 
 [PublicAPI]
 public static class WebApplicationBuilderExtensions
