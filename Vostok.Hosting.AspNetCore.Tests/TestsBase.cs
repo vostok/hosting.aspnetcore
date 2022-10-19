@@ -9,7 +9,7 @@ using Vostok.Logging.Console;
 using Vostok.Logging.File;
 using Vostok.Logging.File.Configuration;
 
-namespace Vostok.Hosting.Aspnetcore.Tests;
+namespace Vostok.Hosting.AspNetCore.Tests;
 
 internal class TestsBase
 {
