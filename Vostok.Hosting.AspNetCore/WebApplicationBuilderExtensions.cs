@@ -4,6 +4,7 @@ using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Vostok.Applications.AspNetCore.Helpers;
 using Vostok.Hosting.Abstractions;
 using Vostok.Hosting.Abstractions.Helpers;
 using Vostok.Hosting.Aspnetcore.Helpers;
@@ -35,8 +36,10 @@ public static class WebApplicationBuilderExtensions
         webApplicationBuilder.Services.AddSingleton(services =>
             services.GetService<IVostokHostingEnvironment>()!.Log);
 
+        webApplicationBuilder.Services.AddVostokEnvironmentComponents();
+        
         webApplicationBuilder.Services.AddHostedService<VostokHostedService>();
-        //webApplicationBuilder.Services.AddHostedService<ServiceBeaconHostedService>();
+        webApplicationBuilder.Services.AddHostedService<ServiceBeaconHostedService>();
     }
 
     private static IVostokHostingEnvironmentBuilder SetupShutdownComponents(
