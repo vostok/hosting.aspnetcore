@@ -10,6 +10,7 @@
     <ItemGroup>
         <PackageReference Include="FluentAssertions" Version="5.10.3" />
         <PackageReference Include="NSubstitute" Version="4.2.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -21,6 +22,14 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Reference Include="Vostok.Applications.AspNetCore">
+            <SpecificVersion>False</SpecificVersion>
+            <HintPath>..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore\bin\Release\net6.0\Vostok.Applications.AspNetCore.dll</HintPath>
+        </Reference>
+        <Reference Include="Vostok.Applications.AspNetCore.Tests">
+            <SpecificVersion>False</SpecificVersion>
+            <HintPath>..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore.Tests\bin\Release\net6.0\Vostok.Applications.AspNetCore.Tests.dll</HintPath>
+        </Reference>        
         <Reference Include="Vostok.ClusterClient.Core">
             <SpecificVersion>False</SpecificVersion>
             <HintPath>..\..\vostok.clusterclient.core\Vostok.ClusterClient.Core\bin\Release\$(ReferencesFramework)\Vostok.ClusterClient.Core.dll</HintPath>
