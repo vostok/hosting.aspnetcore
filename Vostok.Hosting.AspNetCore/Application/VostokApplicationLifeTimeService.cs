@@ -29,15 +29,15 @@ internal class VostokApplicationLifeTimeService : IHostedService
     public VostokApplicationLifeTimeService(
         IHostApplicationLifetime applicationLifetime,
         IVostokHostingEnvironment environment,
-        IServiceProvider services,
+        IServiceProvider services
         //DisposableContainer disposableContainer,
-        IVostokHostShutdown vostokHostShutdown
+        // IVostokHostShutdown vostokHostShutdown
     )
     {
         this.applicationLifetime = applicationLifetime;
         this.environment = environment;
         this.services = services;
-        this.vostokHostShutdown = vostokHostShutdown;
+        this.vostokHostShutdown = environment.HostExtensions.Get<IVostokHostShutdown>();
         // this.disposableContainer = disposableContainer;
 
         log = this.environment.Log.ForContext<VostokApplicationLifeTimeService>();
