@@ -13,20 +13,22 @@ namespace Vostok.Hosting.AspNetCore;
 
 internal class ServiceBeaconHostedService : IHostedService
 {
+    private readonly IHostApplicationLifetime applicationLifetime;
     private readonly IServiceBeacon serviceBeacon;
     private readonly IServer server;
 
     public ServiceBeaconHostedService(IHostApplicationLifetime applicationLifetime, IServiceBeacon serviceBeacon, IServer server)
     {
+        this.applicationLifetime = applicationLifetime;
         this.serviceBeacon = serviceBeacon;
         this.server = server;
-
-        applicationLifetime.ApplicationStarted.Register(OnStartedAsync);
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
         ValidateAddresses();
+
+        applicationLifetime.ApplicationStarted.Register(OnStartedAsync);
 
         return Task.CompletedTask;
     }
