@@ -22,22 +22,22 @@ internal class VostokApplicationLifeTimeService : IHostedService
     private readonly IVostokHostingEnvironment environment;
     private readonly IServiceProvider services;
     // private readonly DisposableContainer disposableContainer;
-    private readonly IVostokHostShutdown vostokHostShutdown;
+    //private readonly IVostokHostShutdown vostokHostShutdown;
 
     private readonly ILog log;
 
     public VostokApplicationLifeTimeService(
         IHostApplicationLifetime applicationLifetime,
         IVostokHostingEnvironment environment,
-        IServiceProvider services,
+        IServiceProvider services
         //DisposableContainer disposableContainer,
-        IVostokHostShutdown vostokHostShutdown
+        //IVostokHostShutdown vostokHostShutdown
     )
     {
         this.applicationLifetime = applicationLifetime;
         this.environment = environment;
         this.services = services;
-        this.vostokHostShutdown = vostokHostShutdown;
+        //this.vostokHostShutdown = vostokHostShutdown;
         // this.disposableContainer = disposableContainer;
 
         log = this.environment.Log.ForContext<VostokApplicationLifeTimeService>();
@@ -106,7 +106,7 @@ internal class VostokApplicationLifeTimeService : IHostedService
     {
         log.Info("OnStopping application life time cycle event");
 
-        vostokHostShutdown?.Initiate();
+        //vostokHostShutdown?.Initiate();
     }
 
     private void OnStopped()
