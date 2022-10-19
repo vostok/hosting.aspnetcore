@@ -14,5 +14,5 @@ public class TracingMiddlewareWebApplicationTests : TracingMiddlewareTests
     }
 
     protected override IApplicationRunner CreateRunner(VostokHostingEnvironmentSetup setup)
-        => new WebApplicationRunner(setup, SetupGlobal);
+        => new TestWebApplicationRunner(setup, SetupGlobal);
 }

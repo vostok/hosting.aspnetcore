@@ -14,5 +14,5 @@ public class RequestInfoMiddlewareWebApplicationTests : RequestInfoMiddlewareTes
     }
     
     protected override IApplicationRunner CreateRunner(VostokHostingEnvironmentSetup setup)
-        => new WebApplicationRunner(setup, SetupGlobal);    
+        => new TestWebApplicationRunner(setup, SetupGlobal);    
 }

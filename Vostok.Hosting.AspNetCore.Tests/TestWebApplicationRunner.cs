@@ -13,12 +13,12 @@ using Vostok.Logging.Abstractions;
 
 namespace Vostok.Hosting.AspNetCore.Tests;
 
-public class WebApplicationRunner : IApplicationRunner
+public class TestWebApplicationRunner : IApplicationRunner
 {
     private readonly WebApplicationBuilder webApplicationBuilder;
     private WebApplication webApplication;
 
-    public WebApplicationRunner(
+    public TestWebApplicationRunner(
         VostokHostingEnvironmentSetup environmentSetup,
         VostokAspNetCoreWebApplicationSetup webApplicationSetup
     )
