@@ -9,13 +9,13 @@ using Microsoft.Extensions.Options;
 using Vostok.Commons.Time;
 using Vostok.Hosting.Abstractions;
 using Vostok.Hosting.Abstractions.Helpers;
-using Vostok.Hosting.Aspnetcore.Application;
+using Vostok.Hosting.AspNetCore.Application;
 using Vostok.Hosting.Aspnetcore.Helpers;
 using Vostok.Hosting.Setup;
 using Vostok.Logging.Abstractions;
 using Vostok.Logging.Microsoft;
 
-namespace Vostok.Hosting.Aspnetcore.Builder;
+namespace Vostok.Hosting.AspNetCore.Builder;
 
 internal class VostokLoggerFactory : ILoggerFactory
 {

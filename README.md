@@ -1,7 +1,7 @@
-# Vostok.Hosting.Aspnetcore
+# Vostok.Hosting.AspNetCore
 
 [![Build status](https://ci.appveyor.com/api/projects/status/github/vostok/hosting.aspnetcore?svg=true&branch=master)](https://ci.appveyor.com/project/vostok/hosting.aspnetcore/branch/master)
-[![NuGet](https://img.shields.io/nuget/v/Vostok.Hosting.Aspnetcore.svg)](https://www.nuget.org/packages/Vostok.Hosting.Aspnetcore)
+[![NuGet](https://img.shields.io/nuget/v/Vostok.Hosting.AspNetCore.svg)](https://www.nuget.org/packages/Vostok.Hosting.AspNetCore)
 
 Entry point for create Vostok-compatible services with ASP.NET Core 6 hosting model
 
