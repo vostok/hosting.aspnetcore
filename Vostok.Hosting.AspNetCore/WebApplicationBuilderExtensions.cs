@@ -19,27 +19,23 @@ public static class WebApplicationBuilderExtensions
         VostokHostingEnvironmentSetup setupEnvironment
     )
     {
-        webApplicationBuilder.Host
-            .ConfigureServices((context, serviceCollection) =>
-            {
-                serviceCollection.AddSingleton(services =>
+        webApplicationBuilder.Services.AddSingleton(services =>
+        {
+            var factorySettings = services.GetFromOptionsOrDefault<VostokHostingEnvironmentFactorySettings>();
+
+            return VostokHostingEnvironmentFactory.Create(
+                builder =>
                 {
-                    var factorySettings = services.GetFromOptionsOrDefault<VostokHostingEnvironmentFactorySettings>();
-                    
-                    return VostokHostingEnvironmentFactory.Create(
-                        builder =>
-                        {
-                            SetupShutdownComponents(builder, services);
-                            setupEnvironment(builder);
-                        }, 
-                        factorySettings);
-                });
+                    SetupShutdownComponents(builder, services);
+                    setupEnvironment(builder);
+                },
+                factorySettings);
+        });
 
-                serviceCollection.AddSingleton(services =>
-                    services.GetService<IVostokHostingEnvironment>()!.Log);
+        webApplicationBuilder.Services.AddSingleton(services =>
+            services.GetService<IVostokHostingEnvironment>()!.Log);
 
-                serviceCollection.AddHostedService<VostokApplicationLifeTimeService>();
-            });
+        webApplicationBuilder.Services.AddHostedService<VostokApplicationLifeTimeService>();
     }
 
     private static IVostokHostingEnvironmentBuilder SetupShutdownComponents(
