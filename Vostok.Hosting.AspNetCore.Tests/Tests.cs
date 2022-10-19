@@ -10,9 +10,9 @@ using NUnit.Framework;
 using Vostok.Clusterclient.Core.Model;
 using Vostok.Commons.Time;
 using Vostok.Hosting.Abstractions;
-using Vostok.Hosting.AspNetCore.Builder;
 using Vostok.Logging.Abstractions;
 using Vostok.Logging.Console;
+#pragma warning disable CS4014
 
 namespace Vostok.Hosting.AspNetCore.Tests;
 
