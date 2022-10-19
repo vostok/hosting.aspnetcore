@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Vostok.Commons.Time;
 using Vostok.Hosting.Abstractions;
 using Vostok.Hosting.Abstractions.Helpers;
+using Vostok.Hosting.Aspnetcore.Helpers;
 using Vostok.Hosting.Helpers;
 using Vostok.Logging.Abstractions;
 using Vostok.ServiceDiscovery;
@@ -16,33 +17,65 @@ using Vostok.ServiceDiscovery.Abstractions;
 
 namespace Vostok.Hosting.AspNetCore;
 
-internal class VostokApplicationLifeTimeService : IHostedService
+internal class ServiceBeaconHostedService : IHostedService
+{
+    private readonly IHostApplicationLifetime applicationLifetime;
+    private readonly IServiceBeacon serviceBeacon;
+
+    public ServiceBeaconHostedService(IHostApplicationLifetime applicationLifetime, IServiceBeacon serviceBeacon)
+    {
+        this.applicationLifetime = applicationLifetime;
+        this.serviceBeacon = serviceBeacon;
+    }
+
+    public async Task StartAsync(CancellationToken cancellationToken)
+    {
+        if (!await applicationLifetime.TryWaitStartedAsync(cancellationToken))
+            return;
+        
+        serviceBeacon.Start();
+
+        if (serviceBeacon is ServiceBeacon convertedBeacon)
+        {
+            // convertedBeacon.WaitForInitialRegistrationAsync()
+            //     .WaitAsync(10.Seconds())
+            //     .ConfigureAwait(false);
+        }
+    }
+
+    public async Task StopAsync(CancellationToken cancellationToken)
+    {
+        
+    }
+}
+
+internal class VostokHostedService : IHostedService
 {
     private readonly IHostApplicationLifetime applicationLifetime;
     private readonly IVostokHostingEnvironment environment;
-    private readonly IServiceProvider services;
+    private readonly IServiceProvider serviceProvider;
     // private readonly DisposableContainer disposableContainer;
-    //private readonly IVostokHostShutdown vostokHostShutdown;
+    // private readonly IVostokHostShutdown vostokHostShutdown;
 
     private readonly ILog log;
 
-    public VostokApplicationLifeTimeService(
+    public VostokHostedService(
         IHostApplicationLifetime applicationLifetime,
         IVostokHostingEnvironment environment,
-        IServiceProvider services
+        IServiceProvider serviceProvider
         //DisposableContainer disposableContainer,
         //IVostokHostShutdown vostokHostShutdown
     )
     {
         this.applicationLifetime = applicationLifetime;
         this.environment = environment;
-        this.services = services;
+        this.serviceProvider = serviceProvider;
         //this.vostokHostShutdown = vostokHostShutdown;
         // this.disposableContainer = disposableContainer;
 
-        log = this.environment.Log.ForContext<VostokApplicationLifeTimeService>();
+        log = this.environment.Log.ForContext<VostokHostedService>();
 
-        var server = services.GetRequiredService<IServer>();
+        var server = serviceProvider.GetRequiredService<IServer>();
         var addressFeature = server.Features.Get<IServerAddressesFeature>();
 
         if (environment.ServiceBeacon.ReplicaInfo.TryGetUrl(out var serviceBeaconUri))
@@ -84,22 +117,15 @@ internal class VostokApplicationLifeTimeService : IHostedService
         return Task.CompletedTask;
     }
 
-    private async void OnStartedAsync()
+    private void OnStartedAsync()
     {
         log.Info("OnStarted application life time cycle event");
 
-        var server = services.GetRequiredService<IServer>();
+        var server = serviceProvider.GetRequiredService<IServer>();
         var addressFeature = server.Features.Get<IServerAddressesFeature>();
         var addresses = addressFeature.Addresses.ToList();
 
-        environment.ServiceBeacon.Start();
-
-        if (environment.ServiceBeacon is ServiceBeacon convertedBeacon)
-        {
-            await convertedBeacon.WaitForInitialRegistrationAsync()
-                .WaitAsync(10.Seconds())
-                .ConfigureAwait(false);
-        }
+        
     }
 
     private void OnStopping()

@@ -35,7 +35,8 @@ public static class WebApplicationBuilderExtensions
         webApplicationBuilder.Services.AddSingleton(services =>
             services.GetService<IVostokHostingEnvironment>()!.Log);
 
-        webApplicationBuilder.Services.AddHostedService<VostokApplicationLifeTimeService>();
+        webApplicationBuilder.Services.AddHostedService<VostokHostedService>();
+        //webApplicationBuilder.Services.AddHostedService<ServiceBeaconHostedService>();
     }
 
     private static IVostokHostingEnvironmentBuilder SetupShutdownComponents(
