@@ -14,7 +14,7 @@ using Vostok.Logging.Abstractions;
 using Vostok.ServiceDiscovery;
 using Vostok.ServiceDiscovery.Abstractions;
 
-namespace Vostok.Hosting.AspNetCore.Application;
+namespace Vostok.Hosting.AspNetCore;
 
 internal class VostokApplicationLifeTimeService : IHostedService
 {
