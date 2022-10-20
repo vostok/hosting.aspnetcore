@@ -46,6 +46,8 @@ public static class WebApplicationBuilderExtensions
 
         webApplicationBuilder.Services.AddHostedService<VostokHostedService>();
         webApplicationBuilder.Services.AddHostedService<ServiceBeaconHostedService>();
+
+        webApplicationBuilder.Services.AddHealthChecks();
     }
 
     private static IVostokHostingEnvironmentBuilder SetupShutdownComponents(
