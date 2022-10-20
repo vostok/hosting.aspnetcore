@@ -1,10 +1,9 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
 using Vostok.Applications.AspNetCore.Helpers;
 using Vostok.Applications.AspNetCore.Tests;
-using Vostok.Applications.AspNetCore.Tests.Controllers;
+using Vostok.Applications.AspNetCore.Tests.Extensions;
 using Vostok.Commons.Time;
 using Vostok.Hosting.Abstractions;
 using Vostok.Hosting.AspNetCore.Builder;
@@ -24,12 +23,8 @@ public class TestWebApplicationRunner : IApplicationRunner
     )
     {
         webApplicationBuilder = WebApplication.CreateBuilder();
-
-        webApplicationBuilder.Services
-            .AddControllers()
-            .AddNewtonsoftJson()
-            .AddApplicationPart(typeof(ContextController).Assembly);
-
+        webApplicationBuilder.Services.ConfigureServiceCollection();
+        
         webApplicationBuilder.SetupVostok(environmentSetup);
         webApplicationBuilder.SetupVostokWebApplication(webApplicationSetup);
     }
@@ -37,12 +32,8 @@ public class TestWebApplicationRunner : IApplicationRunner
     public async Task RunAsync()
     {
         webApplication = webApplicationBuilder.Build();
+        webApplication.ConfigureWebApplication();
 
-        webApplication
-            .UseRouting()
-            .UseEndpoints(s => s.MapControllers())
-            .UseHealthChecks("/health");
-        
         var environment = (IVostokHostingEnvironment)webApplication.Services.GetService(typeof(IVostokHostingEnvironment))!;
 
         Task.Run(async () =>
