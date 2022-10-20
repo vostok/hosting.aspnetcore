@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 
-namespace Vostok.Hosting.Aspnetcore.Helpers;
+namespace Vostok.Hosting.AspNetCore.Extensions;
 
 internal static class IHostApplicationLifetimeExtensions
 {

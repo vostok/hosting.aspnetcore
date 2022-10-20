@@ -3,12 +3,17 @@ using System.Threading;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 using Vostok.Applications.AspNetCore.Helpers;
 using Vostok.Hosting.Abstractions;
 using Vostok.Hosting.Abstractions.Helpers;
-using Vostok.Hosting.Aspnetcore.Helpers;
+using Vostok.Hosting.AspNetCore.Extensions;
 using Vostok.Hosting.Setup;
+using Vostok.Logging.Abstractions;
+using Vostok.Logging.Microsoft;
 
 namespace Vostok.Hosting.AspNetCore;
 
@@ -37,7 +42,8 @@ public static class WebApplicationBuilderExtensions
             services.GetService<IVostokHostingEnvironment>()!.Log);
 
         webApplicationBuilder.Services.AddVostokEnvironmentComponents();
-        
+        webApplicationBuilder.Services.AddVostokLoggerProvider();
+
         webApplicationBuilder.Services.AddHostedService<VostokHostedService>();
         webApplicationBuilder.Services.AddHostedService<ServiceBeaconHostedService>();
     }
