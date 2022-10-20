@@ -11,27 +11,26 @@ using Vostok.Logging.Abstractions;
 
 namespace Vostok.Hosting.AspNetCore.Tests;
 
-public class TestWebApplicationRunner : IApplicationRunner
+public class TestWebApplicationHostRunner : ITestHostRunner
 {
-    private readonly WebApplicationBuilder webApplicationBuilder;
-    private WebApplication webApplication;
+    private readonly WebApplication webApplication;
 
-    public TestWebApplicationRunner(
-        VostokHostingEnvironmentSetup environmentSetup,
-        Action<IVostokAspNetCoreWebApplicationBuilder, IVostokHostingEnvironment> webApplicationSetup)
+    public TestWebApplicationHostRunner(VostokHostingEnvironmentSetup environmentSetup, Action<WebApplicationBuilder> webApplicationBuilderSetup, Action<WebApplication> webApplicationSetup)
     {
-        webApplicationBuilder = WebApplication.CreateBuilder();
-        webApplicationBuilder.Services.ConfigureTestsDefaults();
-
+        var webApplicationBuilder = WebApplication.CreateBuilder();
+        
         webApplicationBuilder.SetupVostok(environmentSetup);
-        // webApplicationBuilder.SetupVostokWebApplication(webApplicationSetup);
+        webApplicationBuilder.Services.ConfigureTestsDefaults();
+        webApplicationBuilderSetup(webApplicationBuilder);
+        
+        webApplication = webApplicationBuilder.Build();
+        
+        webApplication.ConfigureTestsDefaults();
+        webApplicationSetup(webApplication);
     }
 
-    public async Task RunAsync()
+    public async Task StartAsync()
     {
-        webApplication = webApplicationBuilder.Build();
-        webApplication.ConfigureTestsDefaults();
-
         var environment = (IVostokHostingEnvironment)webApplication.Services.GetService(typeof(IVostokHostingEnvironment))!;
 
         Task.Run(async () =>
