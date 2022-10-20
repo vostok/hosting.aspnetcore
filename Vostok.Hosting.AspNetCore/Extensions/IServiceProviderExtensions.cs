@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace Vostok.Hosting.Aspnetcore.Helpers;
+namespace Vostok.Hosting.AspNetCore.Extensions;
 
 internal static class IServiceProviderExtensions
 {

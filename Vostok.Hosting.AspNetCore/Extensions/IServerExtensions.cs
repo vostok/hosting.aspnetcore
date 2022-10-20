@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 
-namespace Vostok.Hosting.Aspnetcore.Helpers;
+namespace Vostok.Hosting.AspNetCore.Extensions;
 
 internal static class IServerExtensions
 {

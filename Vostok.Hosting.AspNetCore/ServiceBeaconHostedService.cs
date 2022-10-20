@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.Extensions.Hosting;
 using Vostok.Commons.Time;
-using Vostok.Hosting.Aspnetcore.Helpers;
+using Vostok.Hosting.AspNetCore.Extensions;
 using Vostok.ServiceDiscovery;
 using Vostok.ServiceDiscovery.Abstractions;
 

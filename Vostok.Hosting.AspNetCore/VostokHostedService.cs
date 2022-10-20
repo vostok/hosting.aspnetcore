@@ -42,7 +42,7 @@ internal class VostokHostedService : IHostedService
     {
         environment.Warmup(new VostokHostingEnvironmentWarmupSettings());
 
-        applicationLifetime.ApplicationStarted.Register(OnStartedAsync);
+        applicationLifetime.ApplicationStarted.Register(OnStarted);
         applicationLifetime.ApplicationStopping.Register(OnStopping);
         applicationLifetime.ApplicationStopped.Register(OnStopped);
 
@@ -54,23 +54,23 @@ internal class VostokHostedService : IHostedService
         return Task.CompletedTask;
     }
 
-    private void OnStartedAsync()
+    private void OnStarted()
     {
-        log.Info("OnStarted application life time cycle event");
+        log.Info("Host started.");
     }
 
     private void OnStopping()
     {
-        log.Info("OnStopping application life time cycle event");
+        log.Info("Host stopping..");
 
         //vostokHostShutdown?.Initiate();
     }
 
     private void OnStopped()
     {
-        log.Info("OnStopped application life time cycle event");
+        log.Info("Host stopped.");
 
-        (environment as IDisposable)?.Dispose();
+        //(environment as IDisposable)?.Dispose();
         // disposableContainer.DoDispose();
     }
 }
