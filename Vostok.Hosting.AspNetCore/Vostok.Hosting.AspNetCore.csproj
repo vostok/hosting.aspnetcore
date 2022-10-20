@@ -21,6 +21,7 @@
         <RepositoryUrl>https://github.com/vostok/hosting.aspnetcore.git</RepositoryUrl>
     </PropertyGroup>
     <ItemGroup>
+        <Folder Include="Builder" />
         <Folder Include="PublicAPI" />
         <AdditionalFiles Include="PublicAPI/$(TargetFramework)/PublicAPI.Shipped.txt" />
         <AdditionalFiles Include="PublicAPI/$(TargetFramework)/PublicAPI.Unshipped.txt" />
