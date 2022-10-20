@@ -29,11 +29,11 @@
     <ItemGroup>
         <Reference Include="Vostok.Applications.AspNetCore">
             <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore\bin\Release\net6.0\Vostok.Applications.AspNetCore.dll</HintPath>
+            <HintPath>..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore\bin\Release\$(ReferencesFramework)\Vostok.Applications.AspNetCore.dll</HintPath>
         </Reference>
         <Reference Include="Vostok.Applications.AspNetCore.Tests">
             <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore.Tests\bin\Release\net6.0\Vostok.Applications.AspNetCore.Tests.dll</HintPath>
+            <HintPath>..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore.Tests\bin\Release\$(ReferencesFramework)\Vostok.Applications.AspNetCore.Tests.dll</HintPath>
         </Reference>        
         <Reference Include="Vostok.ClusterClient.Core">
             <SpecificVersion>False</SpecificVersion>
