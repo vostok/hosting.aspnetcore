@@ -1,18 +1,16 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using NSubstitute.Extensions;
 using NUnit.Framework;
 using Vostok.Clusterclient.Core.Model;
 using Vostok.Commons.Time;
 using Vostok.Hosting.Abstractions;
-using Vostok.Hosting.AspNetCore.Builder;
 using Vostok.Logging.Abstractions;
-using Vostok.Logging.Console;
+
+#pragma warning disable CS4014
 
 namespace Vostok.Hosting.AspNetCore.Tests;
 
