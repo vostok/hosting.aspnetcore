@@ -29,23 +29,8 @@ public class TestWebApplicationHostRunner : ITestHostRunner
         webApplicationSetup(webApplication);
     }
 
-    public async Task StartAsync()
-    {
-        var environment = (IVostokHostingEnvironment)webApplication.Services.GetService(typeof(IVostokHostingEnvironment))!;
-
-        Task.Run(async () =>
-        {
-            try
-            {
-                await webApplication.RunAsync();
-            }
-            catch (Exception e)
-            {
-                environment.Log.Error(e);
-            }
-        });
-        await Task.Delay(100.Milliseconds()); // ??
-    }
+    public Task StartAsync() =>
+        webApplication.StartAsync();
 
     public Task StopAsync() =>
         webApplication.StopAsync();
