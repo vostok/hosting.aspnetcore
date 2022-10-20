@@ -16,7 +16,7 @@ notests *default:
     - vostok.devtools
     - vostok.hosting@web-application-app-hosting
     - vostok.hosting.abstractions 
-    - vostok.applications.aspnetcore@web-application-app-hosting/v6_0
+    - vostok.applications.aspnetcore@di-injection/v6_0
     - vostok.logging.microsoft
     - vostok.logging.abstractions
     - vostok.servicediscovery.abstractions
@@ -26,6 +26,8 @@ full-build > notests:
   deps:
     - -vostok.devtools
     - vostok.devtools@with-net6.0
+    - -vostok.applications.aspnetcore@di-injection/v6_0
+    - vostok.applications.aspnetcore@di-injection/full-build
 
   build:
     target: Vostok.Hosting.AspNetCore.sln
