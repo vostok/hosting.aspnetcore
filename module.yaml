@@ -16,7 +16,7 @@ notests *default:
     - vostok.devtools
     - vostok.hosting@web-application-app-hosting
     - vostok.hosting.abstractions 
-    - vostok.applications.aspnetcore@web-application-app-hosting/v6_0_with_tests
+    - vostok.applications.aspnetcore@web-application-app-hosting/full-build
     - vostok.logging.microsoft
     - vostok.logging.abstractions
     - vostok.servicediscovery.abstractions
