@@ -21,7 +21,7 @@ public class TestWebApplicationRunner : IApplicationRunner
         Action<IVostokAspNetCoreWebApplicationBuilder, IVostokHostingEnvironment> webApplicationSetup)
     {
         webApplicationBuilder = WebApplication.CreateBuilder();
-        webApplicationBuilder.Services.ConfigureServiceCollection();
+        webApplicationBuilder.Services.ConfigureTestsDefaults();
 
         webApplicationBuilder.SetupVostok(environmentSetup);
         // webApplicationBuilder.SetupVostokWebApplication(webApplicationSetup);
@@ -30,7 +30,7 @@ public class TestWebApplicationRunner : IApplicationRunner
     public async Task RunAsync()
     {
         webApplication = webApplicationBuilder.Build();
-        webApplication.ConfigureWebApplication();
+        webApplication.ConfigureTestsDefaults();
 
         var environment = (IVostokHostingEnvironment)webApplication.Services.GetService(typeof(IVostokHostingEnvironment))!;
 
