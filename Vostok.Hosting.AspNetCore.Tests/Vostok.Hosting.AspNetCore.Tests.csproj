@@ -19,6 +19,11 @@
 
     <ItemGroup>
         <Compile Include="..\..\vostok.commons.helpers\Vostok.Commons.Helpers\Network\FreeTcpPortFinder.cs" Link="Commons\FreeTcpPortFinder.cs" />
+        <Compile Include="..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore\Diagnostics\DiagnosticConstants.cs" Link="Commons\DiagnosticConstants.cs" />
+        <Compile Include="..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore.Tests\TestsBase.cs" Link="TestsBase.cs" />
+        <Compile Include="..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore.Tests\Tests\*.cs" Exclude="..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore.Tests\Tests\MinimalApiTests.cs" LinkBase="MiddlewareTests" />
+        <Compile Include="..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore.Tests\Extensions\*.cs" LinkBase="Extensions" />
+        <Compile Include="..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore.Tests\Models\*.cs" LinkBase="Models" />
     </ItemGroup>
 
     <ItemGroup>
