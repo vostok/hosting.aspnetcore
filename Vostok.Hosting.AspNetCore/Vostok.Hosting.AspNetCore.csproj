@@ -5,6 +5,7 @@
     <PropertyGroup>
         <TargetFrameworks>net6.0</TargetFrameworks>
         <Configurations>Debug;Release</Configurations>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
     <PropertyGroup>
         <VersionPrefix>0.0.1</VersionPrefix>

@@ -1,2 +1,2 @@
-static Vostok.Hosting.AspNetCore.WebApplicationBuilderExtensions.SetupVostok(this Microsoft.AspNetCore.Builder.WebApplicationBuilder webApplicationBuilder, Vostok.Hosting.Setup.VostokHostingEnvironmentSetup setupEnvironment) -> void
+static Vostok.Hosting.AspNetCore.WebApplicationBuilderExtensions.SetupVostok(this Microsoft.AspNetCore.Builder.WebApplicationBuilder! webApplicationBuilder, Vostok.Hosting.Setup.VostokHostingEnvironmentSetup! setupEnvironment) -> void
 Vostok.Hosting.AspNetCore.WebApplicationBuilderExtensions

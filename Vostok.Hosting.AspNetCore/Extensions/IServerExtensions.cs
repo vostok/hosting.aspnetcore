@@ -6,7 +6,7 @@ namespace Vostok.Hosting.AspNetCore.Extensions;
 
 internal static class IServerExtensions
 {
-    public static ICollection<string> TryGetAddresses(this IServer server)
+    public static ICollection<string>? TryGetAddresses(this IServer server)
     {
         var addressFeature = server.Features.Get<IServerAddressesFeature>();
         return addressFeature?.Addresses;
