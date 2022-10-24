@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Vostok.Commons.Time;
 using Vostok.Hosting.AspNetCore.Extensions;
+using Vostok.Logging.Abstractions;
 using Vostok.ServiceDiscovery;
 using Vostok.ServiceDiscovery.Abstractions;
 
@@ -16,12 +20,16 @@ internal class ServiceBeaconHostedService : IHostedService
     private readonly IHostApplicationLifetime applicationLifetime;
     private readonly IServiceBeacon serviceBeacon;
     private readonly IServer server;
+    private readonly IConfiguration configuration;
+    private readonly ILog log;
 
-    public ServiceBeaconHostedService(IHostApplicationLifetime applicationLifetime, IServiceBeacon serviceBeacon, IServer server)
+    public ServiceBeaconHostedService(IHostApplicationLifetime applicationLifetime, IServiceBeacon serviceBeacon, IServer server, IConfiguration configuration, ILog log)
     {
         this.applicationLifetime = applicationLifetime;
         this.serviceBeacon = serviceBeacon;
         this.server = server;
+        this.configuration = configuration;
+        this.log = log.ForContext<ServiceBeaconHostedService>();
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
@@ -53,12 +61,33 @@ internal class ServiceBeaconHostedService : IHostedService
     private void ValidateAddresses()
     {
         var addresses = server.TryGetAddresses();
-
-        if (serviceBeacon.ReplicaInfo.TryGetUrl(out var serviceBeaconUri))
+        var urls = configuration[WebHostDefaults.ServerUrlsKey]?.Split(';');
+        
+        if (serviceBeacon.ReplicaInfo.TryGetUrl(out var serviceBeaconUrl))
         {
-            addresses.Clear();
-            addresses.Add($"{serviceBeaconUri.Scheme}://{serviceBeaconUri.Host}:{serviceBeaconUri.Port}/");
+            if (!HasAddress(addresses, serviceBeaconUrl) && !HasAddress(urls, serviceBeaconUrl))
+                addresses.Add($"{serviceBeaconUrl.Scheme}://*:{serviceBeaconUrl.Port}/");
+            log.Info("Using url provided in Service Beacon: '{Url}'.", serviceBeaconUrl);
+            return;
         }
-        // TODO else - try set serviceBeacon replicaInfo url from address.
+
+        if (addresses.Any() || urls?.Any() == true)
+        {
+            throw new NotImplementedException("Dynamic configuration of Sevice Beacon is not currently supported. Please configure port explicitly during Vostok environment setup.");
+        }
+    }
+
+    private static bool HasAddress(IEnumerable<string>? urls, Uri expectedUrl)
+    {
+        if (urls == null)
+            return false;
+        
+        foreach (var url in urls)
+        {
+            if (Uri.TryCreate(url, UriKind.Absolute, out var parsed) && parsed.Port == expectedUrl.Port && parsed.Scheme == expectedUrl.Scheme)
+                return true;
+        }
+
+        return false;
     }
 }
