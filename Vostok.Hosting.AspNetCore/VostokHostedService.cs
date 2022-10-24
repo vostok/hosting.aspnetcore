@@ -1,10 +1,9 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting.Server;
-using Microsoft.AspNetCore.Hosting.Server.Features;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+using Vostok.Commons.Threading;
 using Vostok.Hosting.Abstractions;
 using Vostok.Hosting.Helpers;
 using Vostok.Logging.Abstractions;
@@ -15,32 +14,26 @@ internal class VostokHostedService : IHostedService
 {
     private readonly IHostApplicationLifetime applicationLifetime;
     private readonly IVostokHostingEnvironment environment;
-    private readonly IServiceProvider serviceProvider;
-    // private readonly DisposableContainer disposableContainer;
-    // private readonly IVostokHostShutdown vostokHostShutdown;
-
     private readonly ILog log;
+    private readonly VostokSettings settings;
 
     public VostokHostedService(
         IHostApplicationLifetime applicationLifetime,
         IVostokHostingEnvironment environment,
-        IServiceProvider serviceProvider
-        //DisposableContainer disposableContainer,
-        //IVostokHostShutdown vostokHostShutdown
-    )
+        IOptions<VostokSettings> settings)
     {
         this.applicationLifetime = applicationLifetime;
         this.environment = environment;
-        this.serviceProvider = serviceProvider;
-        //this.vostokHostShutdown = vostokHostShutdown;
-        // this.disposableContainer = disposableContainer;
-
+        this.settings = settings.Value;
         log = this.environment.Log.ForContext<VostokHostedService>();
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        environment.Warmup(new VostokHostingEnvironmentWarmupSettings());
+        // todo (kungurtsev, 24.10.2022): 
+        //var dynamicThreadPool = ConfigureDynamicThreadPool();
+        
+        WarmupEnvironment();
 
         applicationLifetime.ApplicationStarted.Register(OnStarted);
         applicationLifetime.ApplicationStopping.Register(OnStopping);
@@ -48,7 +41,7 @@ internal class VostokHostedService : IHostedService
 
         return Task.CompletedTask;
     }
-
+    
     public Task StopAsync(CancellationToken cancellationToken)
     {
         return Task.CompletedTask;
@@ -73,4 +66,35 @@ internal class VostokHostedService : IHostedService
         //(environment as IDisposable)?.Dispose();
         // disposableContainer.DoDispose();
     }
+    
+    private void WarmupEnvironment()
+    {
+        ConfigureHostBeforeRun();
+
+        environment.Warmup(settings.EnvironmentWarmupSettings);
+
+        foreach (var action in settings.BeforeInitializeApplication)
+            action(environment);
+    }
+    
+    private void ConfigureHostBeforeRun()
+    {
+        var cpuUnitsLimit = environment.ApplicationLimits.CpuUnits;
+        if (settings.ConfigureThreadPool && cpuUnitsLimit.HasValue)
+            ThreadPoolUtility.Setup(settings.ThreadPoolTuningMultiplier, cpuUnitsLimit.Value);
+    }
+    
+    // private DynamicThreadPoolTracker ConfigureDynamicThreadPool()
+    // {
+    //     if (settings.ThreadPoolSettingsProvider == null)
+    //         return null;
+    //
+    //     var dynamicThreadPoolTracker = new DynamicThreadPoolTracker(
+    //         settings.ThreadPoolSettingsProvider,
+    //         environment.ConfigurationProvider,
+    //         environment.ApplicationLimits,
+    //         environment.Log);
+    //
+    //     return dynamicThreadPoolTracker;
+    // }
 }

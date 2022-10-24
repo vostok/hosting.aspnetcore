@@ -3,17 +3,13 @@ using System.Threading;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
 using Vostok.Applications.AspNetCore.Helpers;
+using Vostok.Commons.Threading;
 using Vostok.Hosting.Abstractions;
 using Vostok.Hosting.Abstractions.Helpers;
 using Vostok.Hosting.AspNetCore.Extensions;
 using Vostok.Hosting.Setup;
-using Vostok.Logging.Abstractions;
-using Vostok.Logging.Microsoft;
 
 namespace Vostok.Hosting.AspNetCore;
 
@@ -27,15 +23,28 @@ public static class WebApplicationBuilderExtensions
     {
         webApplicationBuilder.Services.AddSingleton(services =>
         {
-            var factorySettings = services.GetFromOptionsOrDefault<VostokHostingEnvironmentFactorySettings>();
+            var settings = services.GetFromOptionsOrDefault<VostokSettings>();
 
+            var environmentFactorySettings = new VostokHostingEnvironmentFactorySettings
+            {
+                ConfigureStaticProviders = settings.ConfigureStaticProviders,
+                // todo (kungurtsev, 24.10.2022): think about it
+                BeaconShutdownWaitEnabled = false,
+                DisposeComponentTimeout = settings.DisposeComponentTimeout,
+                SendAnnotations = settings.SendAnnotations,
+                DiagnosticMetricsEnabled = settings.DiagnosticMetricsEnabled
+            };
+
+            if (settings.ConfigureThreadPool)
+                ThreadPoolUtility.Setup(settings.ThreadPoolTuningMultiplier);
+            
             return VostokHostingEnvironmentFactory.Create(
                 builder =>
                 {
                     SetupShutdownComponents(builder, services);
                     setupEnvironment(builder);
                 },
-                factorySettings);
+                environmentFactorySettings);
         });
 
         webApplicationBuilder.Services.AddSingleton(services =>
