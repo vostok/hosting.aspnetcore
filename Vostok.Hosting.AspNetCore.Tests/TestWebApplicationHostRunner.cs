@@ -13,7 +13,7 @@ namespace Vostok.Hosting.AspNetCore.Tests;
 
 public class TestWebApplicationHostRunner : ITestHostRunner
 {
-    private readonly WebApplication webApplication;
+    public readonly WebApplication WebApplication;
 
     public TestWebApplicationHostRunner(VostokHostingEnvironmentSetup environmentSetup, Action<WebApplicationBuilder> webApplicationBuilderSetup, Action<WebApplication> webApplicationSetup)
     {
@@ -23,15 +23,15 @@ public class TestWebApplicationHostRunner : ITestHostRunner
         webApplicationBuilder.Services.ConfigureTestsDefaults();
         webApplicationBuilderSetup(webApplicationBuilder);
         
-        webApplication = webApplicationBuilder.Build();
+        WebApplication = webApplicationBuilder.Build();
         
-        webApplication.ConfigureTestsDefaults();
-        webApplicationSetup(webApplication);
+        WebApplication.ConfigureTestsDefaults();
+        webApplicationSetup(WebApplication);
     }
 
     public Task StartAsync() =>
-        webApplication.StartAsync();
+        WebApplication.StartAsync();
 
     public Task StopAsync() =>
-        webApplication.StopAsync();
+        WebApplication.StopAsync();
 }
