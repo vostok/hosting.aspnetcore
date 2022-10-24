@@ -61,6 +61,9 @@ internal class ServiceBeaconHostedService : IHostedService
     private void ValidateAddresses()
     {
         var addresses = server.TryGetAddresses();
+        if (addresses == null)
+            return;
+        
         var urls = configuration[WebHostDefaults.ServerUrlsKey]?.Split(';');
         
         if (serviceBeacon.ReplicaInfo.TryGetUrl(out var serviceBeaconUrl))
