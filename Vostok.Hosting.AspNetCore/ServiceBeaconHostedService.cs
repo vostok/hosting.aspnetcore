@@ -22,9 +22,9 @@ internal class ServiceBeaconHostedService : IHostedService
     private readonly IServer server;
     private readonly IConfiguration configuration;
     private readonly ILog log;
-    private readonly VostokSettings settings;
+    private readonly VostokComponentsSettings settings;
 
-    public ServiceBeaconHostedService(IHostApplicationLifetime applicationLifetime, IServiceBeacon serviceBeacon, IServer server, IConfiguration configuration, ILog log, IOptions<VostokSettings> settings)
+    public ServiceBeaconHostedService(IHostApplicationLifetime applicationLifetime, IServiceBeacon serviceBeacon, IServer server, IConfiguration configuration, ILog log, IOptions<VostokComponentsSettings> settings)
     {
         this.applicationLifetime = applicationLifetime;
         this.serviceBeacon = serviceBeacon;

@@ -15,12 +15,12 @@ internal class VostokHostedService : IHostedService
     private readonly IHostApplicationLifetime applicationLifetime;
     private readonly IVostokHostingEnvironment environment;
     private readonly ILog log;
-    private readonly VostokSettings settings;
+    private readonly VostokComponentsSettings settings;
 
     public VostokHostedService(
         IHostApplicationLifetime applicationLifetime,
         VostokHostingEnvironmentKeeper environment,
-        IOptions<VostokSettings> settings)
+        IOptions<VostokComponentsSettings> settings)
     {
         this.applicationLifetime = applicationLifetime;
         this.environment = environment.Environment;
