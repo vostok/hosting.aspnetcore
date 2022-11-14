@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
-using Microsoft.Extensions.Configuration;
 using Vostok.Commons.Time;
+using Vostok.Configuration.Abstractions;
 using Vostok.Hosting.Abstractions;
 using Vostok.Hosting.Components.ThreadPool;
 

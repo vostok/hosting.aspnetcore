@@ -13,6 +13,8 @@ notests *default:
     - vostok.servicediscovery
 
   deps:
+    - vostok.configuration
+    - vostok.configuration.abstractions
     - vostok.devtools
     - vostok.hosting@hosting-aspnetcore
     - vostok.hosting.abstractions 
