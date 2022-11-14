@@ -50,7 +50,6 @@ public static class WebApplicationBuilderExtensions
         // todo (kungurtsev, 14.11.2022): deal with configuration
 
         webApplicationBuilder.Services.AddHostedService<VostokHostedService>();
-        // todo (kungurtsev, 14.11.2022): what if we need to run some service before ServiceBeaconHostedService?
         webApplicationBuilder.Services.AddHostedService<ServiceBeaconHostedService>();
 
         webApplicationBuilder.Services.AddHealthChecks();
