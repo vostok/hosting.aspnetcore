@@ -95,13 +95,13 @@ internal class ServiceBeaconHostedService : IHostedService
         {
             if (!HasAddress(addresses, serviceBeaconUrl) && !HasAddress(urls, serviceBeaconUrl))
                 addresses.Add($"{serviceBeaconUrl.Scheme}://*:{serviceBeaconUrl.Port}/");
-            log.Info("Using url provided in Service Beacon: '{Url}'.", serviceBeaconUrl);
+            log.Info("Using url provided in Service beacon: '{Url}'.", serviceBeaconUrl);
             return;
         }
 
         if (addresses.Any() || urls?.Any() == true)
         {
-            throw new NotImplementedException("Dynamic configuration of Sevice Beacon is not currently supported. Please configure port explicitly during Vostok environment setup.");
+            throw new NotImplementedException("Dynamic configuration of Sevice beacon is not currently supported. Please configure port explicitly during Vostok environment setup.");
         }
     }
 
