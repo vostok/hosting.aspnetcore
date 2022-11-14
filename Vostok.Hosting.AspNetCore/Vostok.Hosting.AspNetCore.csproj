@@ -1,81 +1,89 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-    <Import Project="..\..\vostok.devtools\library-common-props\Main-Project.props" />
-    <Import Project="..\..\vostok.devtools\git-commit-to-assembly-title\Vostok.Tools.GitCommit2AssemblyTitle.props" />
-    <PropertyGroup>
-        <TargetFrameworks>net6.0</TargetFrameworks>
-        <Configurations>Debug;Release</Configurations>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
-    <PropertyGroup>
-        <VersionPrefix>0.0.1</VersionPrefix>
-    </PropertyGroup>
-    <PropertyGroup>
-        <Title>Vostok.Hosting.AspNetCore</Title>
-        <Description>Entry point for create Vostok-compatible services with ASP.NET Core 6 hosting model</Description>
-    </PropertyGroup>
-    <PropertyGroup>
-        <PackageProjectUrl>https://github.com/vostok/hosting.aspnetcore.git</PackageProjectUrl>
-        <PackageLicenseUrl>https://github.com/vostok/hosting.aspnetcore.git/blob/master/LICENSE</PackageLicenseUrl>
-        <PackageTags>vostok vostok.hosting</PackageTags>
-        <PackageReleaseNotes>https://github.com/vostok/hosting.aspnetcore.git/blob/master/CHANGELOG.md</PackageReleaseNotes>
-        <RepositoryUrl>https://github.com/vostok/hosting.aspnetcore.git</RepositoryUrl>
-    </PropertyGroup>
-    <ItemGroup>
-        <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    </ItemGroup>
-    <ItemGroup>
-        <Compile Include="..\..\vostok.commons.collections\Vostok.Commons.Collections\ByReferenceEqualityComparer.cs" Link="Commons\ByReferenceEqualityComparer.cs" />
-        <Compile Include="..\..\vostok.commons.collections\Vostok.Commons.Collections\CachingTransform.cs" Link="Commons\CachingTransform.cs" />
-        <Compile Include="..\..\vostok.commons.collections\Vostok.Commons.Collections\CircularBuffer.cs" Link="Commons\CircularBuffer.cs" />
-        <Compile Include="..\..\vostok.commons.collections\Vostok.Commons.Collections\ConcurrentBoundedQueue.cs" Link="Commons\ConcurrentBoundedQueue.cs" />
-        <Compile Include="..\..\vostok.commons.environment\Vostok.Commons.Environment\EnvironmentInfo.cs" Link="Commons\EnvironmentInfo.cs" />
-        <Compile Include="..\..\vostok.commons.environment\Vostok.Commons.Environment\RuntimeDetector.cs" Link="Commons\RuntimeDetector.cs" />
-        <Compile Include="..\..\vostok.commons.environment\Vostok.Commons.Environment\AssemblyCommitHashExtractor.cs" Link="Commons\AssemblyCommitHashExtractor.cs" />
-        <Compile Include="..\..\vostok.commons.environment\Vostok.Commons.Environment\AssemblyBuildTimeExtractor.cs" Link="Commons\AssemblyBuildTimeExtractor.cs" />
-        <Compile Include="..\..\vostok.commons.environment\Vostok.Commons.Environment\AssemblyTitleParser.cs" Link="Commons\AssemblyTitleParser.cs" />
-        <Compile Include="..\..\vostok.commons.helpers\Vostok.Commons.Helpers\Customization.cs" Link="Commons\Customization.cs" />
-        <Compile Include="..\..\vostok.commons.helpers\Vostok.Commons.Helpers\Disposable\ActionDisposable.cs" Link="Commons\ActionDisposable.cs" />
-        <Compile Include="..\..\vostok.commons.helpers\Vostok.Commons.Helpers\Extensions\TaskExtensions.cs" Link="Commons\TaskExtensions.cs" />
-        <Compile Include="..\..\vostok.commons.helpers\Vostok.Commons.Helpers\Network\FreeTcpPortFinder.cs" Link="Commons\FreeTcpPortFinder.cs" />
-        <Compile Include="..\..\vostok.commons.helpers\Vostok.Commons.Helpers\Observable\CachingObservable.cs" Link="Commons\CachingObservable.cs" />
-        <Compile Include="..\..\vostok.commons.threading\Vostok.Commons.Threading\AtomicBoolean.cs" Link="Commons\AtomicBoolean.cs" />
-        <Compile Include="..\..\vostok.commons.threading\Vostok.Commons.Threading\ThreadPoolState.cs" Link="Commons\ThreadPoolState.cs" />
-        <Compile Include="..\..\vostok.commons.threading\Vostok.Commons.Threading\ThreadPoolUtility.cs" Link="Commons\ThreadPoolUtility.cs" />
-        <Compile Include="..\..\vostok.commons.time\Vostok.Commons.Time\TimeBudget.cs" Link="Commons\TimeBudget.cs" />
-        <Compile Include="..\..\vostok.commons.time\Vostok.Commons.Time\TimeSpanArithmetics.cs" Link="Commons\TimeSpanArithmetics.cs" />
-        <Compile Include="..\..\vostok.commons.time\Vostok.Commons.Time\TimeSpanConversions.cs" Link="Commons\TimeSpanConversions.cs" />
-        <Compile Include="..\..\vostok.commons.time\Vostok.Commons.Time\TimeSpanFormatting.cs" Link="Commons\TimeSpanFormatting.cs" />
-        <Compile Include="..\..\vostok.commons.time\Vostok.Commons.Time\PeriodicalAction.cs" Link="Commons\PeriodicalAction.cs" />
-    </ItemGroup>
-    <ItemGroup>
-        <Reference Include="Vostok.Hosting">
-            <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\vostok.hosting\Vostok.Hosting\bin\Release\$(ReferencesFramework)\Vostok.Hosting.dll</HintPath>
-        </Reference>
-        <Reference Include="Vostok.Applications.AspNetCore">
-            <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore\bin\Release\$(ReferencesFramework)\Vostok.Applications.AspNetCore.dll</HintPath>
-        </Reference>
-        <Reference Include="Vostok.Hosting.Abstractions">
-            <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\vostok.hosting.abstractions\Vostok.Hosting.Abstractions\bin\Release\$(ReferencesFramework)\Vostok.Hosting.Abstractions.dll</HintPath>
-        </Reference>
-        <Reference Include="Vostok.Logging.Microsoft">
-            <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\vostok.logging.microsoft\Vostok.Logging.Microsoft\bin\Release\$(ReferencesFramework)\Vostok.Logging.Microsoft.dll</HintPath>
-        </Reference>
-        <Reference Include="Vostok.Logging.Abstractions">
-            <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\vostok.logging.abstractions\Vostok.Logging.Abstractions\bin\Release\$(ReferencesFramework)\Vostok.Logging.Abstractions.dll</HintPath>
-        </Reference>
-        <Reference Include="Vostok.ServiceDiscovery.Abstractions">
-            <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\vostok.servicediscovery.abstractions\Vostok.ServiceDiscovery.Abstractions\bin\Release\$(ReferencesFramework)\Vostok.ServiceDiscovery.Abstractions.dll</HintPath>
-        </Reference>
-        <Reference Include="Vostok.ServiceDiscovery">
-            <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\vostok.servicediscovery\Vostok.ServiceDiscovery\bin\Release\$(ReferencesFramework)\Vostok.ServiceDiscovery.dll</HintPath>
-        </Reference>
-    </ItemGroup>
+  <Import Project="..\..\vostok.devtools\library-common-props\Main-Project.props" />
+  <Import Project="..\..\vostok.devtools\git-commit-to-assembly-title\Vostok.Tools.GitCommit2AssemblyTitle.props" />
+  <PropertyGroup>
+    <TargetFrameworks>net6.0</TargetFrameworks>
+    <Configurations>Debug;Release</Configurations>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VersionPrefix>0.0.1</VersionPrefix>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Title>Vostok.Hosting.AspNetCore</Title>
+    <Description>Entry point for create Vostok-compatible services with ASP.NET Core 6 hosting model</Description>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PackageProjectUrl>https://github.com/vostok/hosting.aspnetcore.git</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/vostok/hosting.aspnetcore.git/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageTags>vostok vostok.hosting</PackageTags>
+    <PackageReleaseNotes>https://github.com/vostok/hosting.aspnetcore.git/blob/master/CHANGELOG.md</PackageReleaseNotes>
+    <RepositoryUrl>https://github.com/vostok/hosting.aspnetcore.git</RepositoryUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\vostok.commons.collections\Vostok.Commons.Collections\ByReferenceEqualityComparer.cs" Link="Commons\ByReferenceEqualityComparer.cs" />
+    <Compile Include="..\..\vostok.commons.collections\Vostok.Commons.Collections\CachingTransform.cs" Link="Commons\CachingTransform.cs" />
+    <Compile Include="..\..\vostok.commons.collections\Vostok.Commons.Collections\CircularBuffer.cs" Link="Commons\CircularBuffer.cs" />
+    <Compile Include="..\..\vostok.commons.collections\Vostok.Commons.Collections\ConcurrentBoundedQueue.cs" Link="Commons\ConcurrentBoundedQueue.cs" />
+    <Compile Include="..\..\vostok.commons.environment\Vostok.Commons.Environment\EnvironmentInfo.cs" Link="Commons\EnvironmentInfo.cs" />
+    <Compile Include="..\..\vostok.commons.environment\Vostok.Commons.Environment\RuntimeDetector.cs" Link="Commons\RuntimeDetector.cs" />
+    <Compile Include="..\..\vostok.commons.environment\Vostok.Commons.Environment\AssemblyCommitHashExtractor.cs" Link="Commons\AssemblyCommitHashExtractor.cs" />
+    <Compile Include="..\..\vostok.commons.environment\Vostok.Commons.Environment\AssemblyBuildTimeExtractor.cs" Link="Commons\AssemblyBuildTimeExtractor.cs" />
+    <Compile Include="..\..\vostok.commons.environment\Vostok.Commons.Environment\AssemblyTitleParser.cs" Link="Commons\AssemblyTitleParser.cs" />
+    <Compile Include="..\..\vostok.commons.helpers\Vostok.Commons.Helpers\Customization.cs" Link="Commons\Customization.cs" />
+    <Compile Include="..\..\vostok.commons.helpers\Vostok.Commons.Helpers\Disposable\ActionDisposable.cs" Link="Commons\ActionDisposable.cs" />
+    <Compile Include="..\..\vostok.commons.helpers\Vostok.Commons.Helpers\Extensions\TaskExtensions.cs" Link="Commons\TaskExtensions.cs" />
+    <Compile Include="..\..\vostok.commons.helpers\Vostok.Commons.Helpers\Network\FreeTcpPortFinder.cs" Link="Commons\FreeTcpPortFinder.cs" />
+    <Compile Include="..\..\vostok.commons.helpers\Vostok.Commons.Helpers\Observable\CachingObservable.cs" Link="Commons\CachingObservable.cs" />
+    <Compile Include="..\..\vostok.commons.threading\Vostok.Commons.Threading\AtomicBoolean.cs" Link="Commons\AtomicBoolean.cs" />
+    <Compile Include="..\..\vostok.commons.threading\Vostok.Commons.Threading\ThreadPoolState.cs" Link="Commons\ThreadPoolState.cs" />
+    <Compile Include="..\..\vostok.commons.threading\Vostok.Commons.Threading\ThreadPoolUtility.cs" Link="Commons\ThreadPoolUtility.cs" />
+    <Compile Include="..\..\vostok.commons.time\Vostok.Commons.Time\TimeBudget.cs" Link="Commons\TimeBudget.cs" />
+    <Compile Include="..\..\vostok.commons.time\Vostok.Commons.Time\TimeSpanArithmetics.cs" Link="Commons\TimeSpanArithmetics.cs" />
+    <Compile Include="..\..\vostok.commons.time\Vostok.Commons.Time\TimeSpanConversions.cs" Link="Commons\TimeSpanConversions.cs" />
+    <Compile Include="..\..\vostok.commons.time\Vostok.Commons.Time\TimeSpanFormatting.cs" Link="Commons\TimeSpanFormatting.cs" />
+    <Compile Include="..\..\vostok.commons.time\Vostok.Commons.Time\PeriodicalAction.cs" Link="Commons\PeriodicalAction.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Vostok.Hosting">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\vostok.hosting\Vostok.Hosting\bin\Release\$(ReferencesFramework)\Vostok.Hosting.dll</HintPath>
+    </Reference>
+    <Reference Include="Vostok.Applications.AspNetCore">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore\bin\Release\$(ReferencesFramework)\Vostok.Applications.AspNetCore.dll</HintPath>
+    </Reference>
+    <Reference Include="Vostok.Hosting.Abstractions">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\vostok.hosting.abstractions\Vostok.Hosting.Abstractions\bin\Release\$(ReferencesFramework)\Vostok.Hosting.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Vostok.Logging.Microsoft">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\vostok.logging.microsoft\Vostok.Logging.Microsoft\bin\Release\$(ReferencesFramework)\Vostok.Logging.Microsoft.dll</HintPath>
+    </Reference>
+    <Reference Include="Vostok.Logging.Abstractions">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\vostok.logging.abstractions\Vostok.Logging.Abstractions\bin\Release\$(ReferencesFramework)\Vostok.Logging.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Vostok.ServiceDiscovery.Abstractions">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\vostok.servicediscovery.abstractions\Vostok.ServiceDiscovery.Abstractions\bin\Release\$(ReferencesFramework)\Vostok.ServiceDiscovery.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Vostok.ServiceDiscovery">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\vostok.servicediscovery\Vostok.ServiceDiscovery\bin\Release\$(ReferencesFramework)\Vostok.ServiceDiscovery.dll</HintPath>
+    </Reference>
+    <Reference Include="Vostok.Configuration">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\vostok.configuration\Vostok.Configuration\bin\Release\$(ReferencesFramework)\Vostok.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Vostok.Configuration.Abstractions">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\vostok.configuration.abstractions\Vostok.Configuration.Abstractions\bin\Release\$(ReferencesFramework)\Vostok.Configuration.Abstractions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>

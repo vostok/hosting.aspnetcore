@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using Vostok.Commons.Threading;
 using Vostok.Hosting.Abstractions;
 using Vostok.Hosting.AspNetCore.Helpers;
+using Vostok.Hosting.Components.ThreadPool;
 using Vostok.Hosting.Helpers;
 using Vostok.Logging.Abstractions;
 
@@ -16,6 +17,7 @@ internal class VostokHostedService : IHostedService
     private readonly IVostokHostingEnvironment environment;
     private readonly ILog log;
     private readonly VostokComponentsSettings settings;
+    private DynamicThreadPoolTracker? dynamicThreadPool;
 
     public VostokHostedService(
         IHostApplicationLifetime applicationLifetime,
@@ -30,20 +32,21 @@ internal class VostokHostedService : IHostedService
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        // todo (kungurtsev, 24.10.2022): 
-        //var dynamicThreadPool = ConfigureDynamicThreadPool();
+        dynamicThreadPool = ConfigureDynamicThreadPool();
         
         WarmupEnvironment();
 
         applicationLifetime.ApplicationStarted.Register(OnStarted);
         applicationLifetime.ApplicationStopping.Register(OnStopping);
         applicationLifetime.ApplicationStopped.Register(OnStopped);
-
+        
         return Task.CompletedTask;
     }
     
     public Task StopAsync(CancellationToken cancellationToken)
     {
+        dynamicThreadPool?.Dispose();
+        
         return Task.CompletedTask;
     }
 
@@ -55,8 +58,6 @@ internal class VostokHostedService : IHostedService
     private void OnStopping()
     {
         log.Info("Host stopping..");
-
-        //vostokHostShutdown?.Initiate();
     }
 
     private void OnStopped()
@@ -84,17 +85,16 @@ internal class VostokHostedService : IHostedService
             ThreadPoolUtility.Setup(settings.ThreadPoolTuningMultiplier, cpuUnitsLimit.Value);
     }
     
-    // private DynamicThreadPoolTracker ConfigureDynamicThreadPool()
-    // {
-    //     if (settings.ThreadPoolSettingsProvider == null)
-    //         return null;
-    //
-    //     var dynamicThreadPoolTracker = new DynamicThreadPoolTracker(
-    //         settings.ThreadPoolSettingsProvider,
-    //         environment.ConfigurationProvider,
-    //         environment.ApplicationLimits,
-    //         environment.Log);
-    //
-    //     return dynamicThreadPoolTracker;
-    // }
+    private DynamicThreadPoolTracker? ConfigureDynamicThreadPool()
+    {
+        if (settings.ThreadPoolSettingsProvider == null)
+            return null;
+    
+        var dynamicThreadPoolTracker = new DynamicThreadPoolTracker(
+            () => settings.ThreadPoolSettingsProvider(environment.ConfigurationProvider),
+            environment.ApplicationLimits,
+            environment.Log);
+    
+        return dynamicThreadPoolTracker;
+    }
 }
