@@ -63,9 +63,6 @@ internal class VostokHostedService : IHostedService
     private void OnStopped()
     {
         log.Info("Host stopped.");
-
-        //(environment as IDisposable)?.Dispose();
-        // disposableContainer.DoDispose();
     }
     
     private void WarmupEnvironment()
