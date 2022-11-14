@@ -5,6 +5,8 @@ using Microsoft.Extensions.Options;
 using Vostok.Commons.Threading;
 using Vostok.Hosting.Abstractions;
 using Vostok.Hosting.AspNetCore.Helpers;
+using Vostok.Hosting.Components.Diagnostics;
+using Vostok.Hosting.Components.Metrics;
 using Vostok.Hosting.Components.ThreadPool;
 using Vostok.Hosting.Helpers;
 using Vostok.Logging.Abstractions;
@@ -37,8 +39,6 @@ internal class VostokHostedService : IHostedService
         WarmupEnvironment();
 
         applicationLifetime.ApplicationStarted.Register(OnStarted);
-        applicationLifetime.ApplicationStopping.Register(OnStopping);
-        applicationLifetime.ApplicationStopped.Register(OnStopped);
         
         return Task.CompletedTask;
     }
@@ -50,19 +50,27 @@ internal class VostokHostedService : IHostedService
         return Task.CompletedTask;
     }
 
+    // note (kungurtsev, 14.11.2022): is called after Kestrel and Beacon started
     private void OnStarted()
     {
-        log.Info("Host started.");
+        log.Info("Started.");
+        
+        if (settings.DiagnosticMetricsEnabled && environment.HostExtensions.TryGet<IVostokApplicationDiagnostics>(out var diagnostics))
+            HealthTrackerHelper.LaunchPeriodicalChecks(diagnostics);
+
+        if (settings.SendAnnotations)
+            AnnotationsHelper.ReportInitialized(environment.ApplicationIdentity, environment.Metrics.Instance);
+        
+        applicationLifetime.ApplicationStopping.Register(OnStopping);
     }
 
+    // note (kungurtsev, 14.11.2022): is called before Kestrel and Beacon stopped
     private void OnStopping()
     {
-        log.Info("Host stopping..");
-    }
-
-    private void OnStopped()
-    {
-        log.Info("Host stopped.");
+        log.Info("Stopping..");
+        
+        if (settings.SendAnnotations)
+            AnnotationsHelper.ReportStopping(environment.ApplicationIdentity, environment.Metrics.Instance);
     }
     
     private void WarmupEnvironment()
