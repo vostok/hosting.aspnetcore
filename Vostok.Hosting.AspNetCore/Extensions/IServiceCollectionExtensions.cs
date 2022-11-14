@@ -11,6 +11,9 @@ internal static class IServiceCollectionExtensions
     public static void AddVostokLoggerProvider(this IServiceCollection services)
     {
         services.RemoveAll<ILoggerProvider>();
+
+        services.Configure<VostokLoggerProviderSettings>(settings =>
+            settings.IgnoredScopePrefixes = new[] {"Microsoft.AspNetCore"});
         
         services.TryAddEnumerable(ServiceDescriptor.Singleton<ILoggerProvider, VostokLoggerProvider>(serviceProvider =>
             new VostokLoggerProvider(serviceProvider.GetRequiredService<ILog>(), serviceProvider.GetFromOptionsOrDefault<VostokLoggerProviderSettings>())));

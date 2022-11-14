@@ -54,7 +54,8 @@ internal class VostokHostedService : IHostedService
     private void OnStarted()
     {
         log.Info("Started.");
-        
+
+        // todo (kungurtsev, 14.11.2022): replace/integrate with microsoft health checks?
         if (settings.DiagnosticMetricsEnabled && environment.HostExtensions.TryGet<IVostokApplicationDiagnostics>(out var diagnostics))
             HealthTrackerHelper.LaunchPeriodicalChecks(diagnostics);
 
