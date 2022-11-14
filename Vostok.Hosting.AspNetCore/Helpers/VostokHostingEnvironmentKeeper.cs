@@ -6,8 +6,6 @@ internal class VostokHostingEnvironmentKeeper
 {
     public IVostokHostingEnvironment Environment { get; }
 
-    public VostokHostingEnvironmentKeeper(IVostokHostingEnvironment environment)
-    {
+    public VostokHostingEnvironmentKeeper(IVostokHostingEnvironment environment) =>
         Environment = environment;
-    }
 }

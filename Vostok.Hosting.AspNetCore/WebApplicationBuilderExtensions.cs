@@ -19,7 +19,7 @@ public static class WebApplicationBuilderExtensions
     {
         webApplicationBuilder.Services.AddSingleton(services =>
         {
-            var settings = services.GetFromOptionsOrDefault<VostokSettings>();
+            var settings = services.GetFromOptionsOrDefault<VostokComponentsSettings>();
 
             var environmentFactorySettings = new VostokHostingEnvironmentFactorySettings
             {

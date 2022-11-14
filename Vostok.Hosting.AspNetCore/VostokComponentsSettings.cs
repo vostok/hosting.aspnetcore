@@ -9,7 +9,7 @@ using Vostok.Hosting.Components.ThreadPool;
 namespace Vostok.Hosting.AspNetCore;
 
 [PublicAPI]
-public class VostokSettings
+public class VostokComponentsSettings
 {
     /// <inheritdoc cref="VostokHostSettings.ConfigureStaticProviders"/>
     public bool ConfigureStaticProviders { get; set; } = true;
