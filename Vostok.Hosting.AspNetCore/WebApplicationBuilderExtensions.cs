@@ -12,7 +12,7 @@ namespace Vostok.Hosting.AspNetCore;
 [PublicAPI]
 public static class WebApplicationBuilderExtensions
 {
-    public static void SetupVostok(
+    public static void AddVostok(
         this WebApplicationBuilder webApplicationBuilder,
         VostokHostingEnvironmentSetup setupEnvironment
     )
