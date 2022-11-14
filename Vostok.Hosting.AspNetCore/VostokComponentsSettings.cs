@@ -17,6 +17,7 @@ public class VostokComponentsSettings
     /// <inheritdoc cref="VostokHostSettings.ConfigureThreadPool"/>
     public bool ConfigureThreadPool { get; set; } = true;
 
+    // todo (kungurtsev, 14.11.2022): get VostokHostingEnvironmentWarmupSettings from container?
     /// <inheritdoc cref="VostokHostingEnvironmentWarmupSettings"/>
     public VostokHostingEnvironmentWarmupSettings EnvironmentWarmupSettings { get; set; } = new();
     
@@ -38,6 +39,7 @@ public class VostokComponentsSettings
     /// <inheritdoc cref="VostokHostSettings.ThreadPoolTuningMultiplier"/>
     public int ThreadPoolTuningMultiplier { get; set; } = ThreadPoolConstants.DefaultThreadPoolMultiplier;
 
+    // todo (kungurtsev, 14.11.2022): get ThreadPoolSettings from container?
     /// <inheritdoc cref="VostokHostSettings.ThreadPoolSettingsProvider"/>
     public Func<IConfigurationProvider, ThreadPoolSettings>? ThreadPoolSettingsProvider { get; set; }
     

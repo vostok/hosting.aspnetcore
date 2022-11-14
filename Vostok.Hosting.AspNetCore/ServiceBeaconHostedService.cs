@@ -100,9 +100,7 @@ internal class ServiceBeaconHostedService : IHostedService
         }
 
         if (addresses.Any() || urls?.Any() == true)
-        {
             throw new NotImplementedException("Dynamic configuration of Sevice beacon is not currently supported. Please configure port explicitly during Vostok environment setup.");
-        }
     }
 
     private static bool HasAddress(IEnumerable<string>? urls, Uri expectedUrl)
