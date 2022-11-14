@@ -44,9 +44,13 @@ public static class WebApplicationBuilderExtensions
 
         webApplicationBuilder.Services.AddVostokEnvironmentComponents(
             serviceProvider => serviceProvider.GetRequiredService<VostokHostingEnvironmentKeeper>().Environment);
+        
         webApplicationBuilder.Services.AddVostokLoggerProvider();
 
+        // todo (kungurtsev, 14.11.2022): deal with configuration
+
         webApplicationBuilder.Services.AddHostedService<VostokHostedService>();
+        // todo (kungurtsev, 14.11.2022): what if we need to run some service before ServiceBeaconHostedService?
         webApplicationBuilder.Services.AddHostedService<ServiceBeaconHostedService>();
 
         webApplicationBuilder.Services.AddHealthChecks();
