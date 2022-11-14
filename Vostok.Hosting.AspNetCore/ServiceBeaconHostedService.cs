@@ -49,28 +49,19 @@ internal class ServiceBeaconHostedService : IHostedService
         return Task.CompletedTask; 
     }
 
+    // note (kungurtsev, 14.11.2022): is called after Kestrel started
     private void OnStarted()
     {
         serviceBeacon.Start();
 
         WaitForServiceBeaconRegistrationIfNeeded();
-
-        // todo (kungurtsev, 24.10.2022): 
-        // if (settings.DiagnosticMetricsEnabled)
-        // {
-        //     if (environment.Diagnostics.HealthTracker is HealthTracker healthTracker)
-        //         healthTracker.LaunchPeriodicalChecks(environment.ShutdownToken);
-        //     else
-        //         log.Warn($"Provided {nameof(IHealthTracker)} instance is of unknown type {environment.Diagnostics.HealthTracker.GetType().Name}, unable to launch periodical health checks.");
-        // }
-
-        // todo (kungurtsev, 24.10.2022): 
-        // if (settings.SendAnnotations)
-        //     AnnotationsHelper.ReportInitialized(environment.ApplicationIdentity, environment.Metrics.Instance);
     }
 
+    // note (kungurtsev, 14.11.2022): is called before Kestrel stopped
     private void OnStopping()
     {
+        log.Info("Stopping..");
+
         serviceBeacon.Stop();
     }
 

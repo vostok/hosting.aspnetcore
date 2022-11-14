@@ -85,5 +85,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\vostok.configuration.abstractions\Vostok.Configuration.Abstractions\bin\Release\$(ReferencesFramework)\Vostok.Configuration.Abstractions.dll</HintPath>
     </Reference>
+    <Reference Include="Vostok.Metrics">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\vostok.metrics\Vostok.Metrics\bin\Release\$(ReferencesFramework)\Vostok.Metrics.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>
