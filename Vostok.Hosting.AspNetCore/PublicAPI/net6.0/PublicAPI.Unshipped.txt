@@ -14,7 +14,7 @@ Vostok.Hosting.AspNetCore.VostokSettings.DiagnosticMetricsEnabled.get -> bool
 Vostok.Hosting.AspNetCore.VostokSettings.DiagnosticMetricsEnabled.set -> void
 Vostok.Hosting.AspNetCore.VostokSettings.DisposeComponentTimeout.get -> System.TimeSpan
 Vostok.Hosting.AspNetCore.VostokSettings.DisposeComponentTimeout.set -> void
-Vostok.Hosting.AspNetCore.VostokSettings.EnvironmentWarmupSettings.get -> Vostok.Hosting.VostokHostingEnvironmentWarmupSettings!
+Vostok.Hosting.AspNetCore.VostokSettings.EnvironmentWarmupSettings.get -> VostokHostingEnvironmentWarmupSettings!
 Vostok.Hosting.AspNetCore.VostokSettings.EnvironmentWarmupSettings.set -> void
 Vostok.Hosting.AspNetCore.VostokSettings.SendAnnotations.get -> bool
 Vostok.Hosting.AspNetCore.VostokSettings.SendAnnotations.set -> void
