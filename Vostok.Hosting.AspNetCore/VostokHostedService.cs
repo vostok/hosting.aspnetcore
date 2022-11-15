@@ -17,7 +17,7 @@ internal class VostokHostedService : IHostedService
 {
     private readonly IHostApplicationLifetime applicationLifetime;
     private readonly IVostokHostingEnvironment environment;
-    private readonly ILog log;
+    private readonly ILog log; // review: ILogger<T> ?
     private readonly VostokComponentsSettings settings;
     private DynamicThreadPoolTracker? dynamicThreadPool;
 

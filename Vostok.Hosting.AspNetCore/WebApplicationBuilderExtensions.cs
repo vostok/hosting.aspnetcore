@@ -19,6 +19,15 @@ public static class WebApplicationBuilderExtensions
     {
         webApplicationBuilder.Services.AddSingleton(services =>
         {
+            // review: While it's possible to configure VostokComponentsSettings using .Configure<T>(...) call
+            //         current method's api doesn't lead developer doing so as knowledge of existing of such type can only be
+            //         obtained from the source code. I think it would be useful to include it in a typical way
+            //         (via optional Action<T> and calling the Configure<T>(action) internally)
+            //
+            //         It's typical for lots of MS apis and other libraries — check almost any Add* method from ASP.NET Core
+            //         it most likely will have an overload of any method accepting Action<T> for configuration as it leads
+            //         to library api being easily explorable. 
+            //         Another example is returning some sort of builder like IMvcBuilder (AddControllers)
             var settings = services.GetFromOptionsOrDefault<VostokComponentsSettings>();
 
             var environmentFactorySettings = new VostokHostingEnvironmentFactorySettings
@@ -30,6 +39,7 @@ public static class WebApplicationBuilderExtensions
                 SetupShutdownSupported = false
             };
 
+            // review: Looks like this code is also included in VostokHostedService.ConfigureHostBeforeRun. Is it intentional?
             if (settings.ConfigureThreadPool)
                 ThreadPoolUtility.Setup(settings.ThreadPoolTuningMultiplier);
             
@@ -37,8 +47,13 @@ public static class WebApplicationBuilderExtensions
                 setupEnvironment,
                 environmentFactorySettings);
 
+            // review: I would prefer to create some kind of decorator over IVostokHostingEnvironment throwing when calling unsupported
+            //         properties. It would be confusing for some developers not to be able to use vostok env in reverse compatible way
+            //         But I don't have a firm stance on this maybe current way is better
+
             // note (kungurtsev, 14.11.2022): do not register IVostokHostingEnvironment
             // to prevent usage of ShutdownToken, ShutdownTimeout and Port
+            
             return new VostokHostingEnvironmentKeeper(environment);
         });
 
@@ -47,6 +62,7 @@ public static class WebApplicationBuilderExtensions
         
         webApplicationBuilder.Services.AddVostokLoggerProvider();
 
+        // review: Put my thought in "WebApplication1" :) will also try to think about possible solution
         // todo (kungurtsev, 14.11.2022): deal with configuration
 
         webApplicationBuilder.Services.AddHostedService<VostokHostedService>();
