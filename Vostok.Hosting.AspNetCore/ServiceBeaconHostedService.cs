@@ -21,7 +21,7 @@ internal class ServiceBeaconHostedService : IHostedService
     private readonly IServiceBeacon serviceBeacon;
     private readonly IServer server;
     private readonly IConfiguration configuration;
-    private readonly ILog log;
+    private readonly ILog log; // review: ILogger<T>
     private readonly VostokComponentsSettings settings;
 
     public ServiceBeaconHostedService(IHostApplicationLifetime applicationLifetime, IServiceBeacon serviceBeacon, IServer server, IConfiguration configuration, ILog log, IOptions<VostokComponentsSettings> settings)
@@ -91,6 +91,7 @@ internal class ServiceBeaconHostedService : IHostedService
         }
 
         if (addresses.Any() || urls?.Any() == true)
+            // review: typo - 'Service'
             throw new NotImplementedException("Dynamic configuration of Sevice beacon is not currently supported. Please configure port explicitly during Vostok environment setup.");
     }
 
