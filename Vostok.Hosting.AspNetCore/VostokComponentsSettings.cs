@@ -52,6 +52,7 @@ public class VostokComponentsSettings
     //         Or create some kind of IVostokBeforeInit and inject IEnumerable<IVostokBeforeInit>
     //         
     //         BTW as I can see IVostokHostingEnvironment is being exposed here but in other parts of code it hidden via VostokHostingEnvironmentKeeper
+    // todo (kungurtsev, 23.11.2022): probably we should delete it at all
     /// <inheritdoc cref="VostokHostSettings.BeforeInitializeApplication"/>
     public List<Action<IVostokHostingEnvironment>> BeforeInitializeApplication { get; set; } = new();
 }
