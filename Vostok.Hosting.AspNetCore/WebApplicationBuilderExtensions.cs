@@ -1,3 +1,4 @@
+using System;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,20 +14,15 @@ public static class WebApplicationBuilderExtensions
 {
     public static void AddVostok(
         this WebApplicationBuilder webApplicationBuilder,
-        VostokHostingEnvironmentSetup setupEnvironment
+        VostokHostingEnvironmentSetup setupEnvironment,
+        Action<VostokComponentsSettings>? setupComponentsSettings = null
     )
     {
+        if (setupComponentsSettings != null)
+            webApplicationBuilder.Services.Configure(setupComponentsSettings);
+        
         webApplicationBuilder.Services.AddSingleton(services =>
         {
-            // review: While it's possible to configure VostokComponentsSettings using .Configure<T>(...) call
-            //         current method's api doesn't lead developer doing so as knowledge of existing of such type can only be
-            //         obtained from the source code. I think it would be useful to include it in a typical way
-            //         (via optional Action<T> and calling the Configure<T>(action) internally)
-            //
-            //         It's typical for lots of MS apis and other libraries — check almost any Add* method from ASP.NET Core
-            //         it most likely will have an overload of any method accepting Action<T> for configuration as it leads
-            //         to library api being easily explorable. 
-            //         Another example is returning some sort of builder like IMvcBuilder (AddControllers)
             var settings = services.GetFromOptionsOrDefault<VostokComponentsSettings>();
 
             var environmentFactorySettings = new VostokHostingEnvironmentFactorySettings
