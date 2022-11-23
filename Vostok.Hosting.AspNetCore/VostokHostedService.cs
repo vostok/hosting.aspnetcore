@@ -1,15 +1,14 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Vostok.Commons.Threading;
 using Vostok.Hosting.Abstractions;
-using Vostok.Hosting.AspNetCore.Helpers;
 using Vostok.Hosting.Components.Diagnostics;
 using Vostok.Hosting.Components.Metrics;
 using Vostok.Hosting.Components.ThreadPool;
 using Vostok.Hosting.Helpers;
-using Vostok.Logging.Abstractions;
 
 namespace Vostok.Hosting.AspNetCore;
 
@@ -17,19 +16,20 @@ internal class VostokHostedService : IHostedService
 {
     private readonly IHostApplicationLifetime applicationLifetime;
     private readonly IVostokHostingEnvironment environment;
-    private readonly ILog log;
+    private readonly ILogger logger;
     private readonly VostokComponentsSettings settings;
     private DynamicThreadPoolTracker? dynamicThreadPool;
 
     public VostokHostedService(
         IHostApplicationLifetime applicationLifetime,
-        VostokHostingEnvironmentKeeper environment,
+        IVostokHostingEnvironment environment,
+        ILogger<VostokHostedService> logger,
         IOptions<VostokComponentsSettings> settings)
     {
         this.applicationLifetime = applicationLifetime;
-        this.environment = environment.Environment;
+        this.environment = environment;
         this.settings = settings.Value;
-        log = this.environment.Log.ForContext<VostokHostedService>();
+        this.logger = logger;
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
@@ -53,7 +53,7 @@ internal class VostokHostedService : IHostedService
     // note (kungurtsev, 14.11.2022): is called after Kestrel and Beacon started
     private void OnStarted()
     {
-        log.Info("Started.");
+        logger.LogInformation("Started.");
 
         // todo (kungurtsev, 14.11.2022): replace/integrate with microsoft health checks?
         if (settings.DiagnosticMetricsEnabled && environment.HostExtensions.TryGet<IVostokApplicationDiagnostics>(out var diagnostics))
@@ -68,7 +68,7 @@ internal class VostokHostedService : IHostedService
     // note (kungurtsev, 14.11.2022): is called before Kestrel and Beacon stopped
     private void OnStopping()
     {
-        log.Info("Stopping..");
+        logger.LogInformation("Stopping..");
         
         if (settings.SendAnnotations)
             AnnotationsHelper.ReportStopping(environment.ApplicationIdentity, environment.Metrics.Instance);

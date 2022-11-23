@@ -17,7 +17,6 @@ public class VostokComponentsSettings
     /// <inheritdoc cref="VostokHostSettings.ConfigureThreadPool"/>
     public bool ConfigureThreadPool { get; set; } = true;
 
-    // todo (kungurtsev, 14.11.2022): get VostokHostingEnvironmentWarmupSettings from container?
     /// <inheritdoc cref="VostokHostingEnvironmentWarmupSettings"/>
     public VostokHostingEnvironmentWarmupSettings EnvironmentWarmupSettings { get; set; } = new();
     
@@ -39,10 +38,22 @@ public class VostokComponentsSettings
     /// <inheritdoc cref="VostokHostSettings.ThreadPoolTuningMultiplier"/>
     public int ThreadPoolTuningMultiplier { get; set; } = ThreadPoolConstants.DefaultThreadPoolMultiplier;
 
+    // review: I think it kinda doesn't fit here (rest of the settings are cold, and this one is hot)
+    //         A better solution would be to use IOptionsMonitor<TSettings> in hosted service and configure it in
+    //         Conventional way using Configure(options.GetSection(...))
+    // cr (kungurtsev, 23.11.2022): not sure it's possible, will check later after houston integration
     // todo (kungurtsev, 14.11.2022): get ThreadPoolSettings from container?
     /// <inheritdoc cref="VostokHostSettings.ThreadPoolSettingsProvider"/>
     public Func<IConfigurationProvider, ThreadPoolSettings>? ThreadPoolSettingsProvider { get; set; }
     
+    // review: IServiceProvider is already available when this list is being enumerated in hosted service.
+    //         It's not rare for applications to warmup drivers for databases / client to another services.
+    //         I think this code should forward service provider as an argument alongside vostok env as an extra argument
+    //         or via some kind of "context" (e.g. HostBuilderContext) allowing to painlessly extend in future
+    //         Or create some kind of IVostokBeforeInit and inject IEnumerable<IVostokBeforeInit>
+    //         
+    //         BTW as I can see IVostokHostingEnvironment is being exposed here but in other parts of code it hidden via VostokHostingEnvironmentKeeper
+    // todo (kungurtsev, 23.11.2022): probably we should delete it at all
     /// <inheritdoc cref="VostokHostSettings.BeforeInitializeApplication"/>
     public List<Action<IVostokHostingEnvironment>> BeforeInitializeApplication { get; set; } = new();
 }
