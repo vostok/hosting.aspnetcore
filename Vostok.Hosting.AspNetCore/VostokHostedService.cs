@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Vostok.Commons.Threading;
 using Vostok.Hosting.Abstractions;
-using Vostok.Hosting.AspNetCore.Helpers;
 using Vostok.Hosting.Components.Diagnostics;
 using Vostok.Hosting.Components.Metrics;
 using Vostok.Hosting.Components.ThreadPool;
@@ -23,12 +22,12 @@ internal class VostokHostedService : IHostedService
 
     public VostokHostedService(
         IHostApplicationLifetime applicationLifetime,
-        VostokHostingEnvironmentKeeper environment,
+        IVostokHostingEnvironment environment,
         ILogger<VostokHostedService> logger,
         IOptions<VostokComponentsSettings> settings)
     {
         this.applicationLifetime = applicationLifetime;
-        this.environment = environment.Environment;
+        this.environment = environment;
         this.settings = settings.Value;
         this.logger = logger;
     }

@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Vostok.Applications.AspNetCore.Helpers;
 using Vostok.Commons.Threading;
 using Vostok.Hosting.AspNetCore.Extensions;
-using Vostok.Hosting.AspNetCore.Helpers;
 using Vostok.Hosting.Setup;
 
 namespace Vostok.Hosting.AspNetCore;
@@ -47,18 +46,10 @@ public static class WebApplicationBuilderExtensions
                 setupEnvironment,
                 environmentFactorySettings);
 
-            // review: I would prefer to create some kind of decorator over IVostokHostingEnvironment throwing when calling unsupported
-            //         properties. It would be confusing for some developers not to be able to use vostok env in reverse compatible way
-            //         But I don't have a firm stance on this maybe current way is better
-
-            // note (kungurtsev, 14.11.2022): do not register IVostokHostingEnvironment
-            // to prevent usage of ShutdownToken, ShutdownTimeout and Port
-            
-            return new VostokHostingEnvironmentKeeper(environment);
+            return environment;
         });
 
-        webApplicationBuilder.Services.AddVostokEnvironmentComponents(
-            serviceProvider => serviceProvider.GetRequiredService<VostokHostingEnvironmentKeeper>().Environment);
+        webApplicationBuilder.Services.AddVostokEnvironmentComponents();
         
         webApplicationBuilder.Services.AddVostokLoggerProvider();
 
