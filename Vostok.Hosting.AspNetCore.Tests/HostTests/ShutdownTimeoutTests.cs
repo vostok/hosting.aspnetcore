@@ -34,8 +34,22 @@ internal class ShutdownTimeoutTests : TestsBase
     }
     
     [Test]
+    public void Should_not_allow_to_use_shutdown_timeout()
+    {
+        var environment = WebApplication.Services.GetRequiredService<IVostokHostingEnvironment>();
+        new Action(() => Console.WriteLine(environment.ShutdownTimeout)).Should().Throw<NotSupportedException>();
+    }
+    
+    [Test]
     public void Should_not_allow_to_change_shutdown_token()
     {
+    }
+    
+    [Test]
+    public void Should_not_allow_to_use_shutdown_token()
+    {
+        var environment = WebApplication.Services.GetRequiredService<IVostokHostingEnvironment>();
+        new Action(() => Console.WriteLine(environment.ShutdownToken)).Should().Throw<NotSupportedException>();
     }
     
     protected override void SetupGlobal(IVostokHostingEnvironmentBuilder builder)
