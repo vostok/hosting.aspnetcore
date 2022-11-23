@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Vostok.Hosting.AspNetCore.Extensions;
-using Vostok.Logging.Abstractions;
 using Vostok.ServiceDiscovery;
 using Vostok.ServiceDiscovery.Abstractions;
 
@@ -21,16 +21,16 @@ internal class ServiceBeaconHostedService : IHostedService
     private readonly IServiceBeacon serviceBeacon;
     private readonly IServer server;
     private readonly IConfiguration configuration;
-    private readonly ILog log; // review: ILogger<T>
+    private readonly ILogger logger;
     private readonly VostokComponentsSettings settings;
 
-    public ServiceBeaconHostedService(IHostApplicationLifetime applicationLifetime, IServiceBeacon serviceBeacon, IServer server, IConfiguration configuration, ILog log, IOptions<VostokComponentsSettings> settings)
+    public ServiceBeaconHostedService(IHostApplicationLifetime applicationLifetime, IServiceBeacon serviceBeacon, IServer server, IConfiguration configuration, ILogger<ServiceBeaconHostedService> logger, IOptions<VostokComponentsSettings> settings)
     {
         this.applicationLifetime = applicationLifetime;
         this.serviceBeacon = serviceBeacon;
         this.server = server;
         this.configuration = configuration;
-        this.log = log.ForContext<ServiceBeaconHostedService>();
+        this.logger = logger;
         this.settings = settings.Value;
     }
 
@@ -60,7 +60,7 @@ internal class ServiceBeaconHostedService : IHostedService
     // note (kungurtsev, 14.11.2022): is called before Kestrel stopped
     private void OnStopping()
     {
-        log.Info("Stopping..");
+        logger.LogInformation("Stopping..");
 
         serviceBeacon.Stop();
     }
@@ -86,7 +86,7 @@ internal class ServiceBeaconHostedService : IHostedService
         {
             if (!HasAddress(addresses, serviceBeaconUrl) && !HasAddress(urls, serviceBeaconUrl))
                 addresses.Add($"{serviceBeaconUrl.Scheme}://*:{serviceBeaconUrl.Port}/");
-            log.Info("Using url provided in Service beacon: '{Url}'.", serviceBeaconUrl);
+            logger.LogInformation("Using url provided in Service beacon: '{Url}'.", serviceBeaconUrl);
             return;
         }
 
