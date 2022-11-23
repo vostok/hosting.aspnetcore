@@ -15,7 +15,6 @@ var builder = WebApplication.CreateBuilder(args);
 //         Seems to be the only serious problem ATM. I'll think more about it later
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
