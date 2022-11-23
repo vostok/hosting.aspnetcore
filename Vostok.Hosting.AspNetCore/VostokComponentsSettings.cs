@@ -17,9 +17,6 @@ public class VostokComponentsSettings
     /// <inheritdoc cref="VostokHostSettings.ConfigureThreadPool"/>
     public bool ConfigureThreadPool { get; set; } = true;
 
-    // review: I think it's good as is. Nested properties are fine and kinda easier to use as one can discover them
-    //         from top level of service collection extensions (Action<T> overload for AddX methods)
-    // todo (kungurtsev, 14.11.2022): get VostokHostingEnvironmentWarmupSettings from container?
     /// <inheritdoc cref="VostokHostingEnvironmentWarmupSettings"/>
     public VostokHostingEnvironmentWarmupSettings EnvironmentWarmupSettings { get; set; } = new();
     
