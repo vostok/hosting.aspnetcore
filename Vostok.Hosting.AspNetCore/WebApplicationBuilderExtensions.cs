@@ -35,6 +35,7 @@ public static class WebApplicationBuilderExtensions
             };
 
             // review: Looks like this code is also included in VostokHostedService.ConfigureHostBeforeRun. Is it intentional?
+            // cr (kungurtsev, 23.11.2022): yes, here we tune it with defaults without knowledge of cpu limits
             if (settings.ConfigureThreadPool)
                 ThreadPoolUtility.Setup(settings.ThreadPoolTuningMultiplier);
             

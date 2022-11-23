@@ -21,6 +21,7 @@ builder.Services.AddSwaggerGen();
 
 // review: How integration with Houston should look like at this point?
 //         Overload without a delegate?
+// cr (kungurtsev, 23.11.2022): probably it will be AddHouston instead of this one
 builder.AddVostok(SetupVostok);
 
 var app = builder.Build();
