@@ -281,4 +281,7 @@
       <HintPath>..\..\vostok.zookeeper.recipes\Vostok.ZooKeeper.Recipes\bin\Release\net6.0\Vostok.ZooKeeper.Recipes.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\Debug\net6.0\logs\log" />
+  </ItemGroup>
 </Project>
