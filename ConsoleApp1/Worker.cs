@@ -15,7 +15,7 @@ public class Worker : BackgroundService
     {
         Console.WriteLine("Hello world!");
 
-        await Task.Delay(5000);
+        await Task.Delay(4000);
         
         _host.StopAsync();
     }
