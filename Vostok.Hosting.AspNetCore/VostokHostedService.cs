@@ -79,9 +79,6 @@ internal class VostokHostedService : IHostedService
         ConfigureHostBeforeRun();
 
         environment.Warmup(settings.EnvironmentWarmupSettings);
-
-        foreach (var action in settings.BeforeInitializeApplication)
-            action(environment);
     }
     
     private void ConfigureHostBeforeRun()
