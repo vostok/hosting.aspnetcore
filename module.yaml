@@ -27,6 +27,7 @@ notests *default:
 
 full-build > notests:
   deps:
+    - vostok.hosting.houston@hosting-aspnetcore
     - -vostok.devtools
     - vostok.devtools@with-net6.0
     - -vostok.applications.aspnetcore@hosting-aspnetcore/v6_0
