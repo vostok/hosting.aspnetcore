@@ -1,12 +1,14 @@
 ﻿using ConsoleApp1;
-using Vostok.Hosting.AspNetCore;
+using Vostok.Hosting.AspNetCore.Houston;
+using Vostok.Hosting.Houston.Configuration;
 using Vostok.Hosting.Kontur;
 using Vostok.Hosting.Setup;
 using Vostok.Logging.File.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddVostok(SetupVostok);
+//builder.AddVostok(SetupVostok);
+builder.AddHouston(SetupHouston);
 
 builder.Services.AddHostedService<Worker>();
 
@@ -14,12 +16,37 @@ var app = builder.Build();
 
 app.Run();
 
+void SetupHouston(IHostingConfiguration configuration)
+{
+    configuration.Everywhere.SetupEnvironment(builder =>
+    {
+        builder.SetupApplicationIdentity(identity =>
+        {
+            identity.SetProject("Vostok");
+            identity.SetSubproject("Test");
+            identity.SetApplication("AspNetCoreHostingConsole");
+            identity.SetEnvironment("dev");
+        });
+    });
+
+    configuration.OutOfHouston.SetupEnvironment(builder =>
+    {
+        builder.SetupLog(log =>
+        {
+            log.SetupConsoleLog();
+            log.SetupFileLog(fileLog => fileLog.CustomizeSettings(
+                fileLogSettings => fileLogSettings.FileOpenMode = FileOpenMode.Rewrite));
+        });
+    });
+}
+
 void SetupVostok(IVostokHostingEnvironmentBuilder builder)
 {
     builder.SetupApplicationIdentity(identity =>
     {
         identity.SetProject("Vostok");
-        identity.SetApplication("TestAspNetCoreConsoleHosting");
+        identity.SetSubproject("Test");
+        identity.SetApplication("AspNetCoreHostingConsole");
         identity.SetEnvironment("dev");
     });
 

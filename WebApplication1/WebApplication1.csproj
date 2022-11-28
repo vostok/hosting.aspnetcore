@@ -4,14 +4,25 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <PackageId>Vostok.Test.AspNetCoreHostingApi</PackageId>
+    <VersionPrefix>1.0</VersionPrefix>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Vostok.Hosting.AspNetCore.Houston\Vostok.Hosting.AspNetCore.Houston.csproj" />
     <ProjectReference Include="..\Vostok.Hosting.AspNetCore\Vostok.Hosting.AspNetCore.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Vostok.Hosting.Houston">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\vostok.hosting.houston\Vostok.Hosting.Houston\bin\Release\netstandard2.0\Vostok.Hosting.Houston.dll</HintPath>
+    </Reference>
+    <Reference Include="Vostok.Hosting.Houston.Abstractions">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\vostok.hosting.houston.abstractions\Vostok.Hosting.Houston.Abstractions\bin\Release\netstandard2.0\Vostok.Hosting.Houston.Abstractions.dll</HintPath>
+    </Reference>
     <Reference Include="Vostok.Core.App.Kontur">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\vostok.core.app.kontur\Vostok.Core.App.Kontur\bin\Release\net6.0\Vostok.Core.App.Kontur.dll</HintPath>

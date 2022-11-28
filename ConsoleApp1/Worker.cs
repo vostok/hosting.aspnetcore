@@ -13,10 +13,12 @@ public class Worker : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        Console.WriteLine("Hello world!");
+        while (!stoppingToken.IsCancellationRequested)
+        {
+            _logger.LogInformation("Working..");
+            await Task.Delay(1000, stoppingToken);
+        }
 
-        await Task.Delay(4000);
-        
-        _host.StopAsync();
+        //_host.StopAsync();
     }
 }

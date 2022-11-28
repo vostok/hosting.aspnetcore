@@ -1,4 +1,6 @@
 using Vostok.Hosting.AspNetCore;
+using Vostok.Hosting.AspNetCore.Houston;
+using Vostok.Hosting.Houston.Configuration;
 using Vostok.Hosting.Kontur;
 using Vostok.Hosting.Setup;
 using Vostok.Logging.File.Configuration;
@@ -21,7 +23,8 @@ builder.Services.AddSwaggerGen();
 // review: How integration with Houston should look like at this point?
 //         Overload without a delegate?
 // cr (kungurtsev, 23.11.2022): probably it will be AddHouston instead of this one
-builder.AddVostok(SetupVostok);
+//builder.AddVostok(SetupVostok);
+builder.AddHouston(SetupHouston);
 
 var app = builder.Build();
 
@@ -40,12 +43,39 @@ app.MapControllers();
 
 app.Run();
 
+void SetupHouston(IHostingConfiguration configuration)
+{
+    configuration.Everywhere.SetupEnvironment(builder =>
+    {
+        builder.SetupApplicationIdentity(identity =>
+        {
+            identity.SetProject("Vostok");
+            identity.SetSubproject("Test");
+            identity.SetApplication("AspNetCoreHostingApi");
+            identity.SetEnvironment("dev");
+        });
+    });
+
+    configuration.OutOfHouston.SetupEnvironment(builder =>
+    {
+        builder.SetupLog(log =>
+        {
+            log.SetupConsoleLog();
+            log.SetupFileLog(fileLog => fileLog.CustomizeSettings(
+                fileLogSettings => fileLogSettings.FileOpenMode = FileOpenMode.Rewrite));
+        });
+        
+        builder.SetPort(5134);
+    });
+}
+
 void SetupVostok(IVostokHostingEnvironmentBuilder builder)
 {
     builder.SetupApplicationIdentity(identity =>
     {
         identity.SetProject("Vostok");
-        identity.SetApplication("TestAspNetCoreHosting");
+        identity.SetSubproject("Test");
+        identity.SetApplication("AspNetCoreHostingApi");
         identity.SetEnvironment("dev");
     });
 

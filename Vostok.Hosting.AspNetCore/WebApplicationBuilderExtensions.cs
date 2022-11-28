@@ -14,12 +14,12 @@ public static class WebApplicationBuilderExtensions
 {
     public static void AddVostok(
         this WebApplicationBuilder webApplicationBuilder,
-        VostokHostingEnvironmentSetup setupEnvironment,
-        Action<VostokComponentsSettings>? setupComponentsSettings = null
+        VostokHostingEnvironmentSetup environmentSetup,
+        Action<VostokComponentsSettings>? componentsSettingsSetup = null
     )
     {
-        if (setupComponentsSettings != null)
-            webApplicationBuilder.Services.Configure(setupComponentsSettings);
+        if (componentsSettingsSetup != null)
+            webApplicationBuilder.Services.Configure(componentsSettingsSetup);
         
         webApplicationBuilder.Services.AddSingleton(services =>
         {
@@ -40,7 +40,7 @@ public static class WebApplicationBuilderExtensions
                 ThreadPoolUtility.Setup(settings.ThreadPoolTuningMultiplier);
             
             var environment = VostokHostingEnvironmentFactory.Create(
-                setupEnvironment,
+                environmentSetup,
                 environmentFactorySettings);
 
             return environment;
@@ -57,5 +57,7 @@ public static class WebApplicationBuilderExtensions
         webApplicationBuilder.Services.AddHostedService<ServiceBeaconHostedService>();
 
         webApplicationBuilder.Services.AddHealthChecks();
+
+        // todo (kungurtsev, 28.11.2022): configure kontur static providers without BeforeInitializeApplication
     }
 }
