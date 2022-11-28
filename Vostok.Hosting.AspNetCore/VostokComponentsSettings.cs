@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using JetBrains.Annotations;
 using Vostok.Commons.Time;
 using Vostok.Configuration.Abstractions;
-using Vostok.Hosting.Abstractions;
 using Vostok.Hosting.Components.ThreadPool;
 
 namespace Vostok.Hosting.AspNetCore;
