@@ -66,4 +66,7 @@
             <HintPath>..\..\vostok.metrics\Vostok.Metrics\bin\Release\$(ReferencesFramework)\Vostok.Metrics.dll</HintPath>
         </Reference>
     </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Vostok.Hosting.AspNetCore\Vostok.Hosting.AspNetCore.csproj" />
+    </ItemGroup>
 </Project>
