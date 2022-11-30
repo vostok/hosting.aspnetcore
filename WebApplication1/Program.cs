@@ -1,4 +1,3 @@
-using Vostok.Hosting.AspNetCore;
 using Vostok.Hosting.AspNetCore.Houston;
 using Vostok.Hosting.Houston.Configuration;
 using Vostok.Hosting.Kontur;
