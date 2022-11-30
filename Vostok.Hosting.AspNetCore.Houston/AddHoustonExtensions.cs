@@ -11,7 +11,7 @@ using Vostok.Hosting.Houston.Configuration;
 namespace Vostok.Hosting.AspNetCore.Houston;
 
 [PublicAPI]
-public static class WebApplicationBuilderExtensions
+public static class AddHoustonExtensions
 {
     public static void AddHouston(
         this WebApplicationBuilder webApplicationBuilder,
@@ -19,9 +19,9 @@ public static class WebApplicationBuilderExtensions
         webApplicationBuilder.Services.AddHouston(userSetup);
     
     public static void AddHouston(
-        this IHostBuilder webApplicationBuilder,
+        this IHostBuilder hostBuilder,
         Action<IHostingConfiguration> userSetup) =>
-        webApplicationBuilder.ConfigureServices(serviceCollection => 
+        hostBuilder.ConfigureServices(serviceCollection => 
             serviceCollection.AddHouston(userSetup));
     
     public static void AddHouston(

@@ -19,12 +19,12 @@ internal class ServiceBeaconHostedService : IHostedService
 {
     private readonly IHostApplicationLifetime applicationLifetime;
     private readonly IServiceBeacon serviceBeacon;
-    private readonly IServer server;
+    private readonly IServer? server;
     private readonly IConfiguration configuration;
     private readonly ILog log;
     private readonly VostokComponentsSettings settings;
 
-    public ServiceBeaconHostedService(IHostApplicationLifetime applicationLifetime, IServiceBeacon serviceBeacon, IServer server, IConfiguration configuration, ILog log, IOptions<VostokComponentsSettings> settings)
+    public ServiceBeaconHostedService(IHostApplicationLifetime applicationLifetime, IServiceBeacon serviceBeacon, IConfiguration configuration, ILog log, IOptions<VostokComponentsSettings> settings, IServer? server = null)
     {
         this.applicationLifetime = applicationLifetime;
         this.serviceBeacon = serviceBeacon;
@@ -76,21 +76,21 @@ internal class ServiceBeaconHostedService : IHostedService
     
     private void ValidateAddresses()
     {
-        var addresses = server.TryGetAddresses();
-        if (addresses == null)
-            return;
-        
-        var urls = configuration[WebHostDefaults.ServerUrlsKey]?.Split(';');
+        var addresses = server?.TryGetAddresses();
+        var urls = configuration[WebHostDefaults.ServerUrlsKey]?.Split(';', StringSplitOptions.RemoveEmptyEntries);
         
         if (serviceBeacon.ReplicaInfo.TryGetUrl(out var serviceBeaconUrl))
         {
+            if (addresses == null)
+                throw new Exception($"Service beacon url '{serviceBeaconUrl}' is incompatible with Generic host.");
+            
             if (!HasAddress(addresses, serviceBeaconUrl) && !HasAddress(urls, serviceBeaconUrl))
                 addresses.Add($"{serviceBeaconUrl.Scheme}://*:{serviceBeaconUrl.Port}/");
             log.Info("Using url provided in Service beacon: '{Url}'.", serviceBeaconUrl);
             return;
         }
 
-        if (addresses.Any() || urls?.Any() == true)
+        if (addresses?.Any() == true || urls?.Any() == true)
             throw new NotImplementedException("Dynamic configuration of Service beacon is not currently supported. Please configure port explicitly during Vostok environment setup.");
     }
 

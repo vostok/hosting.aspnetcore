@@ -20,10 +20,10 @@ public static class AddVostokExtensions
         webApplicationBuilder.Services.AddVostok(environmentSetup, componentsSettingsSetup);
     
     public static void AddVostok(
-        this IHostBuilder webApplicationBuilder,
+        this IHostBuilder hostBuilder,
         VostokHostingEnvironmentSetup environmentSetup,
         Action<VostokComponentsSettings>? componentsSettingsSetup = null) =>
-        webApplicationBuilder.ConfigureServices(serviceCollection => 
+        hostBuilder.ConfigureServices(serviceCollection => 
             serviceCollection.AddVostok(environmentSetup, componentsSettingsSetup));
     
     public static void AddVostok(
