@@ -1,8 +1,8 @@
 using System;
-using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Vostok.Hosting.Abstractions;
 using Vostok.Hosting.AspNetCore.Helpers;
 using Vostok.Hosting.AspNetCore.Houston.Helpers;
@@ -13,18 +13,25 @@ namespace Vostok.Hosting.AspNetCore.Houston;
 [PublicAPI]
 public static class WebApplicationBuilderExtensions
 {
-    public static void AddHouston(this WebApplicationBuilder webApplicationBuilder, Action<IHostingConfiguration> userSetup) =>
-        webApplicationBuilder.AddHoustonAsync(userSetup).GetAwaiter().GetResult();
-    
-    public static async Task AddHoustonAsync(
+    public static void AddHouston(
         this WebApplicationBuilder webApplicationBuilder,
-        Action<IHostingConfiguration> userSetup
-    )
-    {   
+        Action<IHostingConfiguration> userSetup) =>
+        webApplicationBuilder.Services.AddHouston(userSetup);
+    
+    public static void AddHouston(
+        this IHostBuilder webApplicationBuilder,
+        Action<IHostingConfiguration> userSetup) =>
+        webApplicationBuilder.ConfigureServices(serviceCollection => 
+            serviceCollection.AddHouston(userSetup));
+    
+    public static void AddHouston(
+        this IServiceCollection serviceCollection,
+        Action<IHostingConfiguration> userSetup)
+    {
         var houstonHost = new FakeHoustonHost(userSetup);
         houstonHost.ConfigureUnhandledExceptionHandling();
         
-        var houstonContext = await houstonHost.ObtainHoustonContextAsync();
+        var houstonContext = houstonHost.ObtainHoustonContextAsync().GetAwaiter().GetResult();
         houstonHost.ConfigureHostSettings(houstonContext);
         houstonHost.ConfigureHost(houstonContext);
 
@@ -34,9 +41,9 @@ public static class WebApplicationBuilderExtensions
         Action<VostokComponentsSettings> componentsSettingsSetup = componentsSettings =>
             CopySettings(hostSettings, componentsSettings);
         
-        webApplicationBuilder.AddVostok(environmentSetup, componentsSettingsSetup);
+        serviceCollection.AddVostok(environmentSetup, componentsSettingsSetup);
 
-        webApplicationBuilder.Services.AddHostedService(services =>
+        serviceCollection.AddHostedService(services =>
             new HoustonHostedService(houstonContext, services.GetRequiredService<IVostokHostingEnvironment>(), hostSettings.BeforeInitializeApplication, services.GetRequiredService<VostokApplicationStateObservable>()));
         
         // todo (kungurtsev, 28.11.2022): handle crashes & write postmortems
