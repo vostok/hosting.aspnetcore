@@ -41,7 +41,8 @@ internal class HoustonHostedService : IHostedService
         
         if (context == null)
             return;
-        
+
+        // todo (kungurtsev, 30.11.2022): should it be here?
         await context.Shutdown.HandleStop(new VostokApplicationRunResult(VostokApplicationState.Stopped));
     }
 }
