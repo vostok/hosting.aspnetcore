@@ -4,6 +4,7 @@ using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Vostok.Hosting.Abstractions;
+using Vostok.Hosting.AspNetCore.Helpers;
 using Vostok.Hosting.AspNetCore.Houston.Helpers;
 using Vostok.Hosting.Houston.Configuration;
 
@@ -36,7 +37,7 @@ public static class WebApplicationBuilderExtensions
         webApplicationBuilder.AddVostok(environmentSetup, componentsSettingsSetup);
 
         webApplicationBuilder.Services.AddHostedService(services =>
-            new HoustonHostedService(houstonContext, services.GetRequiredService<IVostokHostingEnvironment>(), hostSettings.BeforeInitializeApplication));
+            new HoustonHostedService(houstonContext, services.GetRequiredService<IVostokHostingEnvironment>(), hostSettings.BeforeInitializeApplication, services.GetRequiredService<VostokApplicationStateObservable>()));
         
         // todo (kungurtsev, 28.11.2022): handle crashes & write postmortems
         // todo (kungurtsev, 30.11.2022): setup shutdown
