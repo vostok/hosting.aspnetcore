@@ -21,8 +21,9 @@ public static class WebApplicationBuilderExtensions
     )
     {   
         var houstonHost = new FakeHoustonHost(userSetup);
-        var houstonContext = await houstonHost.ObtainHoustonContextAsync();
+        houstonHost.ConfigureUnhandledExceptionHandling();
         
+        var houstonContext = await houstonHost.ObtainHoustonContextAsync();
         houstonHost.ConfigureHostSettings(houstonContext);
         houstonHost.ConfigureHost(houstonContext);
 
@@ -38,6 +39,7 @@ public static class WebApplicationBuilderExtensions
             new HoustonHostedService(houstonContext, services.GetRequiredService<IVostokHostingEnvironment>(), hostSettings.BeforeInitializeApplication));
         
         // todo (kungurtsev, 28.11.2022): handle crashes & write postmortems
+        // todo (kungurtsev, 30.11.2022): setup shutdown
     }
 
     private static void CopySettings(VostokHostSettings hostSettings, VostokComponentsSettings componentsSettings)
