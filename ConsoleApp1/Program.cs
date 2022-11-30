@@ -9,12 +9,15 @@ using Vostok.Logging.File.Configuration;
 
 [assembly: HoustonEntryPoint(typeof(FakeVostokApplication))]
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = Host.CreateDefaultBuilder(args);
 
 //builder.AddVostok(SetupVostok);
 builder.AddHouston(SetupHouston);
 
-builder.Services.AddHostedService<Worker>();
+builder.ConfigureServices(services =>
+{
+    services.AddHostedService<Worker>();
+});
 
 var app = builder.Build();
 
