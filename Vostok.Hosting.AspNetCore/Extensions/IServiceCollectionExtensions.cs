@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using Vostok.Hosting.AspNetCore.Helpers;
 using Vostok.Logging.Abstractions;
 using Vostok.Logging.Microsoft;
 
@@ -17,5 +18,11 @@ internal static class IServiceCollectionExtensions
         
         services.TryAddEnumerable(ServiceDescriptor.Singleton<ILoggerProvider, VostokLoggerProvider>(serviceProvider =>
             new VostokLoggerProvider(serviceProvider.GetRequiredService<ILog>(), serviceProvider.GetFromOptionsOrDefault<VostokLoggerProviderSettings>())));
+    }
+
+    public static void AddOnApplicationStateChanged(this IServiceCollection services)
+    {
+        var onApplicationStateChanged = new VostokApplicationStateObservable();
+        services.AddSingleton(onApplicationStateChanged);
     }
 }

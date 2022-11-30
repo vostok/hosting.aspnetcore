@@ -47,7 +47,7 @@ public static class WebApplicationBuilderExtensions
         });
 
         webApplicationBuilder.Services.AddVostokEnvironmentComponents();
-        
+        webApplicationBuilder.Services.AddOnApplicationStateChanged();
         webApplicationBuilder.Services.AddVostokLoggerProvider();
 
         // review: Put my thought in "WebApplication1" :) will also try to think about possible solution

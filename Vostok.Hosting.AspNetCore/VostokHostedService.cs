@@ -5,10 +5,12 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Vostok.Commons.Threading;
 using Vostok.Hosting.Abstractions;
+using Vostok.Hosting.AspNetCore.Helpers;
 using Vostok.Hosting.Components.Diagnostics;
 using Vostok.Hosting.Components.Metrics;
 using Vostok.Hosting.Components.ThreadPool;
 using Vostok.Hosting.Helpers;
+using Vostok.Hosting.Models;
 
 namespace Vostok.Hosting.AspNetCore;
 
@@ -16,6 +18,7 @@ internal class VostokHostedService : IHostedService
 {
     private readonly IHostApplicationLifetime applicationLifetime;
     private readonly IVostokHostingEnvironment environment;
+    private readonly VostokApplicationStateObservable applicationStateObservable;
     private readonly ILogger logger;
     private readonly VostokComponentsSettings settings;
     private DynamicThreadPoolTracker? dynamicThreadPool;
@@ -23,22 +26,28 @@ internal class VostokHostedService : IHostedService
     public VostokHostedService(
         IHostApplicationLifetime applicationLifetime,
         IVostokHostingEnvironment environment,
+        VostokApplicationStateObservable applicationStateObservable,
         ILogger<VostokHostedService> logger,
         IOptions<VostokComponentsSettings> settings)
     {
         this.applicationLifetime = applicationLifetime;
         this.environment = environment;
+        this.applicationStateObservable = applicationStateObservable;
         this.settings = settings.Value;
         this.logger = logger;
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
+        applicationStateObservable.ChangeStateTo(VostokApplicationState.EnvironmentWarmup);
+        
         dynamicThreadPool = ConfigureDynamicThreadPool();
         
         WarmupEnvironment();
 
         applicationLifetime.ApplicationStarted.Register(OnStarted);
+        
+        applicationStateObservable.ChangeStateTo(VostokApplicationState.Initializing);
         
         return Task.CompletedTask;
     }
@@ -63,6 +72,9 @@ internal class VostokHostedService : IHostedService
             AnnotationsHelper.ReportInitialized(environment.ApplicationIdentity, environment.Metrics.Instance);
         
         applicationLifetime.ApplicationStopping.Register(OnStopping);
+        applicationLifetime.ApplicationStopped.Register(OnStopped);
+        
+        applicationStateObservable.ChangeStateTo(VostokApplicationState.Running);
     }
 
     // note (kungurtsev, 14.11.2022): is called before Kestrel and Beacon stopped
@@ -72,6 +84,15 @@ internal class VostokHostedService : IHostedService
         
         if (settings.SendAnnotations)
             AnnotationsHelper.ReportStopping(environment.ApplicationIdentity, environment.Metrics.Instance);
+        
+        applicationStateObservable.ChangeStateTo(VostokApplicationState.Stopping);
+    }
+    
+    private void OnStopped()
+    {
+        logger.LogInformation("Stopped.");
+        
+        applicationStateObservable.ChangeStateTo(VostokApplicationState.Stopped);
     }
     
     private void WarmupEnvironment()

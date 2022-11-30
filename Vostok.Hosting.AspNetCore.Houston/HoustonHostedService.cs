@@ -4,6 +4,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Vostok.Hosting.Abstractions;
+using Vostok.Hosting.AspNetCore.Helpers;
+using Vostok.Hosting.AspNetCore.Houston.Helpers;
 using Vostok.Hosting.Houston.Context;
 using Vostok.Hosting.Models;
 
@@ -15,11 +17,14 @@ internal class HoustonHostedService : IHostedService
     private readonly IVostokHostingEnvironment environment;
     private readonly List<Action<IVostokHostingEnvironment>> actions;
 
-    public HoustonHostedService(HoustonContext? context, IVostokHostingEnvironment environment, List<Action<IVostokHostingEnvironment>> actions)
+    public HoustonHostedService(HoustonContext? context, IVostokHostingEnvironment environment, List<Action<IVostokHostingEnvironment>> actions, VostokApplicationStateObservable applicationStateObservable)
     {
         this.context = context;
         this.environment = environment;
         this.actions = actions;
+
+        if (context != null)
+            applicationStateObservable.Subscribe(new HoustonStateObserver(context));
     }
     
     public Task StartAsync(CancellationToken cancellationToken)
