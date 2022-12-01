@@ -48,9 +48,6 @@ public static class AddHoustonExtensions
 
         serviceCollection.AddHostedService(services =>
             new HoustonHostedService(houstonContext, services.GetRequiredService<IVostokHostingEnvironment>(), hostSettings.BeforeInitializeApplication, services.GetRequiredService<VostokApplicationStateObservable>(), services.GetRequiredService<IHostApplicationLifetime>()));
-        
-        // todo (kungurtsev, 28.11.2022): handle crashes & write postmortems
-        // todo (kungurtsev, 30.11.2022): setup shutdown
     }
 
     private static void CopySettings(VostokHostSettings hostSettings, VostokComponentsSettings componentsSettings)
