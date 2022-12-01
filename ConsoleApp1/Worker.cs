@@ -20,6 +20,6 @@ public class Worker : BackgroundService
             await Task.Delay(1000, stoppingToken);
         }
 
-        _host.StopAsync();
+        //_host.StopAsync();
     }
 }
