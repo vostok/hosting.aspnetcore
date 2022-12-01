@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Vostok.Hosting.AspNetCore.Helpers;
 using Vostok.Logging.Abstractions;
@@ -7,22 +9,26 @@ using Vostok.Logging.Microsoft;
 
 namespace Vostok.Hosting.AspNetCore.Extensions;
 
-internal static class IServiceCollectionExtensions
+public static class IServiceCollectionExtensions
 {
-    public static void AddVostokLoggerProvider(this IServiceCollection services)
+    public static void AddVostokLoggerProvider(this IServiceCollection serviceCollection)
     {
-        services.RemoveAll<ILoggerProvider>();
+        serviceCollection.RemoveAll<ILoggerProvider>();
 
-        services.Configure<VostokLoggerProviderSettings>(settings =>
+        serviceCollection.Configure<VostokLoggerProviderSettings>(settings =>
             settings.IgnoredScopePrefixes = new[] {"Microsoft.AspNetCore"});
-        
-        services.TryAddEnumerable(ServiceDescriptor.Singleton<ILoggerProvider, VostokLoggerProvider>(serviceProvider =>
+
+        serviceCollection.TryAddEnumerable(ServiceDescriptor.Singleton<ILoggerProvider, VostokLoggerProvider>(serviceProvider =>
             new VostokLoggerProvider(serviceProvider.GetRequiredService<ILog>(), serviceProvider.GetFromOptionsOrDefault<VostokLoggerProviderSettings>())));
     }
 
-    public static void AddOnApplicationStateChanged(this IServiceCollection services)
+    public static void ConfigureShutdownTimeout(this IServiceCollection serviceCollection, TimeSpan timeout) =>
+        serviceCollection.Configure<HostOptions>(
+            opts => opts.ShutdownTimeout = timeout);
+
+    internal static void AddOnApplicationStateChanged(this IServiceCollection serviceCollection)
     {
         var onApplicationStateChanged = new VostokApplicationStateObservable();
-        services.AddSingleton(onApplicationStateChanged);
+        serviceCollection.AddSingleton(onApplicationStateChanged);
     }
 }

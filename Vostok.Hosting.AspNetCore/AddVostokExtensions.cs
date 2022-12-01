@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Vostok.Applications.AspNetCore.Helpers;
 using Vostok.Commons.Threading;
 using Vostok.Hosting.AspNetCore.Extensions;
+using Vostok.Hosting.Components.Shutdown;
 using Vostok.Hosting.Setup;
 
 namespace Vostok.Hosting.AspNetCore;
@@ -70,6 +71,8 @@ public static class AddVostokExtensions
         serviceCollection.AddHostedService<ServiceBeaconHostedService>();
 
         serviceCollection.AddHealthChecks();
+        
+        serviceCollection.ConfigureShutdownTimeout(ShutdownConstants.DefaultShutdownTimeout);
 
         // todo (kungurtsev, 28.11.2022): configure kontur static providers without BeforeInitializeApplication
     }
