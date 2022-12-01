@@ -8,14 +8,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
-using Vostok.Applications.AspNetCore.Tests;
 using Vostok.Hosting.Setup;
 using Vostok.Logging.File.Configuration;
 
 namespace Vostok.Hosting.AspNetCore.Tests.HostTests;
 
 [TestFixture]
-internal class GenericHostTests : TestsBase
+internal class GenericHostTests
 {
     [Test]
     public void Should_run_hosted_worker()
@@ -35,10 +34,12 @@ internal class GenericHostTests : TestsBase
         
         Thread.Sleep(5.Seconds());
         
-        app.StopAsync().GetAwaiter().GetResult();
-
         var hostedServices = app.Services.GetRequiredService<IEnumerable<IHostedService>>();
         var worker = hostedServices.First(s => s is Worker) as Worker;
+        
+        app.StopAsync().GetAwaiter().GetResult();
+        app.Dispose();
+        
         worker.Should().NotBeNull();
         worker!.Iteration.Should().BeGreaterThan(30);
     }
