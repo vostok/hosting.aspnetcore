@@ -1,13 +1,12 @@
-using Vostok.Hosting.Abstractions;
-using Vostok.Hosting.Abstractions.Requirements;
 using Vostok.Hosting.AspNetCore.Houston;
+using Vostok.Hosting.AspNetCore.Houston.Applications;
 using Vostok.Hosting.Houston.Abstractions;
 using Vostok.Hosting.Houston.Configuration;
 using Vostok.Hosting.Kontur;
 using Vostok.Hosting.Setup;
 using Vostok.Logging.File.Configuration;
 
-[assembly: HoustonEntryPoint(typeof(FakeVostokApplication))]
+[assembly: HoustonEntryPoint(typeof(HoustonWebApplication))]
 
 var builder = WebApplication.CreateBuilder(args);
 // review: I'm concerned about relations between builder.Configuration and vostok environment
@@ -93,14 +92,4 @@ void SetupVostok(IVostokHostingEnvironmentBuilder builder)
     builder.SetPort(5134);
     
     builder.SetupForKontur();
-}
-
-[RequiresPort]
-internal class FakeVostokApplication : IVostokApplication
-{
-    public Task InitializeAsync(IVostokHostingEnvironment environment) =>
-        throw new NotImplementedException("Should not be called.");
-
-    public Task RunAsync(IVostokHostingEnvironment environment) =>
-        throw new NotImplementedException("Should not be called.");
 }
