@@ -30,7 +30,7 @@ public static class AddHoustonExtensions
         this IServiceCollection serviceCollection,
         Action<IHostingConfiguration> userSetup)
     {
-        var houstonHost = new FakeHoustonHost(userSetup);
+        var houstonHost = new AspNetCoreHoustonHost(userSetup);
         houstonHost.ConfigureUnhandledExceptionHandling();
         
         var houstonContext = houstonHost.ObtainHoustonContextAsync().GetAwaiter().GetResult();

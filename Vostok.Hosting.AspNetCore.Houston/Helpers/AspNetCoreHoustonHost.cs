@@ -1,14 +1,15 @@
 using System;
+using Vostok.Hosting.AspNetCore.Houston.Applications;
 using Vostok.Hosting.Houston;
 using Vostok.Hosting.Houston.Configuration;
 using Vostok.Hosting.Setup;
 
 namespace Vostok.Hosting.AspNetCore.Houston.Helpers;
 
-internal class FakeHoustonHost : HoustonHost
+internal class AspNetCoreHoustonHost : HoustonHost
 {
-    public FakeHoustonHost(Action<IHostingConfiguration> userSetup)
-        : base(new FakeVostokApplication(), userSetup)
+    public AspNetCoreHoustonHost(Action<IHostingConfiguration> userSetup)
+        : base(new HoustonApplication(), userSetup)
     {
         
     }
