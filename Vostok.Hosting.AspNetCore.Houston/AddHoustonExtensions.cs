@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Vostok.Hosting.Abstractions;
+using Vostok.Hosting.AspNetCore.Extensions;
 using Vostok.Hosting.AspNetCore.Helpers;
 using Vostok.Hosting.AspNetCore.Houston.Helpers;
+using Vostok.Hosting.Components.Shutdown;
 using Vostok.Hosting.Houston.Configuration;
 
 namespace Vostok.Hosting.AspNetCore.Houston;
@@ -42,9 +44,10 @@ public static class AddHoustonExtensions
             CopySettings(hostSettings, componentsSettings);
         
         serviceCollection.AddVostok(environmentSetup, componentsSettingsSetup);
+        serviceCollection.ConfigureShutdownTimeout(houstonContext?.Setup.Shutdown.ShutdownTimeout ?? ShutdownConstants.DefaultShutdownTimeout);
 
         serviceCollection.AddHostedService(services =>
-            new HoustonHostedService(houstonContext, services.GetRequiredService<IVostokHostingEnvironment>(), hostSettings.BeforeInitializeApplication, services.GetRequiredService<VostokApplicationStateObservable>()));
+            new HoustonHostedService(houstonContext, services.GetRequiredService<IVostokHostingEnvironment>(), hostSettings.BeforeInitializeApplication, services.GetRequiredService<VostokApplicationStateObservable>(), services.GetRequiredService<IHostApplicationLifetime>()));
         
         // todo (kungurtsev, 28.11.2022): handle crashes & write postmortems
         // todo (kungurtsev, 30.11.2022): setup shutdown

@@ -17,14 +17,17 @@ internal class HoustonHostedService : IHostedService
     private readonly IVostokHostingEnvironment environment;
     private readonly List<Action<IVostokHostingEnvironment>> actions;
 
-    public HoustonHostedService(HoustonContext? context, IVostokHostingEnvironment environment, List<Action<IVostokHostingEnvironment>> actions, VostokApplicationStateObservable applicationStateObservable)
+    public HoustonHostedService(HoustonContext? context, IVostokHostingEnvironment environment, List<Action<IVostokHostingEnvironment>> actions, VostokApplicationStateObservable applicationStateObservable, IHostApplicationLifetime applicationLifetime)
     {
         this.context = context;
         this.environment = environment;
         this.actions = actions;
 
         if (context != null)
+        {
             applicationStateObservable.Subscribe(new HoustonStateObserver(context));
+            context.Shutdown.ShutdownToken.Register(applicationLifetime.StopApplication);
+        }
     }
     
     public Task StartAsync(CancellationToken cancellationToken)
