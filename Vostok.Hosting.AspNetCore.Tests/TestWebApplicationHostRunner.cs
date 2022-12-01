@@ -32,6 +32,9 @@ public class TestWebApplicationHostRunner : ITestHostRunner
     public Task StartAsync() =>
         WebApplication.StartAsync();
 
-    public Task StopAsync() =>
-        WebApplication.StopAsync();
+    public async Task StopAsync()
+    {
+        await WebApplication.StopAsync();
+        await WebApplication.DisposeAsync();
+    }
 }
