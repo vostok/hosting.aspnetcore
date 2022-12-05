@@ -73,7 +73,5 @@ public static class AddVostokExtensions
         serviceCollection.AddHealthChecks();
         
         serviceCollection.ConfigureShutdownTimeout(ShutdownConstants.DefaultShutdownTimeout);
-
-        // todo (kungurtsev, 28.11.2022): configure kontur static providers without BeforeInitializeApplication
     }
 }
