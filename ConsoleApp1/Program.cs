@@ -1,4 +1,5 @@
 ﻿using ConsoleApp1;
+using Vostok.Hosting.AspNetCore;
 using Vostok.Hosting.AspNetCore.Houston;
 using Vostok.Hosting.AspNetCore.Houston.Applications;
 using Vostok.Hosting.Houston.Abstractions;
