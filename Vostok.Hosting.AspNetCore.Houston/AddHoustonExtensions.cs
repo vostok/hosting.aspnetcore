@@ -67,6 +67,8 @@ public static class AddHoustonExtensions
         componentsSettings.BeaconRegistrationTimeout = hostSettings.BeaconRegistrationTimeout;
         componentsSettings.DisposeComponentTimeout = hostSettings.DisposeComponentTimeout;
         componentsSettings.ThreadPoolTuningMultiplier = hostSettings.ThreadPoolTuningMultiplier;
-        componentsSettings.ThreadPoolSettingsProvider = hostSettings.ThreadPoolSettingsProvider;
+
+        if (hostSettings.ThreadPoolSettingsProvider != null)
+            throw new NotImplementedException("Dynamic thread pool configuration is not currently supported.");
     }
 }
