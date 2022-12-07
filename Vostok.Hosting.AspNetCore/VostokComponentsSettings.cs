@@ -15,6 +15,9 @@ public class VostokComponentsSettings
     /// <inheritdoc cref="VostokHostSettings.ConfigureThreadPool"/>
     public bool ConfigureThreadPool { get; set; } = true;
 
+    /// <inheritdoc cref="VostokHostSettings.ThreadPoolTuningMultiplier"/>
+    public int ThreadPoolTuningMultiplier { get; set; } = ThreadPoolConstants.DefaultThreadPoolMultiplier;
+    
     /// <inheritdoc cref="VostokHostingEnvironmentWarmupSettings"/>
     public VostokHostingEnvironmentWarmupSettings EnvironmentWarmupSettings { get; set; } = new();
     
@@ -32,7 +35,4 @@ public class VostokComponentsSettings
 
     /// <inheritdoc cref="VostokHostSettings.DisposeComponentTimeout"/>
     public TimeSpan DisposeComponentTimeout { get; set; } = 5.Seconds();
-
-    /// <inheritdoc cref="VostokHostSettings.ThreadPoolTuningMultiplier"/>
-    public int ThreadPoolTuningMultiplier { get; set; } = ThreadPoolConstants.DefaultThreadPoolMultiplier;
 }
