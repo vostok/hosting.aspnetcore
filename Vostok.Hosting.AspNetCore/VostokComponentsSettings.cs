@@ -35,12 +35,4 @@ public class VostokComponentsSettings
 
     /// <inheritdoc cref="VostokHostSettings.ThreadPoolTuningMultiplier"/>
     public int ThreadPoolTuningMultiplier { get; set; } = ThreadPoolConstants.DefaultThreadPoolMultiplier;
-
-    // review: I think it kinda doesn't fit here (rest of the settings are cold, and this one is hot)
-    //         A better solution would be to use IOptionsMonitor<TSettings> in hosted service and configure it in
-    //         Conventional way using Configure(options.GetSection(...))
-    // cr (kungurtsev, 23.11.2022): not sure it's possible, will check later after houston integration
-    // todo (kungurtsev, 14.11.2022): get ThreadPoolSettings from container?
-    /// <inheritdoc cref="VostokHostSettings.ThreadPoolSettingsProvider"/>
-    public Func<IConfigurationProvider, ThreadPoolSettings>? ThreadPoolSettingsProvider { get; set; }
 }
