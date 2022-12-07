@@ -9,6 +9,7 @@ using Vostok.Hosting.AspNetCore.Helpers;
 using Vostok.Hosting.AspNetCore.Houston.Helpers;
 using Vostok.Hosting.Components.Shutdown;
 using Vostok.Hosting.Houston.Configuration;
+using Vostok.Hosting.Setup;
 
 namespace Vostok.Hosting.AspNetCore.Houston;
 
@@ -37,7 +38,14 @@ public static class AddHoustonExtensions
         houstonHost.ConfigureHostSettings(houstonContext);
         houstonHost.ConfigureHost(houstonContext);
 
-        var environmentSetup = houstonHost.EnvironmentSetup;
+        VostokHostingEnvironmentSetup environmentSetup = builder =>
+        {
+            houstonHost.EnvironmentSetup(builder);
+            builder.SetupLog(logBuilder => logBuilder
+                .SetupFileLog(fileLogBuilder => fileLogBuilder
+                    .DisposeWithEnvironment(true)));
+        };
+
         var hostSettings = houstonHost.Settings;
 
         Action<VostokComponentsSettings> componentsSettingsSetup = componentsSettings =>
