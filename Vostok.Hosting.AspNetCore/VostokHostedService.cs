@@ -7,7 +7,6 @@ using Vostok.Hosting.Abstractions;
 using Vostok.Hosting.AspNetCore.Helpers;
 using Vostok.Hosting.Components.Diagnostics;
 using Vostok.Hosting.Components.Metrics;
-using Vostok.Hosting.Components.ThreadPool;
 using Vostok.Hosting.Helpers;
 using Vostok.Hosting.Models;
 using Vostok.Logging.Abstractions;
