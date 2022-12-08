@@ -14,9 +14,9 @@ public class WeatherForecastController : ControllerBase
 
     private readonly ILogger<WeatherForecastController> logger;
     private readonly IConfiguration configuration;
-    private readonly IOptions<MyOptions> myOptions;
+    private readonly IOptionsMonitor<MyOptions> myOptions;
 
-    public WeatherForecastController(ILogger<WeatherForecastController> logger, IConfiguration configuration, IOptions<MyOptions> myOptions)
+    public WeatherForecastController(ILogger<WeatherForecastController> logger, IConfiguration configuration, IOptionsMonitor<MyOptions> myOptions)
     {
         this.logger = logger;
         this.configuration = configuration;
@@ -28,7 +28,7 @@ public class WeatherForecastController : ControllerBase
     {
         logger.LogInformation("Returning forecast");
 
-        logger.LogInformation("Config: {Config}.", myOptions);
+        logger.LogInformation("Config: {Config}.", myOptions.CurrentValue);
         
         return Enumerable.Range(1, 5)
             .Select(index => new WeatherForecast
