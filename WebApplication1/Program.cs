@@ -33,6 +33,10 @@ builder.Services.Configure<MyOptions>(
     builder.Configuration.GetSection("MyOptions"));
 var options = builder.Configuration.GetSection("MyOptions").Get<MyOptions>();
 
+//var root = builder.Configuration as IConfigurationRoot;
+//root.GetDebugView();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
