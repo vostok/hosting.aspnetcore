@@ -19,17 +19,18 @@ public static class AddHoustonExtensions
     public static void AddHouston(
         this WebApplicationBuilder webApplicationBuilder,
         Action<IHostingConfiguration> userSetup) =>
-        webApplicationBuilder.Services.AddHouston(userSetup);
+        webApplicationBuilder.Services.AddHouston(userSetup, webApplicationBuilder.AddVostok);
     
     public static void AddHouston(
         this IHostBuilder hostBuilder,
         Action<IHostingConfiguration> userSetup) =>
         hostBuilder.ConfigureServices(serviceCollection => 
-            serviceCollection.AddHouston(userSetup));
+            serviceCollection.AddHouston(userSetup, hostBuilder.AddVostok));
     
-    public static void AddHouston(
+    private static void AddHouston(
         this IServiceCollection serviceCollection,
-        Action<IHostingConfiguration> userSetup)
+        Action<IHostingConfiguration> userSetup,
+        Action<VostokHostingEnvironmentSetup, VostokComponentsSettings> addVostok)
     {
         var houstonHost = new AspNetCoreHoustonHost(userSetup);
         houstonHost.ConfigureUnhandledExceptionHandling();
@@ -47,36 +48,39 @@ public static class AddHoustonExtensions
         };
 
         var hostSettings = houstonHost.Settings;
+        var componentsSettings = ConvertSettings(hostSettings);
 
-        Action<VostokComponentsSettings> componentsSettingsSetup = componentsSettings =>
-            CopySettings(hostSettings, componentsSettings);
-        
-        serviceCollection.AddVostok(environmentSetup, componentsSettingsSetup);
+        addVostok(environmentSetup, componentsSettings);
         serviceCollection.ConfigureShutdownTimeout(houstonContext?.Setup.Shutdown.ShutdownTimeout ?? ShutdownConstants.DefaultShutdownTimeout);
 
         serviceCollection.AddHostedService(services =>
             new HoustonHostedService(houstonContext, services.GetRequiredService<IVostokHostingEnvironment>(), hostSettings.BeforeInitializeApplication, services.GetRequiredService<VostokApplicationStateObservable>(), services.GetRequiredService<IHostApplicationLifetime>()));
     }
 
-    private static void CopySettings(VostokHostSettings hostSettings, VostokComponentsSettings componentsSettings)
+    private static VostokComponentsSettings ConvertSettings(VostokHostSettings hostSettings)
     {
-        componentsSettings.ConfigureStaticProviders = hostSettings.ConfigureStaticProviders;
-        componentsSettings.ConfigureThreadPool = hostSettings.ConfigureThreadPool;
-        componentsSettings.EnvironmentWarmupSettings = new VostokHostingEnvironmentWarmupSettings
+        var componentsSettings = new VostokComponentsSettings
         {
-            LogApplicationConfiguration = hostSettings.LogApplicationConfiguration,
-            LogDotnetEnvironmentVariables = hostSettings.LogDotnetEnvironmentVariables,
-            WarmupConfiguration = hostSettings.WarmupConfiguration,
-            WarmupZooKeeper = hostSettings.WarmupZooKeeper
+            ConfigureStaticProviders = hostSettings.ConfigureStaticProviders,
+            ConfigureThreadPool = hostSettings.ConfigureThreadPool,
+            EnvironmentWarmupSettings = new VostokHostingEnvironmentWarmupSettings
+            {
+                LogApplicationConfiguration = hostSettings.LogApplicationConfiguration,
+                LogDotnetEnvironmentVariables = hostSettings.LogDotnetEnvironmentVariables,
+                WarmupConfiguration = hostSettings.WarmupConfiguration,
+                WarmupZooKeeper = hostSettings.WarmupZooKeeper
+            },
+            SendAnnotations = hostSettings.SendAnnotations,
+            DiagnosticMetricsEnabled = hostSettings.DiagnosticMetricsEnabled,
+            BeaconRegistrationWaitEnabled = hostSettings.BeaconRegistrationWaitEnabled,
+            BeaconRegistrationTimeout = hostSettings.BeaconRegistrationTimeout,
+            DisposeComponentTimeout = hostSettings.DisposeComponentTimeout,
+            ThreadPoolTuningMultiplier = hostSettings.ThreadPoolTuningMultiplier
         };
-        componentsSettings.SendAnnotations = hostSettings.SendAnnotations;
-        componentsSettings.DiagnosticMetricsEnabled = hostSettings.DiagnosticMetricsEnabled;
-        componentsSettings.BeaconRegistrationWaitEnabled = hostSettings.BeaconRegistrationWaitEnabled;
-        componentsSettings.BeaconRegistrationTimeout = hostSettings.BeaconRegistrationTimeout;
-        componentsSettings.DisposeComponentTimeout = hostSettings.DisposeComponentTimeout;
-        componentsSettings.ThreadPoolTuningMultiplier = hostSettings.ThreadPoolTuningMultiplier;
 
         if (hostSettings.ThreadPoolSettingsProvider != null)
             throw new NotImplementedException("Dynamic thread pool configuration is not currently supported.");
+
+        return componentsSettings;
     }
 }
