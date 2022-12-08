@@ -14,10 +14,7 @@ namespace Vostok.Hosting.AspNetCore;
 [PublicAPI]
 public static class AddVostokExtensions
 {
-    public static void AddVostok(
-        this WebApplicationBuilder webApplicationBuilder,
-        VostokHostingEnvironmentSetup environmentSetup,
-        VostokComponentsSettings? settings = null)
+    public static void AddVostok(this WebApplicationBuilder webApplicationBuilder, VostokHostingEnvironmentSetup environmentSetup, VostokComponentsSettings? settings = null)
     {
         var environment = CreateEnvironment(environmentSetup, settings);
 
@@ -26,10 +23,7 @@ public static class AddVostokExtensions
         webApplicationBuilder.Services.AddVostok(environment);
     }
 
-    public static void AddVostok(
-        this IHostBuilder hostBuilder,
-        VostokHostingEnvironmentSetup environmentSetup,
-        VostokComponentsSettings? settings = null)
+    public static void AddVostok(this IHostBuilder hostBuilder, VostokHostingEnvironmentSetup environmentSetup, VostokComponentsSettings? settings = null)
     {
         var environment = CreateEnvironment(environmentSetup, settings);
 

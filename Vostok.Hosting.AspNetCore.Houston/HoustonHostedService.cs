@@ -7,7 +7,6 @@ using Vostok.Hosting.Abstractions;
 using Vostok.Hosting.AspNetCore.Helpers;
 using Vostok.Hosting.AspNetCore.Houston.Helpers;
 using Vostok.Hosting.Houston.Context;
-using Vostok.Hosting.Models;
 
 namespace Vostok.Hosting.AspNetCore.Houston;
 
