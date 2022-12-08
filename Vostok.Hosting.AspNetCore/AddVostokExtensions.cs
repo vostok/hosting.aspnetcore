@@ -43,7 +43,7 @@ public static class AddVostokExtensions
 
     private static void AddVostok(this IServiceCollection serviceCollection, IVostokHostingEnvironment environment)
     {
-        serviceCollection.AddSingleton(environment);
+        serviceCollection.AddSingleton(_ => environment);
 
         serviceCollection.AddVostokEnvironmentComponents();
         serviceCollection.AddOnApplicationStateChanged();
