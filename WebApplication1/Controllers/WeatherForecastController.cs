@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace WebApplication1.Controllers;
 
@@ -11,17 +12,23 @@ public class WeatherForecastController : ControllerBase
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
     };
 
-    private readonly ILogger<WeatherForecastController> _logger;
+    private readonly ILogger<WeatherForecastController> logger;
+    private readonly IConfiguration configuration;
+    private readonly IOptions<MyOptions> myOptions;
 
-    public WeatherForecastController(ILogger<WeatherForecastController> logger)
+    public WeatherForecastController(ILogger<WeatherForecastController> logger, IConfiguration configuration, IOptions<MyOptions> myOptions)
     {
-        _logger = logger;
+        this.logger = logger;
+        this.configuration = configuration;
+        this.myOptions = myOptions;
     }
 
     [HttpGet(Name = "GetWeatherForecast")]
     public IEnumerable<WeatherForecast> Get()
     {
-        _logger.LogInformation("Returning forecast");
+        logger.LogInformation("Returning forecast");
+
+        logger.LogInformation("Config: {Config}.", myOptions);
         
         return Enumerable.Range(1, 5)
             .Select(index => new WeatherForecast

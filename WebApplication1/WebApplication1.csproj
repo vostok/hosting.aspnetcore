@@ -9,6 +9,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.1.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Vostok.Hosting.AspNetCore.Houston\Vostok.Hosting.AspNetCore.Houston.csproj" />
@@ -290,6 +291,10 @@
     <Reference Include="Vostok.ZooKeeper.Recipes">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\vostok.zookeeper.recipes\Vostok.ZooKeeper.Recipes\bin\Release\net6.0\Vostok.ZooKeeper.Recipes.dll</HintPath>
+    </Reference>
+    <Reference Include="Vostok.Configuration.Microsoft">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\vostok.configuration.microsoft\Vostok.Configuration.Microsoft\bin\Release\net6.0\Vostok.Configuration.Microsoft.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
