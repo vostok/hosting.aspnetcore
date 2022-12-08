@@ -1,3 +1,6 @@
+using Vostok.Configuration.Microsoft;
+using Vostok.Configuration.Sources;
+using Vostok.Configuration.Sources.Object;
 using Vostok.Hosting.AspNetCore.Houston;
 using Vostok.Hosting.AspNetCore.Houston.Applications;
 using Vostok.Hosting.Houston.Abstractions;
@@ -5,6 +8,7 @@ using Vostok.Hosting.Houston.Configuration;
 using Vostok.Hosting.Kontur;
 using Vostok.Hosting.Setup;
 using Vostok.Logging.File.Configuration;
+using WebApplication1;
 
 [assembly: HoustonEntryPoint(typeof(HoustonWebApplication))]
 
@@ -23,11 +27,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// review: How integration with Houston should look like at this point?
-//         Overload without a delegate?
-// cr (kungurtsev, 23.11.2022): probably it will be AddHouston instead of this one
-//builder.AddVostok(SetupVostok);
 builder.AddHouston(SetupHouston);
+
+builder.Services.Configure<MyOptions>(
+    builder.Configuration.GetSection("MyOptions"));
+var options = builder.Configuration.GetSection("MyOptions").Get<MyOptions>();
 
 var app = builder.Build();
 
@@ -37,8 +41,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
@@ -57,6 +59,9 @@ void SetupHouston(IHostingConfiguration configuration)
             identity.SetApplication("AspNetCoreHostingApi");
             identity.SetEnvironment("dev");
         });
+
+        builder.SetupConfiguration(configuration =>
+            configuration.AddSource(new ObjectSource(new MyOptions {B = "Vostok"}).Nest("MyOptions")));
     });
 
     configuration.OutOfHouston.SetupEnvironment(builder =>
