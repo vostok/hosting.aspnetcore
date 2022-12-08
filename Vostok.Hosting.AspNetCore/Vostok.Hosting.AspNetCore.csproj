@@ -75,5 +75,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\vostok.metrics\Vostok.Metrics\bin\Release\$(ReferencesFramework)\Vostok.Metrics.dll</HintPath>
     </Reference>
+    <Reference Include="Vostok.Configuration.Microsoft">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\vostok.configuration.microsoft\Vostok.Configuration.Microsoft\bin\Release\$(ReferencesFramework)\Vostok.Configuration.Microsoft.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>
