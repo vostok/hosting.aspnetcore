@@ -16,21 +16,14 @@ namespace Vostok.Hosting.AspNetCore.Houston;
 [PublicAPI]
 public static class AddHoustonExtensions
 {
-    public static void AddHouston(
-        this WebApplicationBuilder webApplicationBuilder,
-        Action<IHostingConfiguration> userSetup) =>
+    public static void AddHouston(this WebApplicationBuilder webApplicationBuilder, Action<IHostingConfiguration> userSetup) =>
         webApplicationBuilder.Services.AddHouston(userSetup, webApplicationBuilder.AddVostok);
     
-    public static void AddHouston(
-        this IHostBuilder hostBuilder,
-        Action<IHostingConfiguration> userSetup) =>
+    public static void AddHouston(this IHostBuilder hostBuilder, Action<IHostingConfiguration> userSetup) =>
         hostBuilder.ConfigureServices(serviceCollection => 
             serviceCollection.AddHouston(userSetup, hostBuilder.AddVostok));
     
-    private static void AddHouston(
-        this IServiceCollection serviceCollection,
-        Action<IHostingConfiguration> userSetup,
-        Action<VostokHostingEnvironmentSetup, VostokComponentsSettings> addVostok)
+    private static void AddHouston(this IServiceCollection serviceCollection, Action<IHostingConfiguration> userSetup, Action<VostokHostingEnvironmentSetup, VostokComponentsSettings> addVostok)
     {
         var houstonHost = new AspNetCoreHoustonHost(userSetup);
         houstonHost.ConfigureUnhandledExceptionHandling();

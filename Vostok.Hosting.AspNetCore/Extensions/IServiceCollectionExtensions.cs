@@ -11,7 +11,11 @@ namespace Vostok.Hosting.AspNetCore.Extensions;
 
 public static class IServiceCollectionExtensions
 {
-    public static void AddVostokLoggerProvider(this IServiceCollection serviceCollection)
+    public static void ConfigureShutdownTimeout(this IServiceCollection serviceCollection, TimeSpan timeout) =>
+        serviceCollection.Configure<HostOptions>(
+            opts => opts.ShutdownTimeout = timeout);
+
+    internal static void AddVostokLoggerProvider(this IServiceCollection serviceCollection)
     {
         serviceCollection.RemoveAll<ILoggerProvider>();
 
@@ -21,10 +25,6 @@ public static class IServiceCollectionExtensions
         serviceCollection.TryAddEnumerable(ServiceDescriptor.Singleton<ILoggerProvider, VostokLoggerProvider>(serviceProvider =>
             new VostokLoggerProvider(serviceProvider.GetRequiredService<ILog>(), serviceProvider.GetFromOptionsOrDefault<VostokLoggerProviderSettings>())));
     }
-
-    public static void ConfigureShutdownTimeout(this IServiceCollection serviceCollection, TimeSpan timeout) =>
-        serviceCollection.Configure<HostOptions>(
-            opts => opts.ShutdownTimeout = timeout);
 
     internal static void AddOnApplicationStateChanged(this IServiceCollection serviceCollection)
     {
