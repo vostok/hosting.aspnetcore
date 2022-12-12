@@ -6,6 +6,7 @@ using Vostok.Applications.AspNetCore.Helpers;
 using Vostok.Commons.Threading;
 using Vostok.Hosting.Abstractions;
 using Vostok.Hosting.AspNetCore.Extensions;
+using Vostok.Hosting.AspNetCore.Helpers;
 using Vostok.Hosting.Components.Shutdown;
 using Vostok.Hosting.Setup;
 
@@ -40,7 +41,7 @@ public static class UseVostokExtensions
         serviceCollection.AddSingleton(_ => environment);
 
         serviceCollection.AddVostokEnvironmentComponents();
-        serviceCollection.AddOnApplicationStateChanged();
+        serviceCollection.AddSingleton<VostokApplicationStateObservable>();
         serviceCollection.AddVostokLoggerProvider();
 
         serviceCollection.AddHostedService<VostokHostedService>();
