@@ -8,74 +8,94 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
+using Vostok.Commons.Helpers.Network;
+using Vostok.Hosting.AspNetCore.Tests.TestHelpers;
 using Vostok.Hosting.Setup;
+using Vostok.Logging.Abstractions;
 using Vostok.Logging.File.Configuration;
+using Vostok.ServiceDiscovery.Abstractions;
+using Vostok.ServiceDiscovery.Abstractions.Models;
 
 namespace Vostok.Hosting.AspNetCore.Tests.HostTests;
 
 [TestFixture]
 internal class GenericHostTests
 {
-    [Test]
-    public void Should_run_hosted_worker()
+    private CheckingLog checkingLog;
+
+    [TearDown]
+    public void TearDown()
     {
+        checkingLog?.EnsureReceivedExpectedMessages();
+        checkingLog = null;
+    }
+
+    [Test]
+    public void Should_run_hosted_worker_and_write_logs()
+    {
+        checkingLog = new CheckingLog(
+            "[VostokApplicationStateObservable] New state: EnvironmentWarmup.",
+            "[VostokHostingEnvironment] Registered host extensions:",
+            "[VostokApplicationStateObservable] New state: Initializing.",
+            "[FakeServiceBeacon] Start.",
+            "[VostokHostedService] Started.",
+            "[VostokApplicationStateObservable] New state: Running.",
+            "[Microsoft.Hosting.Lifetime] Application started.",
+            "[Vostok.Hosting.AspNetCore.Tests.HostTests.GenericHostTests.Worker] Working 10..",
+            "[Vostok.Hosting.AspNetCore.Tests.HostTests.GenericHostTests.Worker] Working 20..",
+            "[Vostok.Hosting.AspNetCore.Tests.HostTests.GenericHostTests.Worker] Working 30..",
+            "[VostokHostedService] Stopping..",
+            "[VostokApplicationStateObservable] New state: Stopping.",
+            "[ServiceBeaconHostedService] Stopping..",
+            "[FakeServiceBeacon] Stop.",
+            "[Microsoft.Hosting.Lifetime] Application is shutting down...",
+            "[VostokHostedService] Stopped.",
+            "[VostokApplicationStateObservable] New state: Stopped.",
+            "[VostokHostingEnvironment] Disposing of VostokHostingEnvironment..",
+            "[VostokHostingEnvironment] Disposing of FileLog.."
+        );
+
         var builder = Host.CreateDefaultBuilder();
 
-        builder.UseVostok(SetupVostok);
-        
+        builder.UseVostok(environmentBuilder =>
+        {
+            environmentBuilder.ApplyTestsDefaults();
+            environmentBuilder.SetupLog(logBuilder => logBuilder.AddLog(checkingLog));
+        });
+
         builder.ConfigureServices(services =>
         {
             services.AddHostedService<Worker>();
+            
+            services.AddSingleton<IServiceBeacon>(services => new FakeServiceBeacon(
+                new ReplicaInfo("default", "test", "localhost(1234)"),
+                services.GetRequiredService<ILog>()));
         });
         
         var app = builder.Build();
 
         app.Start();
-        
+
         Thread.Sleep(5.Seconds());
-        
-        var hostedServices = app.Services.GetRequiredService<IEnumerable<IHostedService>>();
-        var worker = hostedServices.First(s => s is Worker) as Worker;
-        
+
         app.StopAsync().GetAwaiter().GetResult();
         app.Dispose();
-        
-        worker.Should().NotBeNull();
-        worker!.Iteration.Should().BeGreaterThan(30);
     }
 
-    private static void SetupVostok(IVostokHostingEnvironmentBuilder builder)
-    {
-        builder.SetupApplicationIdentity(identity =>
-        {
-            identity.SetProject("Vostok");
-            identity.SetSubproject("Test");
-            identity.SetApplication("AspNetCoreHostingConsole");
-            identity.SetEnvironment("dev");
-            identity.SetInstance("1");
-        });
-
-        builder.SetupLog(log =>
-        {
-            log.SetupConsoleLog();
-            log.SetupFileLog(fileLog => fileLog.CustomizeSettings(
-                fileLogSettings => fileLogSettings.FileOpenMode = FileOpenMode.Rewrite));
-        });
-    }
-    
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> logger;
-        public long Iteration;
 
         public Worker(ILogger<Worker> logger) =>
             this.logger = logger;
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            var iteration = 0;
+            
             while (!stoppingToken.IsCancellationRequested)
             {
-                logger.LogInformation("Working {Iteration}..", Iteration++);
+                logger.LogInformation("Working {Iteration}..", iteration++);
                 await Task.Delay(100, stoppingToken);
             }
         }

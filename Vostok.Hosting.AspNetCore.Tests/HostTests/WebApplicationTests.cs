@@ -2,51 +2,74 @@
 using System.Threading.Tasks;
 using FluentAssertions.Extensions;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NUnit.Framework;
-using Vostok.Hosting.Setup;
-using Vostok.Logging.File.Configuration;
+using Vostok.Commons.Helpers.Network;
+using Vostok.Hosting.AspNetCore.Tests.TestHelpers;
+using Vostok.Logging.Abstractions;
+using Vostok.ServiceDiscovery.Abstractions;
+using Vostok.ServiceDiscovery.Abstractions.Models;
 
 namespace Vostok.Hosting.AspNetCore.Tests.HostTests;
 
 [TestFixture]
 internal class WebApplicationTests
 {
-    [Test]
-    public async Task Should_start_and_stop()
+    private CheckingLog checkingLog;
+
+    [TearDown]
+    public void TearDown()
     {
+        checkingLog?.EnsureReceivedExpectedMessages();
+        checkingLog = null;
+    }
+
+    [Test]
+    public async Task Should_start_and_stop_and_write_logs()
+    {
+        checkingLog = new CheckingLog(
+            "[VostokApplicationStateObservable] New state: EnvironmentWarmup.",
+            "[VostokHostingEnvironment] Registered host extensions:",
+            "[VostokApplicationStateObservable] New state: Initializing.",
+            "[ServiceBeaconHostedService] Using url provided in Service beacon:",
+            "[Microsoft.Hosting.Lifetime] Now listening on:",
+            "[FakeServiceBeacon] Start.",
+            "[VostokHostedService] Started.",
+            "[VostokApplicationStateObservable] New state: Running.",
+            "[Microsoft.Hosting.Lifetime] Application started.",
+            "[VostokHostedService] Stopping..",
+            "[VostokApplicationStateObservable] New state: Stopping.",
+            "[ServiceBeaconHostedService] Stopping..",
+            "[FakeServiceBeacon] Stop.",
+            "[Microsoft.Hosting.Lifetime] Application is shutting down...",
+            "[VostokHostedService] Stopped.",
+            "[VostokApplicationStateObservable] New state: Stopped.",
+            "[VostokHostingEnvironment] Disposing of VostokHostingEnvironment..",
+            "[VostokHostingEnvironment] Disposing of FileLog.."
+        );
+
         var builder = WebApplication.CreateBuilder();
 
-        builder.UseVostok(SetupVostok);
-        
+        builder.UseVostok(environmentBuilder =>
+        {
+            environmentBuilder.ApplyTestsDefaults();
+            environmentBuilder.SetupLog(logBuilder => logBuilder.AddLog(checkingLog));
+        });
+
+        builder.Services.AddSingleton<IServiceBeacon>(services => new FakeServiceBeacon(
+            new ReplicaInfo("default", "test", $"http://localhost:{FreeTcpPortFinder.GetFreePort()}"),
+            services.GetRequiredService<ILog>()));
+
         var app = builder.Build();
 
         app.MapGet("/", () => "Hello World!");
 
         app.Start();
-        
+
         Thread.Sleep(5.Seconds());
-        
+
         await app.StopAsync();
         await app.DisposeAsync();
-    }
-
-    private static void SetupVostok(IVostokHostingEnvironmentBuilder builder)
-    {
-        builder.SetupApplicationIdentity(identity =>
-        {
-            identity.SetProject("Vostok");
-            identity.SetSubproject("Test");
-            identity.SetApplication("WebApplication");
-            identity.SetEnvironment("dev");
-            identity.SetInstance("1");
-        });
-
-        builder.SetupLog(log =>
-        {
-            log.SetupConsoleLog();
-            log.SetupFileLog(fileLog => fileLog.CustomizeSettings(
-                fileLogSettings => fileLogSettings.FileOpenMode = FileOpenMode.Rewrite));
-        });
     }
 }
