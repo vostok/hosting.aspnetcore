@@ -19,7 +19,7 @@ public class TestWebApplicationHostRunner : ITestHostRunner
     {
         var webApplicationBuilder = WebApplication.CreateBuilder();
         
-        webApplicationBuilder.AddVostok(environmentSetup);
+        webApplicationBuilder.UseVostok(environmentSetup);
         webApplicationBuilder.Services.ConfigureTestsDefaults();
         webApplicationBuilderSetup(webApplicationBuilder);
         

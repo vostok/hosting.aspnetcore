@@ -14,16 +14,16 @@ using Vostok.Hosting.Setup;
 namespace Vostok.Hosting.AspNetCore.Houston;
 
 [PublicAPI]
-public static class AddHoustonExtensions
+public static class UseHoustonExtensions
 {
-    public static void AddHouston(this WebApplicationBuilder webApplicationBuilder, Action<IHostingConfiguration> userSetup) =>
-        webApplicationBuilder.Services.AddHouston(userSetup, webApplicationBuilder.AddVostok);
+    public static void UseHouston(this WebApplicationBuilder webApplicationBuilder, Action<IHostingConfiguration> userSetup) =>
+        webApplicationBuilder.Services.UseHouston(userSetup, webApplicationBuilder.UseVostok);
     
-    public static void AddHouston(this IHostBuilder hostBuilder, Action<IHostingConfiguration> userSetup) =>
+    public static void UseHouston(this IHostBuilder hostBuilder, Action<IHostingConfiguration> userSetup) =>
         hostBuilder.ConfigureServices(serviceCollection => 
-            serviceCollection.AddHouston(userSetup, hostBuilder.AddVostok));
+            serviceCollection.UseHouston(userSetup, hostBuilder.UseVostok));
     
-    private static void AddHouston(this IServiceCollection serviceCollection, Action<IHostingConfiguration> userSetup, Action<VostokHostingEnvironmentSetup, VostokComponentsSettings> addVostok)
+    private static void UseHouston(this IServiceCollection serviceCollection, Action<IHostingConfiguration> userSetup, Action<VostokHostingEnvironmentSetup, VostokComponentsSettings> addVostok)
     {
         var houstonHost = new AspNetCoreHoustonHost(userSetup);
         houstonHost.ConfigureUnhandledExceptionHandling();
