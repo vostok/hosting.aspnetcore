@@ -12,18 +12,18 @@ using Vostok.Hosting.Setup;
 namespace Vostok.Hosting.AspNetCore;
 
 [PublicAPI]
-public static class AddVostokExtensions
+public static class UseVostokExtensions
 {
-    public static void AddVostok(this WebApplicationBuilder webApplicationBuilder, VostokHostingEnvironmentSetup environmentSetup, VostokComponentsSettings? settings = null)
+    public static void UseVostok(this WebApplicationBuilder webApplicationBuilder, VostokHostingEnvironmentSetup environmentSetup, VostokComponentsSettings? settings = null)
     {
         var environment = CreateEnvironment(environmentSetup, settings);
 
         webApplicationBuilder.Configuration.AddVostokSources(environment);
         
-        webApplicationBuilder.Services.AddVostok(environment);
+        webApplicationBuilder.Services.UseVostok(environment);
     }
 
-    public static void AddVostok(this IHostBuilder hostBuilder, VostokHostingEnvironmentSetup environmentSetup, VostokComponentsSettings? settings = null)
+    public static void UseVostok(this IHostBuilder hostBuilder, VostokHostingEnvironmentSetup environmentSetup, VostokComponentsSettings? settings = null)
     {
         var environment = CreateEnvironment(environmentSetup, settings);
 
@@ -31,11 +31,11 @@ public static class AddVostokExtensions
 
         hostBuilder.ConfigureServices(serviceCollection =>
         {
-            serviceCollection.AddVostok(environment);
+            serviceCollection.UseVostok(environment);
         });
     }
 
-    private static void AddVostok(this IServiceCollection serviceCollection, IVostokHostingEnvironment environment)
+    private static void UseVostok(this IServiceCollection serviceCollection, IVostokHostingEnvironment environment)
     {
         serviceCollection.AddSingleton(_ => environment);
 

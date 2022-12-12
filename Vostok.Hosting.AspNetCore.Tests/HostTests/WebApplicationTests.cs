@@ -17,7 +17,7 @@ internal class WebApplicationTests
     {
         var builder = WebApplication.CreateBuilder();
 
-        builder.AddVostok(SetupVostok);
+        builder.UseVostok(SetupVostok);
         
         var app = builder.Build();
 

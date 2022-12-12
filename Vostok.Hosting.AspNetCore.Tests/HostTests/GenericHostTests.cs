@@ -21,7 +21,7 @@ internal class GenericHostTests
     {
         var builder = Host.CreateDefaultBuilder();
 
-        builder.AddVostok(SetupVostok);
+        builder.UseVostok(SetupVostok);
         
         builder.ConfigureServices(services =>
         {

@@ -27,7 +27,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.AddHouston(SetupHouston);
+builder.UseHouston(SetupHouston);
 
 builder.Services.Configure<MyOptions>(
     builder.Configuration.GetSection("MyOptions"));
