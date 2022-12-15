@@ -12,7 +12,7 @@ using Vostok.Logging.File.Configuration;
 
 var builder = Host.CreateDefaultBuilder(args);
 
-//builder.AddVostok(SetupVostok);
+//builder.UseVostok(SetupVostok);
 builder.UseHouston(SetupHouston);
 
 builder.ConfigureServices(services =>
