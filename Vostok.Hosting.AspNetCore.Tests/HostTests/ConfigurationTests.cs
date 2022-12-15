@@ -1,36 +1,34 @@
-﻿using FluentAssertions;
+﻿using System.Threading.Tasks;
+using FluentAssertions;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using NUnit.Framework;
-using Vostok.Applications.AspNetCore.Tests;
 using Vostok.Configuration.Sources;
 using Vostok.Configuration.Sources.Object;
-using Vostok.Hosting.Setup;
+using Vostok.Hosting.AspNetCore.Tests.TestHelpers;
 
 namespace Vostok.Hosting.AspNetCore.Tests.HostTests;
 
 [TestFixture]
-internal class ConfigurationTests : TestsBase
+internal class ConfigurationTests
 {
     [Test]
     public void Should_add_vostok_configuration_to_microsoft_source()
     {
+        var builder = WebApplication.CreateBuilder(new []{"MyOptions:A=AspNetCore"});
+
+        builder.UseVostok(environmentBuilder =>
+        {
+            environmentBuilder.ApplyTestsDefaults();
+            
+            environmentBuilder.SetupConfiguration(configuration =>
+                configuration.AddSource(new ObjectSource(new MyOptions {B = "Vostok"}).Nest("MyOptions")));
+        });
         
-    }
-    
-    protected override void SetupGlobal(WebApplicationBuilder builder)
-    {
-        if (TestContext.CurrentContext.Test.Name == nameof(Should_add_vostok_configuration_to_microsoft_source))
-            builder.Configuration["MyOptions:B"].Should().Be("Vostok");
+        builder.Configuration["MyOptions:A"].Should().Be("AspNetCore");
+        builder.Configuration["MyOptions:B"].Should().Be("Vostok");
     }
 
-    protected override void SetupGlobal(IVostokHostingEnvironmentBuilder builder)
-    {
-        builder.SetupConfiguration(configuration =>
-            configuration.AddSource(new ObjectSource(new MyOptions {B = "Vostok"}).Nest("MyOptions")));
-    }
-    
-    public class MyOptions
+    private class MyOptions
     {
         public string A { get; set; }
         public string B { get; set; }
