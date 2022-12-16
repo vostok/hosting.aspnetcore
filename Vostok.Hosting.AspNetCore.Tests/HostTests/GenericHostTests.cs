@@ -51,7 +51,7 @@ internal class GenericHostTests
 
         var builder = Host.CreateDefaultBuilder();
 
-        builder.UseVostok(environmentBuilder =>
+        builder.UseVostokHosting(environmentBuilder =>
         {
             environmentBuilder.ApplyTestsDefaults();
             environmentBuilder.SetupLog(logBuilder => logBuilder.AddLog(checkingLog));
@@ -60,12 +60,12 @@ internal class GenericHostTests
         builder.ConfigureServices(services =>
         {
             services.AddHostedService<Worker>();
-            
+
             services.AddSingleton<IServiceBeacon>(services => new FakeServiceBeacon(
                 new ReplicaInfo("default", "test", "localhost(1234)"),
                 services.GetRequiredService<ILog>()));
         });
-        
+
         var app = builder.Build();
 
         app.Start();
@@ -86,7 +86,7 @@ internal class GenericHostTests
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var iteration = 0;
-            
+
             while (!stoppingToken.IsCancellationRequested)
             {
                 logger.LogInformation("Working {Iteration}..", iteration++);

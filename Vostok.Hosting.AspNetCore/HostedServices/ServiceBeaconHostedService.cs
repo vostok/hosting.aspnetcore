@@ -13,7 +13,7 @@ using Vostok.Logging.Abstractions;
 using Vostok.ServiceDiscovery;
 using Vostok.ServiceDiscovery.Abstractions;
 
-namespace Vostok.Hosting.AspNetCore;
+namespace Vostok.Hosting.AspNetCore.HostedServices;
 
 internal class ServiceBeaconHostedService : IHostedService
 {
@@ -46,7 +46,7 @@ internal class ServiceBeaconHostedService : IHostedService
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
-        return Task.CompletedTask; 
+        return Task.CompletedTask;
     }
 
     // note (kungurtsev, 14.11.2022): is called after Kestrel started
@@ -73,17 +73,17 @@ internal class ServiceBeaconHostedService : IHostedService
         if (!convertedBeacon.WaitForInitialRegistrationAsync().Wait(settings.BeaconRegistrationTimeout))
             throw new Exception($"Service beacon hasn't registered in '{settings.BeaconRegistrationTimeout}'.");
     }
-    
+
     private void ValidateAddresses()
     {
         var addresses = server?.TryGetAddresses();
         var urls = configuration[WebHostDefaults.ServerUrlsKey]?.Split(';', StringSplitOptions.RemoveEmptyEntries);
-        
+
         if (serviceBeacon.ReplicaInfo.TryGetUrl(out var serviceBeaconUrl))
         {
             if (addresses == null)
                 throw new Exception($"Service beacon url '{serviceBeaconUrl}' is incompatible with Generic host.");
-            
+
             if (!HasAddress(addresses, serviceBeaconUrl) && !HasAddress(urls, serviceBeaconUrl))
                 addresses.Add($"{serviceBeaconUrl.Scheme}://*:{serviceBeaconUrl.Port}/");
             log.Info("Using url provided in Service beacon: '{Url}'.", serviceBeaconUrl);
@@ -98,7 +98,7 @@ internal class ServiceBeaconHostedService : IHostedService
     {
         if (urls == null)
             return false;
-        
+
         foreach (var url in urls)
         {
             if (Uri.TryCreate(url, UriKind.Absolute, out var parsed) && parsed.Port == expectedUrl.Port && parsed.Scheme == expectedUrl.Scheme)

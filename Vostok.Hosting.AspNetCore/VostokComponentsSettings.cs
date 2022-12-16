@@ -1,7 +1,5 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Vostok.Commons.Time;
-using Vostok.Configuration.Abstractions;
 using Vostok.Hosting.Components.ThreadPool;
 
 namespace Vostok.Hosting.AspNetCore;
@@ -17,10 +15,10 @@ public class VostokComponentsSettings
 
     /// <inheritdoc cref="VostokHostSettings.ThreadPoolTuningMultiplier"/>
     public int ThreadPoolTuningMultiplier { get; set; } = ThreadPoolConstants.DefaultThreadPoolMultiplier;
-    
+
     /// <inheritdoc cref="VostokHostingEnvironmentWarmupSettings"/>
     public VostokHostingEnvironmentWarmupSettings EnvironmentWarmupSettings { get; set; } = new();
-    
+
     /// <inheritdoc cref="VostokHostSettings.SendAnnotations"/>
     public bool SendAnnotations { get; set; } = true;
 
@@ -31,8 +29,8 @@ public class VostokComponentsSettings
     public bool BeaconRegistrationWaitEnabled { get; set; }
 
     /// <inheritdoc cref="VostokHostSettings.BeaconRegistrationTimeout"/>
-    public TimeSpan BeaconRegistrationTimeout { get; set; } = 10.Seconds();
+    public TimeSpan BeaconRegistrationTimeout { get; set; } = TimeSpan.FromSeconds(10); // collision from InternalsVisibleTo
 
     /// <inheritdoc cref="VostokHostSettings.DisposeComponentTimeout"/>
-    public TimeSpan DisposeComponentTimeout { get; set; } = 5.Seconds();
+    public TimeSpan DisposeComponentTimeout { get; set; } = TimeSpan.FromSeconds(5);
 }

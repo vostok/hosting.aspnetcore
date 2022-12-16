@@ -51,7 +51,7 @@ internal class WebApplicationTests
 
         var builder = WebApplication.CreateBuilder();
 
-        builder.UseVostok(environmentBuilder =>
+        builder.UseVostokHosting(environmentBuilder =>
         {
             environmentBuilder.ApplyTestsDefaults();
             environmentBuilder.SetupLog(logBuilder => logBuilder.AddLog(checkingLog));

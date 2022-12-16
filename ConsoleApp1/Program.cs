@@ -1,5 +1,4 @@
 ﻿using ConsoleApp1;
-using Vostok.Hosting.AspNetCore;
 using Vostok.Hosting.AspNetCore.Houston;
 using Vostok.Hosting.AspNetCore.Houston.Applications;
 using Vostok.Hosting.Houston.Abstractions;
@@ -12,13 +11,10 @@ using Vostok.Logging.File.Configuration;
 
 var builder = Host.CreateDefaultBuilder(args);
 
-//builder.UseVostok(SetupVostok);
-builder.UseHouston(SetupHouston);
+//builder.AddVostok(SetupVostok);
+builder.UseHoustonHosting(SetupHouston);
 
-builder.ConfigureServices(services =>
-{
-    services.AddHostedService<Worker>();
-});
+builder.ConfigureServices(services => { services.AddHostedService<Worker>(); });
 
 var app = builder.Build();
 
@@ -64,6 +60,6 @@ void SetupVostok(IVostokHostingEnvironmentBuilder builder)
         log.SetupFileLog(fileLog => fileLog.CustomizeSettings(
             fileLogSettings => fileLogSettings.FileOpenMode = FileOpenMode.Rewrite));
     });
-    
+
     builder.SetupForKontur();
 }

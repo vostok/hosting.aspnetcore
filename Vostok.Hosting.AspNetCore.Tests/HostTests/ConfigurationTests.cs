@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Builder;
 using NUnit.Framework;
 using Vostok.Configuration.Sources;
@@ -14,16 +13,16 @@ internal class ConfigurationTests
     [Test]
     public void Should_add_vostok_configuration_to_microsoft_source()
     {
-        var builder = WebApplication.CreateBuilder(new []{"MyOptions:A=AspNetCore"});
+        var builder = WebApplication.CreateBuilder(new[] {"MyOptions:A=AspNetCore"});
 
-        builder.UseVostok(environmentBuilder =>
+        builder.UseVostokHosting(environmentBuilder =>
         {
             environmentBuilder.ApplyTestsDefaults();
-            
+
             environmentBuilder.SetupConfiguration(configuration =>
                 configuration.AddSource(new ObjectSource(new MyOptions {B = "Vostok"}).Nest("MyOptions")));
         });
-        
+
         builder.Configuration["MyOptions:A"].Should().Be("AspNetCore");
         builder.Configuration["MyOptions:B"].Should().Be("Vostok");
     }

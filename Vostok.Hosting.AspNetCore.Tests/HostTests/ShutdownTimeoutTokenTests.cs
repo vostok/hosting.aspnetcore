@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -26,10 +25,7 @@ internal class ShutdownTimeoutTokenTests
     {
         builder = WebApplication.CreateBuilder();
 
-        builder.UseVostok(environmentBuilder =>
-        {
-            environmentBuilder.ApplyTestsDefaults();
-        });
+        builder.UseVostokHosting(environmentBuilder => { environmentBuilder.ApplyTestsDefaults(); });
 
         app = null;
     }
@@ -49,20 +45,20 @@ internal class ShutdownTimeoutTokenTests
     {
         builder.Services.Configure<HostOptions>(
             opts => opts.ShutdownTimeout = customShutdownTimeout);
-        
+
         app = builder.Build();
 
         app.Services.GetRequiredService<IOptions<HostOptions>>()
             .Value.ShutdownTimeout.Should()
             .Be(customShutdownTimeout);
     }
-    
+
     [Test]
     public void Should_not_allow_to_change_shutdown_timeout()
     {
         builder = WebApplication.CreateBuilder();
 
-        builder.UseVostok(environmentBuilder =>
+        builder.UseVostokHosting(environmentBuilder =>
         {
             environmentBuilder.ApplyTestsDefaults();
             new Action(() => { environmentBuilder.SetupShutdownTimeout(customShutdownTimeout); })
@@ -70,22 +66,22 @@ internal class ShutdownTimeoutTokenTests
                 .Throw<NotSupportedException>();
         });
     }
-    
+
     [Test]
     public void Should_not_allow_to_use_shutdown_timeout()
     {
         app = builder.Build();
-        
+
         var environment = app.Services.GetRequiredService<IVostokHostingEnvironment>();
         new Action(() => Console.WriteLine(environment.ShutdownTimeout)).Should().Throw<NotSupportedException>();
     }
-    
+
     [Test]
     public void Should_not_allow_to_change_shutdown_token()
     {
         builder = WebApplication.CreateBuilder();
 
-        builder.UseVostok(environmentBuilder =>
+        builder.UseVostokHosting(environmentBuilder =>
         {
             environmentBuilder.ApplyTestsDefaults();
             new Action(() => { environmentBuilder.SetupShutdownToken(new CancellationToken()); })
@@ -93,12 +89,12 @@ internal class ShutdownTimeoutTokenTests
                 .Throw<NotSupportedException>();
         });
     }
-    
+
     [Test]
     public void Should_not_allow_to_use_shutdown_token()
     {
         app = builder.Build();
-        
+
         var environment = app.Services.GetRequiredService<IVostokHostingEnvironment>();
         new Action(() => Console.WriteLine(environment.ShutdownToken)).Should().Throw<NotSupportedException>();
     }

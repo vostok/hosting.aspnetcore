@@ -16,6 +16,9 @@
     <ProjectReference Include="..\Vostok.Hosting.AspNetCore\Vostok.Hosting.AspNetCore.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Vostok.Applications.AspNetCore">
+      <HintPath>..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore\bin\Release\net6.0\Vostok.Applications.AspNetCore.dll</HintPath>
+    </Reference>
     <Reference Include="Vostok.Hosting.Houston">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\vostok.hosting.houston\Vostok.Hosting.Houston\bin\Release\netstandard2.0\Vostok.Hosting.Houston.dll</HintPath>

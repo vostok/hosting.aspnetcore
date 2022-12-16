@@ -1,6 +1,7 @@
-using Vostok.Configuration.Microsoft;
+using Vostok.Applications.AspNetCore.Configuration;
 using Vostok.Configuration.Sources;
 using Vostok.Configuration.Sources.Object;
+using Vostok.Hosting.AspNetCore.Extensions;
 using Vostok.Hosting.AspNetCore.Houston;
 using Vostok.Hosting.AspNetCore.Houston.Applications;
 using Vostok.Hosting.Houston.Abstractions;
@@ -27,17 +28,21 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.UseHouston(SetupHouston);
+builder.UseHoustonHosting(SetupHouston);
 
 builder.Services.Configure<MyOptions>(
     builder.Configuration.GetSection("MyOptions"));
+
+builder.Services.AddVostokMiddlewares(b => { b.ConfigureRequestLogging(r => r.LogQueryString = new LoggingCollectionSettings(true)); });
+
 var options = builder.Configuration.GetSection("MyOptions").Get<MyOptions>();
 
 //var root = builder.Configuration as IConfigurationRoot;
 //root.GetDebugView();
 
-
 var app = builder.Build();
+
+app.UseVostokMiddlewares(); // or select only needed
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -76,7 +81,7 @@ void SetupHouston(IHostingConfiguration configuration)
             log.SetupFileLog(fileLog => fileLog.CustomizeSettings(
                 fileLogSettings => fileLogSettings.FileOpenMode = FileOpenMode.Rewrite));
         });
-        
+
         builder.SetPort(5134);
     });
 }
@@ -97,8 +102,8 @@ void SetupVostok(IVostokHostingEnvironmentBuilder builder)
         log.SetupFileLog(fileLog => fileLog.CustomizeSettings(
             fileLogSettings => fileLogSettings.FileOpenMode = FileOpenMode.Rewrite));
     });
-    
+
     builder.SetPort(5134);
-    
+
     builder.SetupForKontur();
 }
