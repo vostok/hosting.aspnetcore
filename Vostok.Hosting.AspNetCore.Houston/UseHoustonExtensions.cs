@@ -1,6 +1,7 @@
 using System;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Vostok.Hosting.AspNetCore.Extensions;
@@ -12,31 +13,42 @@ namespace Vostok.Hosting.AspNetCore.Houston;
 [PublicAPI]
 public static class UseHoustonExtensions
 {
-    public static void UseHouston(this WebApplicationBuilder webApplicationBuilder, Action<IHostingConfiguration> userSetup)
+    public static WebApplicationBuilder UseHoustonHosting(this WebApplicationBuilder webApplicationBuilder, Action<IHostingConfiguration> userSetup)
     {
         var houstonHost = new AspNetCoreHoustonHost(userSetup).InitializeContext();
 
-        webApplicationBuilder.UseVostok(houstonHost.SetupEnvironment, houstonHost.Settings);
-        
-        webApplicationBuilder.Services.UseHouston(houstonHost);
+        webApplicationBuilder.UseVostokHosting(houstonHost.SetupEnvironment, houstonHost.Settings);
+        webApplicationBuilder.Services.UseHoustonHosting(houstonHost);
+
+        return webApplicationBuilder;
     }
 
-    public static void UseHouston(this IHostBuilder hostBuilder, Action<IHostingConfiguration> userSetup)
+    public static IHostBuilder UseHoustonHosting(this IHostBuilder hostBuilder, Action<IHostingConfiguration> userSetup)
     {
         var houstonHost = new AspNetCoreHoustonHost(userSetup).InitializeContext();
 
-        hostBuilder.UseVostok(houstonHost.SetupEnvironment, houstonHost.Settings);
-        
-        hostBuilder.ConfigureServices(serviceCollection =>
-            serviceCollection.UseHouston(houstonHost));
+        hostBuilder.UseVostokHosting(houstonHost.SetupEnvironment, houstonHost.Settings);
+        hostBuilder.ConfigureServices(serviceCollection => serviceCollection.UseHoustonHosting(houstonHost));
+
+        return hostBuilder;
     }
 
-    private static void UseHouston(this IServiceCollection serviceCollection, AspNetCoreHoustonHost houstonHost)
+    public static IWebHostBuilder UseHoustonHosting(this IWebHostBuilder hostBuilder, Action<IHostingConfiguration> userSetup)
+    {
+        var houstonHost = new AspNetCoreHoustonHost(userSetup).InitializeContext();
+
+        hostBuilder.UseVostokHosting(houstonHost.SetupEnvironment, houstonHost.Settings);
+        hostBuilder.ConfigureServices(serviceCollection => serviceCollection.UseHoustonHosting(houstonHost));
+
+        return hostBuilder;
+    }
+
+    private static void UseHoustonHosting(this IServiceCollection serviceCollection, AspNetCoreHoustonHost houstonHost)
     {
         serviceCollection.ConfigureShutdownTimeout(houstonHost.ShutdownTimeout);
 
         serviceCollection.AddSingleton(houstonHost);
-        
+
         serviceCollection.AddHostedService<HoustonHostedService>();
     }
 }

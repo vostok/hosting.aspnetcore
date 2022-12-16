@@ -10,6 +10,8 @@ notests *default:
     - module vostok.hosting.abstractions
     - module vostok.hosting
     - module vostok.applications.aspnetcore
+    - module vostok.throttling
+    - module vostok.throttling.metrics
 
   deps:
     - vostok.configuration.microsoft

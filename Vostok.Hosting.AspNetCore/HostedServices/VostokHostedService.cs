@@ -11,7 +11,7 @@ using Vostok.Hosting.Helpers;
 using Vostok.Hosting.Models;
 using Vostok.Logging.Abstractions;
 
-namespace Vostok.Hosting.AspNetCore;
+namespace Vostok.Hosting.AspNetCore.HostedServices;
 
 internal class VostokHostedService : IHostedService
 {
@@ -27,7 +27,7 @@ internal class VostokHostedService : IHostedService
         VostokApplicationStateObservable applicationStateObservable,
         IOptions<VostokComponentsSettings> settings,
         ILog log
-        )
+    )
     {
         this.applicationLifetime = applicationLifetime;
         this.environment = environment;
@@ -39,16 +39,16 @@ internal class VostokHostedService : IHostedService
     public Task StartAsync(CancellationToken cancellationToken)
     {
         applicationStateObservable.ChangeStateTo(VostokApplicationState.EnvironmentWarmup);
-        
+
         WarmupEnvironment();
 
         applicationLifetime.ApplicationStarted.Register(OnStarted);
-        
+
         applicationStateObservable.ChangeStateTo(VostokApplicationState.Initializing);
-        
+
         return Task.CompletedTask;
     }
-    
+
     public Task StopAsync(CancellationToken cancellationToken) =>
         Task.CompletedTask;
 
@@ -63,10 +63,10 @@ internal class VostokHostedService : IHostedService
 
         if (settings.SendAnnotations)
             AnnotationsHelper.ReportInitialized(environment.ApplicationIdentity, environment.Metrics.Instance);
-        
+
         applicationLifetime.ApplicationStopping.Register(OnStopping);
         applicationLifetime.ApplicationStopped.Register(OnStopped);
-        
+
         applicationStateObservable.ChangeStateTo(VostokApplicationState.Running);
     }
 
@@ -74,27 +74,27 @@ internal class VostokHostedService : IHostedService
     private void OnStopping()
     {
         log.Info("Stopping..");
-        
+
         if (settings.SendAnnotations)
             AnnotationsHelper.ReportStopping(environment.ApplicationIdentity, environment.Metrics.Instance);
-        
+
         applicationStateObservable.ChangeStateTo(VostokApplicationState.Stopping);
     }
-    
+
     private void OnStopped()
     {
         log.Info("Stopped.");
-        
+
         applicationStateObservable.ChangeStateTo(VostokApplicationState.Stopped);
     }
-    
+
     private void WarmupEnvironment()
     {
         ConfigureHostBeforeRun();
 
         environment.Warmup(settings.EnvironmentWarmupSettings);
     }
-    
+
     private void ConfigureHostBeforeRun()
     {
         var cpuUnitsLimit = environment.ApplicationLimits.CpuUnits;
