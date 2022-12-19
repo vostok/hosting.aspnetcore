@@ -61,36 +61,36 @@ internal static class AddMiddlewareExtensions
 
     private static void AddThrottlingInfo(IServiceProvider serviceProvider, ThrottlingProvider throttlingProvider)
     {
-        var diagnostics = serviceProvider.GetService<IVostokApplicationDiagnostics>();
+        var diagnostics = serviceProvider.GetService<IDiagnosticInfo>();
         if (diagnostics == null)
             return;
 
         var infoEntry = new DiagnosticEntry(DiagnosticConstants.Component, "request-throttling");
         var infoProvider = new ThrottlingInfoProvider(throttlingProvider);
 
-        serviceProvider.RegisterDisposable(diagnostics.Info.RegisterProvider(infoEntry, infoProvider));
+        serviceProvider.RegisterDisposable(diagnostics.RegisterProvider(infoEntry, infoProvider));
     }
 
     private static void AddThrottlingHealthCheck(IServiceProvider serviceProvider, ThrottlingProvider throttlingProvider)
     {
-        var diagnostics = serviceProvider.GetService<IVostokApplicationDiagnostics>();
-        if (diagnostics == null)
+        var healthTracker = serviceProvider.GetService<IHealthTracker>();
+        if (healthTracker == null)
             return;
 
         var healthCheck = new ThrottlingHealthCheck(throttlingProvider);
 
-        serviceProvider.RegisterDisposable(diagnostics.HealthTracker.RegisterCheck("Request throttling", healthCheck));
+        serviceProvider.RegisterDisposable(healthTracker.RegisterCheck("Request throttling", healthCheck));
     }
 
     private static void AddRequestTrackingInfo(IServiceProvider serviceProvider, RequestTracker requestTracker)
     {
-        var diagnostics = serviceProvider.GetService<IVostokApplicationDiagnostics>();
+        var diagnostics = serviceProvider.GetService<IDiagnosticInfo>();
         if (diagnostics == null)
             return;
 
         var infoEntry = new DiagnosticEntry(DiagnosticConstants.Component, "requests-in-progress");
         var infoProvider = new CurrentRequestsInfoProvider(requestTracker);
 
-        serviceProvider.RegisterDisposable(diagnostics.Info.RegisterProvider(infoEntry, infoProvider));
+        serviceProvider.RegisterDisposable(diagnostics.RegisterProvider(infoEntry, infoProvider));
     }
 }
