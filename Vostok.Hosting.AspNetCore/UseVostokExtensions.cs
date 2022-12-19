@@ -17,7 +17,7 @@ namespace Vostok.Hosting.AspNetCore;
 [PublicAPI]
 public static class UseVostokExtensions
 {
-    public static WebApplicationBuilder UseVostokHosting(this WebApplicationBuilder webApplicationBuilder, VostokHostingEnvironmentSetup environmentSetup, VostokComponentsSettings? settings = null)
+    public static WebApplicationBuilder UseVostokHosting(this WebApplicationBuilder webApplicationBuilder, VostokHostingEnvironmentSetup environmentSetup, VostokHostingSettings? settings = null)
     {
         var environment = CreateEnvironment(environmentSetup, settings);
 
@@ -27,7 +27,7 @@ public static class UseVostokExtensions
         return webApplicationBuilder;
     }
 
-    public static IHostBuilder UseVostokHosting(this IHostBuilder hostBuilder, VostokHostingEnvironmentSetup environmentSetup, VostokComponentsSettings? settings = null)
+    public static IHostBuilder UseVostokHosting(this IHostBuilder hostBuilder, VostokHostingEnvironmentSetup environmentSetup, VostokHostingSettings? settings = null)
     {
         var environment = CreateEnvironment(environmentSetup, settings);
 
@@ -37,7 +37,7 @@ public static class UseVostokExtensions
         return hostBuilder;
     }
 
-    public static IWebHostBuilder UseVostokHosting(this IWebHostBuilder hostBuilder, VostokHostingEnvironmentSetup environmentSetup, VostokComponentsSettings? settings = null)
+    public static IWebHostBuilder UseVostokHosting(this IWebHostBuilder hostBuilder, VostokHostingEnvironmentSetup environmentSetup, VostokHostingSettings? settings = null)
     {
         var environment = CreateEnvironment(environmentSetup, settings);
 
@@ -63,9 +63,9 @@ public static class UseVostokExtensions
         serviceCollection.ConfigureShutdownTimeout(ShutdownConstants.DefaultShutdownTimeout);
     }
 
-    private static IVostokHostingEnvironment CreateEnvironment(VostokHostingEnvironmentSetup environmentSetup, VostokComponentsSettings? settings)
+    private static IVostokHostingEnvironment CreateEnvironment(VostokHostingEnvironmentSetup environmentSetup, VostokHostingSettings? settings)
     {
-        settings ??= new VostokComponentsSettings();
+        settings ??= new VostokHostingSettings();
 
         var environmentFactorySettings = new VostokHostingEnvironmentFactorySettings
         {
