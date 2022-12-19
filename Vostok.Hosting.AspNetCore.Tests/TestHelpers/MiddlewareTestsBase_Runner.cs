@@ -7,7 +7,7 @@ using Vostok.Hosting.Setup;
 namespace Vostok.Applications.AspNetCore.Tests.TestHelpers
 {
     [TestFixture(true)]
-    public abstract partial class TestsBase
+    public abstract partial class MiddlewareTestsBase
     {
         protected WebApplication WebApplication => ((TestWebApplicationHostRunner)runner).WebApplication;
         
