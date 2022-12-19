@@ -33,7 +33,10 @@ builder.UseHoustonHosting(SetupHouston);
 builder.Services.Configure<MyOptions>(
     builder.Configuration.GetSection("MyOptions"));
 
-builder.Services.AddVostokMiddlewares(b => { b.ConfigureRequestLogging(r => r.LogQueryString = new LoggingCollectionSettings(true)); });
+builder.Services.AddVostokMiddlewares(b =>
+{
+    b.ConfigureRequestLogging(r => r.LogQueryString = new LoggingCollectionSettings(true));
+});
 
 var options = builder.Configuration.GetSection("MyOptions").Get<MyOptions>();
 
