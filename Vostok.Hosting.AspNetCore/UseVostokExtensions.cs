@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Vostok.Applications.AspNetCore.Helpers;
@@ -21,7 +22,7 @@ public static class UseVostokExtensions
     {
         var environment = CreateEnvironment(environmentSetup, settings);
 
-        webApplicationBuilder.Configuration.AddVostokSources(environment);
+        webApplicationBuilder.Configuration.UseVostokHosting(environment);
         webApplicationBuilder.Services.UseVostokHosting(environment);
 
         return webApplicationBuilder;
@@ -31,7 +32,7 @@ public static class UseVostokExtensions
     {
         var environment = CreateEnvironment(environmentSetup, settings);
 
-        hostBuilder.ConfigureAppConfiguration(config => config.AddVostokSources(environment));
+        hostBuilder.ConfigureAppConfiguration(config => config.UseVostokHosting(environment));
         hostBuilder.ConfigureServices(serviceCollection => { serviceCollection.UseVostokHosting(environment); });
 
         return hostBuilder;
@@ -41,12 +42,18 @@ public static class UseVostokExtensions
     {
         var environment = CreateEnvironment(environmentSetup, settings);
 
-        hostBuilder.ConfigureAppConfiguration(config => config.AddVostokSources(environment));
+        hostBuilder.ConfigureAppConfiguration(config => config.UseVostokHosting(environment));
         hostBuilder.ConfigureServices(serviceCollection => { serviceCollection.UseVostokHosting(environment); });
 
         return hostBuilder;
     }
 
+    private static void UseVostokHosting(this IConfigurationBuilder configurationBuilder, IVostokHostingEnvironment environment)
+    {
+        configurationBuilder.AddVostokSources(environment);
+        configurationBuilder.AddDefaultLoggingFilters();
+    }
+    
     private static void UseVostokHosting(this IServiceCollection serviceCollection, IVostokHostingEnvironment environment)
     {
         serviceCollection.AddSingleton(_ => environment);
