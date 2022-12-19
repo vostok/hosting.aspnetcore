@@ -16,11 +16,11 @@
   <ItemGroup>
     <Compile Include="..\..\vostok.commons.helpers\Vostok.Commons.Helpers\Network\FreeTcpPortFinder.cs" Link="Commons\FreeTcpPortFinder.cs" />
     <Compile Include="..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore\Diagnostics\DiagnosticConstants.cs" Link="Commons\DiagnosticConstants.cs" />
-    <Compile Include="..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore.Tests\MiddlewareTests\*.cs" Exclude="..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore.Tests\MiddlewareTests\MinimalApiTests.cs" LinkBase="MiddlewareTests" />
+    <Compile Include="..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore.Tests\MiddlewareTests\*.cs" LinkBase="MiddlewareTests" />
     <Compile Include="..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore.Tests\Extensions\*.cs" LinkBase="Extensions" />
     <Compile Include="..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore.Tests\Models\*.cs" LinkBase="Models" />
     <Compile Include="..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore.Tests\Controllers\*.cs" LinkBase="Controllers" />
-    <Compile Include="..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore.Tests\TestHelpers\*.cs" Exclude="..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore.Tests\TestHelpers\TestsBase_Runner.cs" LinkBase="TestHelpers" />
+    <Compile Include="..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore.Tests\TestHelpers\*.cs" Exclude="..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore.Tests\TestHelpers\MiddlewareTestsBase_Runner.cs" LinkBase="TestHelpers" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Vostok.Applications.AspNetCore">
