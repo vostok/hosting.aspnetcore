@@ -5,7 +5,7 @@ using Vostok.Configuration.Sources;
 using Vostok.Configuration.Sources.Object;
 using Vostok.Hosting.AspNetCore.Tests.TestHelpers;
 
-namespace Vostok.Hosting.AspNetCore.Tests.HostTests;
+namespace Vostok.Hosting.AspNetCore.Tests.HostingTests;
 
 [TestFixture]
 internal class ConfigurationTests

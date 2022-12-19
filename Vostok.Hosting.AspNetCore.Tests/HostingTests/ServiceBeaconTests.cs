@@ -12,7 +12,7 @@ using Vostok.Commons.Helpers.Network;
 using Vostok.Hosting.AspNetCore.Tests.TestHelpers;
 using Vostok.Logging.Abstractions;
 
-namespace Vostok.Hosting.AspNetCore.Tests.HostTests;
+namespace Vostok.Hosting.AspNetCore.Tests.HostingTests;
 
 [TestFixture]
 internal class ServiceBeaconTests
