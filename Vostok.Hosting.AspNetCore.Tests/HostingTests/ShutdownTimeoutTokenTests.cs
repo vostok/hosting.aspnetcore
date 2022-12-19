@@ -11,7 +11,7 @@ using NUnit.Framework;
 using Vostok.Hosting.Abstractions;
 using Vostok.Hosting.AspNetCore.Tests.TestHelpers;
 
-namespace Vostok.Hosting.AspNetCore.Tests.HostTests;
+namespace Vostok.Hosting.AspNetCore.Tests.HostingTests;
 
 [TestFixture]
 internal class ShutdownTimeoutTokenTests

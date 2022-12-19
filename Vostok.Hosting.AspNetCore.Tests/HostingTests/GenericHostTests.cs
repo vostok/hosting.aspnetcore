@@ -10,7 +10,7 @@ using Vostok.Logging.Abstractions;
 using Vostok.ServiceDiscovery.Abstractions;
 using Vostok.ServiceDiscovery.Abstractions.Models;
 
-namespace Vostok.Hosting.AspNetCore.Tests.HostTests;
+namespace Vostok.Hosting.AspNetCore.Tests.HostingTests;
 
 [TestFixture]
 internal class GenericHostTests
