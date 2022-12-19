@@ -4,6 +4,7 @@
   <Import Project="..\..\vostok.devtools\git-commit-to-assembly-title\Vostok.Tools.GitCommit2AssemblyTitle.props" />
   <PropertyGroup>
     <TargetFrameworks>net6.0</TargetFrameworks>
+    <DefineConstants>ASPNTCORE_HOSTING</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.10.3" />

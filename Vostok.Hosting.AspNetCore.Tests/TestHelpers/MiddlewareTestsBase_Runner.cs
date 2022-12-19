@@ -14,17 +14,20 @@ namespace Vostok.Applications.AspNetCore.Tests.TestHelpers
         private void CreateRunner(VostokHostingEnvironmentSetup setup) =>
             runner = new TestWebApplicationHostRunner(setup, Setup, Setup);
         
+        protected virtual void SetupGlobal(WebApplicationBuilder builder)
+        {
+            // use this method to override host configuration in each test fixture
+        }
+        
         private void Setup(WebApplicationBuilder builder)
         {
             builder.Services.AddVostokMiddlewares(_ => {});
-            //SetupGlobal(builder);
-            
+            SetupGlobal(builder);
         }
 
         private void Setup(WebApplication builder)
         {
             builder.UseVostokMiddlewares();
-            //SetupGlobal(builder);
         }
     }
 }
