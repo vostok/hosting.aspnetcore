@@ -18,14 +18,14 @@ internal class VostokHostedService : IHostedService
     private readonly IHostApplicationLifetime applicationLifetime;
     private readonly IVostokHostingEnvironment environment;
     private readonly VostokApplicationStateObservable applicationStateObservable;
-    private readonly VostokComponentsSettings settings;
+    private readonly VostokHostingSettings settings;
     private readonly ILog log;
 
     public VostokHostedService(
         IHostApplicationLifetime applicationLifetime,
         IVostokHostingEnvironment environment,
         VostokApplicationStateObservable applicationStateObservable,
-        IOptions<VostokComponentsSettings> settings,
+        IOptions<VostokHostingSettings> settings,
         ILog log
     )
     {

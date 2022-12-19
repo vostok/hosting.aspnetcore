@@ -31,7 +31,7 @@ internal class AspNetCoreHoustonHost : HoustonHost
         return this;
     }
     
-    public VostokComponentsSettings Settings =>
+    public VostokHostingSettings Settings =>
         ConvertSettings(settings);
 
     public TimeSpan ShutdownTimeout =>
@@ -48,9 +48,9 @@ internal class AspNetCoreHoustonHost : HoustonHost
                 .DisposeWithEnvironment(true)));
     }
     
-    private static VostokComponentsSettings ConvertSettings(VostokHostSettings hostSettings)
+    private static VostokHostingSettings ConvertSettings(VostokHostSettings hostSettings)
     {
-        var componentsSettings = new VostokComponentsSettings
+        var hostingSettings = new VostokHostingSettings
         {
             ConfigureStaticProviders = hostSettings.ConfigureStaticProviders,
             ConfigureThreadPool = hostSettings.ConfigureThreadPool,
@@ -72,6 +72,6 @@ internal class AspNetCoreHoustonHost : HoustonHost
         if (hostSettings.ThreadPoolSettingsProvider != null)
             throw new NotImplementedException("Dynamic thread pool configuration is not currently supported.");
 
-        return componentsSettings;
+        return hostingSettings;
     }
 }
