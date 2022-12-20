@@ -1,6 +1,7 @@
 using Vostok.Applications.AspNetCore.Configuration;
 using Vostok.Configuration.Sources;
 using Vostok.Configuration.Sources.Object;
+using Vostok.Hosting.AspNetCore;
 using Vostok.Hosting.AspNetCore.Extensions;
 using Vostok.Hosting.AspNetCore.Houston;
 using Vostok.Hosting.AspNetCore.Houston.Applications;
@@ -33,10 +34,10 @@ builder.UseHoustonHosting(SetupHouston);
 builder.Services.Configure<MyOptions>(
     builder.Configuration.GetSection("MyOptions"));
 
-builder.Services.AddVostokMiddlewares(b =>
-{
-    b.ConfigureRequestLogging(r => r.LogQueryString = new LoggingCollectionSettings(true));
-});
+builder.Services
+    .AddVostokMiddlewares()
+    .ConfigureRequestLogging(c => c.LogQueryString = new LoggingCollectionSettings(true))
+    .ConfigureThrottling(t => t.RejectionResponseCode = 503);
 
 var options = builder.Configuration.GetSection("MyOptions").Get<MyOptions>();
 

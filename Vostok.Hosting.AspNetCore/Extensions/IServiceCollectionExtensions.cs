@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Vostok.Applications.AspNetCore;
 using Vostok.Hosting.AspNetCore.HostedServices;
+using Vostok.Hosting.AspNetCore.MiddlewareRegistration;
 using Vostok.Logging.Abstractions;
 using Vostok.Logging.Microsoft;
 
@@ -19,29 +20,26 @@ public static class IServiceCollectionExtensions
         serviceCollection.Configure<HostOptions>(
             opts => opts.ShutdownTimeout = timeout);
 
-    public static IServiceCollection AddVostokMiddlewares(this IServiceCollection services, Action<VostokMiddlewareBuilder> build)
+    public static IVostokMiddlewaresBuilder AddVostokMiddlewares(this IServiceCollection services)
     {
-        var builder = new VostokMiddlewareBuilder();
-        build(builder);
+        services
+            .ConfigureKestrelDefaults()
+            .AddRequestTracking()
+            .AddHostedService<PingApiWarmUpHostedService>();
 
         services
-            .Configure(builder.DiagnosticFeatures)
-            .Configure(builder.Throttling)
-            .AddHostedService<PingApiWarmUpHostedService>()
-            .ConfigureKestrelDefaults();
+            .AddVostokHttpContextTweaks(_ => {})
+            .AddVostokRequestInfo(_ => {})
+            .AddVostokDistributedContext(_ => {})
+            .AddVostokTracing(_ => {})
+            .AddThrottling(_ => {})
+            .AddVostokRequestLogging(_ => {})
+            .AddVostokDatacenterAwareness(_ => {})
+            .AddVostokUnhandledExceptions(_ => {})
+            .AddVostokPingApi(_ => {})
+            .AddVostokDiagnosticApi(_ => {});
 
-        return services
-            .AddRequestTracking()
-            .AddVostokHttpContextTweaks(builder.HttpContextTweaks)
-            .AddVostokRequestInfo(builder.FillRequestInfo)
-            .AddVostokDistributedContext(builder.DistributedContext)
-            .AddVostokTracing(builder.Tracing)
-            .AddThrottling(builder.ThrottlingMiddleware)
-            .AddVostokRequestLogging(builder.RequestLogging)
-            .AddVostokDatacenterAwareness(builder.DatacenterAwareness)
-            .AddVostokUnhandledExceptions(builder.UnhandledExceptions)
-            .AddVostokPingApi(builder.PingApi)
-            .AddVostokDiagnosticApi(builder.DiagnosticApi);
+        return new VostokMiddlewaresBuilder(services);
     }
 
     internal static void AddVostokLoggerProvider(this IServiceCollection serviceCollection)
