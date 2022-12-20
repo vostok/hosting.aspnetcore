@@ -53,12 +53,13 @@ public static class UseVostokExtensions
         configurationBuilder.AddVostokSources(environment);
         configurationBuilder.AddDefaultLoggingFilters();
     }
-    
+
     private static void UseVostokHosting(this IServiceCollection serviceCollection, IVostokHostingEnvironment environment)
     {
         serviceCollection.AddSingleton(_ => environment);
 
         serviceCollection.AddVostokEnvironmentComponents();
+        serviceCollection.AddVostokEnvironmentHostExtensions(environment);
         serviceCollection.AddSingleton<VostokApplicationStateObservable>();
         serviceCollection.AddVostokLoggerProvider();
 
