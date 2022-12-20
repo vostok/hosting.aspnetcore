@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Vostok.Applications.AspNetCore;
+using Vostok.Hosting.AspNetCore.HostedServices;
 using Vostok.Logging.Abstractions;
 using Vostok.Logging.Microsoft;
 
@@ -26,6 +27,7 @@ public static class IServiceCollectionExtensions
         services
             .Configure(builder.DiagnosticFeatures)
             .Configure(builder.Throttling)
+            .AddHostedService<PingApiWarmUpHostedService>()
             .ConfigureKestrelDefaults();
 
         return services
