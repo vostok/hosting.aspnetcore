@@ -18,7 +18,7 @@ public class TestWebApplicationHostRunner : ITestHostRunner
 
         webApplicationBuilder.UseVostokHosting(environmentSetup);
         webApplicationBuilder.Services.ConfigureTestsDefaults();
-        webApplicationBuilder.Services.AddVostokMiddlewares(_ => {});
+        webApplicationBuilder.Services.AddVostokMiddlewares();
         webApplicationBuilderSetup(webApplicationBuilder);
 
         WebApplication = webApplicationBuilder.Build();

@@ -4,10 +4,11 @@ using Vostok.Applications.AspNetCore.Configuration;
 using Vostok.Applications.AspNetCore.Diagnostics;
 using Vostok.Hosting.Abstractions;
 using Vostok.Hosting.Abstractions.Diagnostics;
+using Vostok.Hosting.AspNetCore.Extensions;
 using Vostok.Throttling;
 using Vostok.Throttling.Metrics;
 
-namespace Vostok.Hosting.AspNetCore.Extensions;
+namespace Vostok.Hosting.AspNetCore.MiddlewareRegistration;
 
 internal static class AddMiddlewareExtensions
 {
