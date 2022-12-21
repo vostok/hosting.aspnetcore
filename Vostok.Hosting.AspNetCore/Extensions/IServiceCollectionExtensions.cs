@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Vostok.Applications.AspNetCore;
-using Vostok.Hosting.AspNetCore.HostedServices;
 using Vostok.Hosting.AspNetCore.MiddlewareRegistration;
 using Vostok.Logging.Abstractions;
 using Vostok.Logging.Microsoft;
@@ -24,8 +23,7 @@ public static class IServiceCollectionExtensions
     {
         services
             .ConfigureKestrelDefaults()
-            .AddRequestTracking()
-            .AddHostedService<PingApiWarmUpHostedService>();
+            .AddRequestTracking();
 
         services
             .AddVostokHttpContextTweaks(_ => {})
