@@ -12,6 +12,7 @@ using Vostok.Hosting.AspNetCore.Helpers;
 using Vostok.Hosting.AspNetCore.HostedServices;
 using Vostok.Hosting.Components.Shutdown;
 using Vostok.Hosting.Setup;
+using Vostok.Logging.Abstractions;
 
 namespace Vostok.Hosting.AspNetCore;
 
@@ -56,7 +57,7 @@ public static class UseVostokExtensions
 
     private static void UseVostokHosting(this IServiceCollection serviceCollection, IVostokHostingEnvironment environment)
     {
-        serviceCollection.AddSingleton(_ => new VostokDisposables());
+        serviceCollection.AddSingleton(services => new VostokDisposables(services.GetRequiredService<ILog>()));
         serviceCollection.AddSingleton(_ => environment);
 
         serviceCollection.AddVostokEnvironmentComponents();

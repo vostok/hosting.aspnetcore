@@ -11,8 +11,8 @@ internal class CheckingLog : ILog
 {
     private readonly LinkedList<string> expectedMessages;
 
-    public CheckingLog(params string[] expectedMessages) =>
-        this.expectedMessages = new LinkedList<string>(expectedMessages);
+    public CheckingLog(params string?[] expectedMessages) =>
+        this.expectedMessages = new LinkedList<string>(expectedMessages.Where(m => m != null)!);
 
     public void Log(LogEvent @event)
     {
