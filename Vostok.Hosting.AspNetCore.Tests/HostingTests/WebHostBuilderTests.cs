@@ -30,20 +30,19 @@ internal class WebHostBuilderTests
     public async Task Should_start_and_stop_and_write_logs()
     {
         checkingLog = new CheckingLog(
+            "[Microsoft.AspNetCore.Hosting.Diagnostics] Hosting starting",
             "[VostokApplicationStateObservable] New state: EnvironmentWarmup.",
             "[VostokHostingEnvironment] Registered host extensions:",
             "[VostokApplicationStateObservable] New state: Initializing.",
             "[ServiceBeaconHostedService] Using url provided in Service beacon:",
-            "[Microsoft.Hosting.Lifetime] Now listening on:",
             "[FakeServiceBeacon] Start.",
             "[VostokHostedService] Started.",
             "[VostokApplicationStateObservable] New state: Running.",
-            "[Microsoft.Hosting.Lifetime] Application started.",
+            "[Microsoft.AspNetCore.Hosting.Diagnostics] Hosting shutdown",
             "[VostokHostedService] Stopping..",
             "[VostokApplicationStateObservable] New state: Stopping.",
             "[ServiceBeaconHostedService] Stopping..",
             "[FakeServiceBeacon] Stop.",
-            "[Microsoft.Hosting.Lifetime] Application is shutting down...",
             "[VostokHostedService] Stopped.",
             "[VostokApplicationStateObservable] New state: Stopped.",
             "[VostokHostingEnvironment] Disposing of VostokHostingEnvironment..",
