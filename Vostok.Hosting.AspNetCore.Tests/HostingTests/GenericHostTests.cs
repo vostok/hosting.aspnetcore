@@ -45,6 +45,7 @@ internal class GenericHostTests
             "[Microsoft.Hosting.Lifetime] Application is shutting down...",
             "[VostokHostedService] Stopped.",
             "[VostokApplicationStateObservable] New state: Stopped.",
+            "[VostokHostingEnvironment] Disposing of Disposables list (0 element(s))..",
             "[VostokHostingEnvironment] Disposing of VostokHostingEnvironment..",
             "[VostokHostingEnvironment] Disposing of FileLog.."
         );

@@ -12,6 +12,7 @@ using Vostok.Applications.AspNetCore.Helpers;
 using Vostok.Hosting.Abstractions;
 using Vostok.Hosting.AspNetCore.Extensions;
 using Vostok.Logging.Abstractions;
+using Vostok.Logging.Context;
 using Vostok.ServiceDiscovery;
 using Vostok.ServiceDiscovery.Abstractions;
 
@@ -56,7 +57,8 @@ internal class ServiceBeaconHostedService : IHostedService
     // note (kungurtsev, 14.11.2022): is called after Kestrel started
     private void OnStarted()
     {
-        MiddlewaresWarmup.WarmupPingApi(environment).Wait();
+        using (new OperationContextToken("Warmup"))
+            MiddlewaresWarmup.WarmupPingApi(environment).GetAwaiter().GetResult();
 
         serviceBeacon.Start();
 
