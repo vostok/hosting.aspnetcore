@@ -56,10 +56,12 @@ public static class UseVostokExtensions
 
     private static void UseVostokHosting(this IServiceCollection serviceCollection, IVostokHostingEnvironment environment)
     {
+        serviceCollection.AddSingleton(_ => new VostokDisposables());
         serviceCollection.AddSingleton(_ => environment);
 
         serviceCollection.AddVostokEnvironmentComponents();
         serviceCollection.AddVostokEnvironmentHostExtensions(environment);
+        serviceCollection.AddVostokHealthChecks(environment);
         serviceCollection.AddSingleton<VostokApplicationStateObservable>();
         serviceCollection.AddVostokLoggerProvider();
 

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using Vostok.Applications.AspNetCore.Helpers;
 
 namespace Vostok.Hosting.AspNetCore.Extensions;
 
@@ -13,8 +14,7 @@ internal static class IServiceProviderExtensions
 
     public static void RegisterDisposable(this IServiceProvider serviceProvider, IDisposable disposable)
     {
-        serviceProvider.GetRequiredService<IHostApplicationLifetime>()
-            .ApplicationStopped
-            .Register(disposable.Dispose);
+        serviceProvider.GetRequiredService<VostokDisposables>()
+            .Add(disposable);
     }
 }
