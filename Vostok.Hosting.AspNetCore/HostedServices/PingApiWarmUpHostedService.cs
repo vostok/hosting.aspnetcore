@@ -17,7 +17,8 @@ internal class PingApiWarmUpHostedService : IHostedService
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        await MiddlewaresWarmup.WarmupPingApi(environment);
+        // todo (kungurtsev, 21.12.2022): 
+        //await MiddlewaresWarmup.WarmupPingApi(environment);
     }
 
     public Task StopAsync(CancellationToken cancellationToken) =>
