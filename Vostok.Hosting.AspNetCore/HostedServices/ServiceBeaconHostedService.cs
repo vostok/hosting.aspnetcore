@@ -58,7 +58,10 @@ internal class ServiceBeaconHostedService : IHostedService
     private void OnStarted()
     {
         using (new OperationContextToken("Warmup"))
-            MiddlewaresWarmup.WarmupPingApi(environment).GetAwaiter().GetResult();
+        {
+            if (server != null)
+                MiddlewaresWarmup.WarmupPingApi(environment).GetAwaiter().GetResult();
+        }
 
         serviceBeacon.Start();
 
