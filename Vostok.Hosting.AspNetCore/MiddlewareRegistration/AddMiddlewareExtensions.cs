@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Vostok.Applications.AspNetCore.Configuration;
 using Vostok.Applications.AspNetCore.Diagnostics;
 using Vostok.Applications.AspNetCore.Middlewares;
@@ -43,6 +44,7 @@ internal static class AddMiddlewareExtensions
             AddThrottlingCpuLimits(sp, builder);
             AddThrottlingErrorLogging(sp, builder);
             AddThreadPoolOverloadQuota(sp, builder);
+            AddEssentialSettings(sp, builder);
 
             var provider = new ThrottlingProvider(builder.Build());
 
@@ -50,6 +52,13 @@ internal static class AddMiddlewareExtensions
 
             return provider;
         });
+    }
+
+    private static void AddEssentialSettings(IServiceProvider serviceProvider, ThrottlingConfigurationBuilder builder)
+    {
+        var essentials = serviceProvider.GetRequiredService<IOptionsMonitor<ThrottlingEssentials>>();
+
+        builder.SetEssentials(() => essentials.CurrentValue);
     }
 
     private static void AddThrottlingCpuLimits(IServiceProvider serviceProvider, ThrottlingConfigurationBuilder builder)
