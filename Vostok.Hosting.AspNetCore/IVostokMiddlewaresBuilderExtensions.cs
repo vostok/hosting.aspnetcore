@@ -2,6 +2,7 @@
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Vostok.Applications.AspNetCore.Configuration;
+using Vostok.Hosting.AspNetCore.Builders;
 using Vostok.Hosting.AspNetCore.MiddlewareRegistration;
 
 namespace Vostok.Hosting.AspNetCore;
@@ -39,16 +40,11 @@ public static class IVostokMiddlewaresBuilderExtensions
 
     public static IVostokMiddlewaresBuilder ConfigureThrottling(
         this IVostokMiddlewaresBuilder builder,
-        Action<ThrottlingSettings> configure)
+        Action<IHostingThrottlingBuilder> configure)
     {
-        return builder.Configure(configure);
-    }
+        configure(new HostingThrottlingBuilder(builder.Services));
 
-    public static IVostokMiddlewaresBuilder ConfigureThrottlingProvider(
-        this IVostokMiddlewaresBuilder builder,
-        Action<VostokThrottlingSettings> configure)
-    {
-        return builder.Configure(configure);
+        return builder;
     }
 
     public static IVostokMiddlewaresBuilder ConfigureRequestLogging(

@@ -30,7 +30,7 @@ public static class IServiceCollectionExtensions
             .AddVostokRequestInfo(_ => {})
             .AddVostokDistributedContext(_ => {})
             .AddVostokTracing(_ => {})
-            .AddThrottling(_ => {})
+            .AddThrottling()
             .AddVostokRequestLogging(_ => {})
             .AddVostokDatacenterAwareness(_ => {})
             .AddVostokUnhandledExceptions(_ => {})
