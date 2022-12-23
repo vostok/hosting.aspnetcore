@@ -7,7 +7,7 @@ using Vostok.Applications.AspNetCore.Diagnostics;
 using Vostok.Applications.AspNetCore.Middlewares;
 using Vostok.Hosting.Abstractions;
 using Vostok.Hosting.Abstractions.Diagnostics;
-using Vostok.Hosting.AspNetCore.Builders;
+using Vostok.Hosting.AspNetCore.Builders.Throttling;
 using Vostok.Hosting.AspNetCore.Extensions;
 using Vostok.Logging.Abstractions;
 using Vostok.Throttling;

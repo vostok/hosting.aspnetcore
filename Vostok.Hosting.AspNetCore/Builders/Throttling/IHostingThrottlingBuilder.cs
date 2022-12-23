@@ -4,7 +4,7 @@ using Vostok.Throttling.Config;
 using Vostok.Throttling.Metrics;
 using Vostok.Throttling.Quotas;
 
-namespace Vostok.Hosting.AspNetCore.Builders;
+namespace Vostok.Hosting.AspNetCore.Builders.Throttling;
 
 public interface IHostingThrottlingBuilder
 {

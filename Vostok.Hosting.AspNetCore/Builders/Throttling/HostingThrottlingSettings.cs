@@ -1,7 +1,7 @@
 ﻿using Vostok.Throttling.Config;
 using Vostok.Throttling.Metrics;
 
-namespace Vostok.Hosting.AspNetCore.Builders;
+namespace Vostok.Hosting.AspNetCore.Builders.Throttling;
 
 public class HostingThrottlingSettings
 {
