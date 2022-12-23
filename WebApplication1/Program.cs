@@ -2,6 +2,7 @@ using Vostok.Applications.AspNetCore.Configuration;
 using Vostok.Configuration.Sources;
 using Vostok.Configuration.Sources.Object;
 using Vostok.Hosting.AspNetCore;
+using Vostok.Hosting.AspNetCore.Builders;
 using Vostok.Hosting.AspNetCore.Extensions;
 using Vostok.Hosting.AspNetCore.Houston;
 using Vostok.Hosting.AspNetCore.Houston.Applications;
@@ -37,7 +38,7 @@ builder.Services.Configure<MyOptions>(
 builder.Services
     .AddVostokMiddlewares()
     .ConfigureRequestLogging(c => c.LogQueryString = new LoggingCollectionSettings(true))
-    .ConfigureThrottling(t => t.RejectionResponseCode = 503);
+    .ConfigureThrottling(s => s.ConfigureMiddleware(m => m.RejectionResponseCode = 503).DisableThrottling());
 
 var options = builder.Configuration.GetSection("MyOptions").Get<MyOptions>();
 
