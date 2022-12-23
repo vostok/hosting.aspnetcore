@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Vostok.Throttling;
 using Vostok.Throttling.Quotas;
 
-namespace Vostok.Hosting.AspNetCore.Builders;
+namespace Vostok.Hosting.AspNetCore.Builders.Throttling;
 
 [PublicAPI]
 public static class IHostThrottlingBuilderExtensions

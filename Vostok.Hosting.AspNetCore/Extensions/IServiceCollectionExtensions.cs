@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Vostok.Applications.AspNetCore;
+using Vostok.Hosting.AspNetCore.Builders.Middlewares;
 using Vostok.Hosting.AspNetCore.MiddlewareRegistration;
 using Vostok.Logging.Abstractions;
 using Vostok.Logging.Microsoft;
