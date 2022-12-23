@@ -1,5 +1,6 @@
 using System;
 using Vostok.Applications.AspNetCore.Configuration;
+using Vostok.Hosting.AspNetCore.Builders.Diagnostics;
 using Vostok.Hosting.AspNetCore.Builders.Throttling;
 
 namespace Vostok.Hosting.AspNetCore.Builders.Middlewares;
@@ -15,8 +16,5 @@ public interface IVostokMiddlewaresBuilder
     public IVostokMiddlewaresBuilder ConfigureDatacenterAwareness(Action<DatacenterAwarenessSettings> configure);
     public IVostokMiddlewaresBuilder ConfigureUnhandledExceptions(Action<UnhandledExceptionSettings> configure);
     public IVostokMiddlewaresBuilder ConfigurePingApi(Action<PingApiSettings> configure);
-
-    // TODO: Use single builder for diagnostics
-    public IVostokMiddlewaresBuilder ConfigureDiagnosticApi(Action<DiagnosticApiSettings> configure);
-    public IVostokMiddlewaresBuilder ConfigureDiagnosticFeatures(Action<DiagnosticFeaturesSettings> configure);
+    public IVostokMiddlewaresBuilder ConfigureDiagnostics(Action<IHostingDiagnosticsBuilder> configure);
 }

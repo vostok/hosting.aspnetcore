@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using Vostok.Applications.AspNetCore.Configuration;
+using Vostok.Hosting.AspNetCore.Builders.Diagnostics;
 using Vostok.Hosting.AspNetCore.Builders.Throttling;
 
 namespace Vostok.Hosting.AspNetCore.Builders.Middlewares;
@@ -44,11 +45,11 @@ internal sealed class VostokMiddlewaresBuilder : IVostokMiddlewaresBuilder
     public IVostokMiddlewaresBuilder ConfigurePingApi(Action<PingApiSettings> configure) =>
         Configure(configure);
 
-    public IVostokMiddlewaresBuilder ConfigureDiagnosticApi(Action<DiagnosticApiSettings> configure) =>
-        Configure(configure);
-
-    public IVostokMiddlewaresBuilder ConfigureDiagnosticFeatures(Action<DiagnosticFeaturesSettings> configure) =>
-        Configure(configure);
+    public IVostokMiddlewaresBuilder ConfigureDiagnostics(Action<IHostingDiagnosticsBuilder> configure)
+    {
+        configure(new HostingDiagnosticsBuilder(services));
+        return this;
+    }
 
     private IVostokMiddlewaresBuilder Configure<T>(Action<T> configure)
         where T : class
