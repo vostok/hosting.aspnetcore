@@ -1,11 +1,13 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Vostok.Applications.AspNetCore.Configuration;
 using Vostok.Applications.AspNetCore.Diagnostics;
 using Vostok.Applications.AspNetCore.Middlewares;
 using Vostok.Hosting.Abstractions;
 using Vostok.Hosting.Abstractions.Diagnostics;
+using Vostok.Hosting.AspNetCore.Builders.Throttling;
 using Vostok.Hosting.AspNetCore.Extensions;
 using Vostok.Logging.Abstractions;
 using Vostok.Throttling;
@@ -33,13 +35,11 @@ internal static class AddMiddlewareExtensions
         });
     }
 
-    public static IServiceCollection AddThrottling(this IServiceCollection services, Action<ThrottlingSettings> configure)
+    public static IServiceCollection AddThrottling(this IServiceCollection services)
     {
-        services.Configure(configure);
-
-        return services.AddSingleton<IThrottlingProvider>(sp =>
+        services.TryAddSingleton<IThrottlingProvider>(sp =>
         {
-            var builder = sp.GetFromOptionsOrDefault<VostokThrottlingSettings>().ConfigurationBuilder;
+            var builder = sp.GetFromOptionsOrDefault<HostingThrottlingSettings>().ConfigurationBuilder;
 
             AddThrottlingCpuLimits(sp, builder);
             AddThrottlingErrorLogging(sp, builder);
@@ -52,6 +52,8 @@ internal static class AddMiddlewareExtensions
 
             return provider;
         });
+
+        return services;
     }
 
     private static void AddEssentialSettings(IServiceProvider serviceProvider, ThrottlingConfigurationBuilder builder)
@@ -83,7 +85,7 @@ internal static class AddMiddlewareExtensions
 
     private static void AddThreadPoolOverloadQuota(IServiceProvider serviceProvider, ThrottlingConfigurationBuilder builder)
     {
-        var settings = serviceProvider.GetFromOptionsOrDefault<VostokThrottlingSettings>();
+        var settings = serviceProvider.GetFromOptionsOrDefault<HostingThrottlingSettings>();
 
         if (settings.UseThreadPoolOverloadQuota)
         {
@@ -108,7 +110,7 @@ internal static class AddMiddlewareExtensions
     private static void AddThrottlingMetrics(IServiceProvider serviceProvider, ThrottlingProvider throttlingProvider)
     {
         var metrics = serviceProvider.GetService<IVostokApplicationMetrics>();
-        var settings = serviceProvider.GetFromOptionsOrDefault<VostokThrottlingSettings>();
+        var settings = serviceProvider.GetFromOptionsOrDefault<HostingThrottlingSettings>();
 
         if (settings.Metrics == null || metrics == null)
             return;
