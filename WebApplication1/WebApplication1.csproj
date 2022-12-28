@@ -106,10 +106,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\vostok.configuration.sources.cc\Vostok.Configuration.Sources.ClusterConfig\bin\Release\net6.0\Vostok.Configuration.Sources.ClusterConfig.dll</HintPath>
     </Reference>
-    <Reference Include="Vostok.Configuration.Sources.ClusterConfig.Legacy">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\vostok.configuration.sources.cc.legacy\Vostok.Configuration.Sources.ClusterConfig.Legacy\bin\Release\net6.0\Vostok.Configuration.Sources.ClusterConfig.Legacy.dll</HintPath>
-    </Reference>
     <Reference Include="Vostok.Configuration.Sources.Json">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\vostok.configuration.sources.json\Vostok.Configuration.Sources.Json\bin\Release\net6.0\Vostok.Configuration.Sources.Json.dll</HintPath>
