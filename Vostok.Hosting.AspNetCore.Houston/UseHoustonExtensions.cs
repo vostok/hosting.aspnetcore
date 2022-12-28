@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Vostok.Hosting.AspNetCore.Extensions;
 using Vostok.Hosting.AspNetCore.Houston.Helpers;
+using Vostok.Hosting.AspNetCore.Houston.HostedServices;
 using Vostok.Hosting.Houston.Configuration;
 using Vostok.Hosting.Houston.External;
 
