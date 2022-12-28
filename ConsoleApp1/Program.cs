@@ -1,6 +1,5 @@
 ﻿using ConsoleApp1;
 using Vostok.Hosting.AspNetCore;
-using Vostok.Hosting.Houston.Configuration;
 using Vostok.Hosting.Kontur;
 using Vostok.Hosting.Setup;
 using Vostok.Logging.File.Configuration;
