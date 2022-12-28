@@ -7,7 +7,7 @@ using Vostok.Hosting.Abstractions;
 using Vostok.Hosting.AspNetCore.Helpers;
 using Vostok.Hosting.Houston.External;
 
-namespace Vostok.Hosting.AspNetCore.Houston;
+namespace Vostok.Hosting.AspNetCore.Houston.HostedServices;
 
 internal class HoustonHostedService : IHostedService
 {
