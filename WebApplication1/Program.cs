@@ -1,7 +1,6 @@
 using Vostok.Applications.AspNetCore.Configuration;
 using Vostok.Hosting.AspNetCore;
 using Vostok.Hosting.AspNetCore.Extensions;
-using Vostok.Hosting.Kontur;
 using Vostok.Hosting.Setup;
 using Vostok.Logging.File.Configuration;
 using WebApplication1;
@@ -67,6 +66,4 @@ void SetupVostok(IVostokHostingEnvironmentBuilder builder)
     });
 
     builder.SetPort(5134);
-
-    builder.SetupForKontur();
 }
