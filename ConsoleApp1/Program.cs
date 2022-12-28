@@ -1,6 +1,5 @@
 ﻿using ConsoleApp1;
 using Vostok.Hosting.AspNetCore;
-using Vostok.Hosting.Kontur;
 using Vostok.Hosting.Setup;
 using Vostok.Logging.File.Configuration;
 
@@ -30,6 +29,4 @@ void SetupVostok(IVostokHostingEnvironmentBuilder builder)
         log.SetupFileLog(fileLog => fileLog.CustomizeSettings(
             fileLogSettings => fileLogSettings.FileOpenMode = FileOpenMode.Rewrite));
     });
-
-    builder.SetupForKontur();
 }
