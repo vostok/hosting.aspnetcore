@@ -33,6 +33,7 @@ full-build > notests:
   deps:
     - -vostok.applications.aspnetcore@hosting-aspnetcore/v6_0
     - vostok.applications.aspnetcore@hosting-aspnetcore/full-build
+    - vostok.logging.formatting
 
   build:
     target: Vostok.Hosting.AspNetCore.sln
