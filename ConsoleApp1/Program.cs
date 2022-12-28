@@ -21,6 +21,7 @@ void SetupVostok(IVostokHostingEnvironmentBuilder builder)
         identity.SetSubproject("Test");
         identity.SetApplication("AspNetCoreHostingConsole");
         identity.SetEnvironment("dev");
+        identity.SetInstance("0");
     });
 
     builder.SetupLog(log =>
