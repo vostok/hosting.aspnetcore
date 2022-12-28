@@ -1,5 +1,6 @@
 ﻿using System;
 using JetBrains.Annotations;
+using Vostok.Commons.Time;
 using Vostok.Hosting.Components.ThreadPool;
 
 namespace Vostok.Hosting.AspNetCore;
@@ -29,8 +30,8 @@ public class VostokHostingSettings
     public bool BeaconRegistrationWaitEnabled { get; set; }
 
     /// <inheritdoc cref="VostokHostSettings.BeaconRegistrationTimeout"/>
-    public TimeSpan BeaconRegistrationTimeout { get; set; } = TimeSpan.FromSeconds(10); // collision from InternalsVisibleTo
+    public TimeSpan BeaconRegistrationTimeout { get; set; } = 10.Seconds();
 
     /// <inheritdoc cref="VostokHostSettings.DisposeComponentTimeout"/>
-    public TimeSpan DisposeComponentTimeout { get; set; } = TimeSpan.FromSeconds(5);
+    public TimeSpan DisposeComponentTimeout { get; set; } = 5.Seconds();
 }
