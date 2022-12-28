@@ -98,14 +98,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\vostok.configuration.logging\Vostok.Configuration.Logging\bin\Release\net6.0\Vostok.Configuration.Logging.dll</HintPath>
     </Reference>
-    <Reference Include="Vostok.Configuration.Placeholders">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\vostok.configuration.placeholders\Vostok.Configuration.Placeholders\bin\Release\net6.0\Vostok.Configuration.Placeholders.dll</HintPath>
-    </Reference>
-    <Reference Include="Vostok.Configuration.Placeholders.ClusterConfig">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\vostok.configuration.placeholders.clusterconfig\Vostok.Configuration.Placeholders.ClusterConfig\bin\Release\net6.0\Vostok.Configuration.Placeholders.ClusterConfig.dll</HintPath>
-    </Reference>
     <Reference Include="Vostok.Configuration.Sources">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\vostok.configuration.sources\Vostok.Configuration.Sources\bin\Release\net6.0\Vostok.Configuration.Sources.dll</HintPath>
