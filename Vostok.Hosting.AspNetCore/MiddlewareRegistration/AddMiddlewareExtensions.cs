@@ -124,7 +124,7 @@ internal static class AddMiddlewareExtensions
         if (diagnostics == null)
             return;
 
-        var infoEntry = new DiagnosticEntry(DiagnosticConstants.Component, "request-throttling");
+        var infoEntry = new DiagnosticEntry(DiagnosticConstants.Component, DiagnosticConstants.RequestThrottlingEntry);
         var infoProvider = new ThrottlingInfoProvider(throttlingProvider);
 
         serviceProvider.RegisterDisposable(diagnostics.RegisterProvider(infoEntry, infoProvider));
@@ -147,7 +147,7 @@ internal static class AddMiddlewareExtensions
         if (diagnostics == null)
             return;
 
-        var infoEntry = new DiagnosticEntry(DiagnosticConstants.Component, "requests-in-progress");
+        var infoEntry = new DiagnosticEntry(DiagnosticConstants.Component, DiagnosticConstants.RequestsInProgressEntry);
         var infoProvider = new CurrentRequestsInfoProvider(requestTracker);
 
         serviceProvider.RegisterDisposable(diagnostics.RegisterProvider(infoEntry, infoProvider));
