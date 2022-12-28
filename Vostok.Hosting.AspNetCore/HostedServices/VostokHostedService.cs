@@ -18,6 +18,7 @@ internal class VostokHostedService : IHostedService
     private readonly IHostApplicationLifetime applicationLifetime;
     private readonly IVostokHostingEnvironment environment;
     private readonly VostokApplicationStateObservable applicationStateObservable;
+    private readonly InitializedFlag initializedFlag;
     private readonly VostokHostingSettings settings;
     private readonly ILog log;
 
@@ -25,6 +26,7 @@ internal class VostokHostedService : IHostedService
         IHostApplicationLifetime applicationLifetime,
         IVostokHostingEnvironment environment,
         VostokApplicationStateObservable applicationStateObservable,
+        InitializedFlag initializedFlag,
         IOptions<VostokHostingSettings> settings,
         ILog log
     )
@@ -32,6 +34,7 @@ internal class VostokHostedService : IHostedService
         this.applicationLifetime = applicationLifetime;
         this.environment = environment;
         this.applicationStateObservable = applicationStateObservable;
+        this.initializedFlag = initializedFlag;
         this.settings = settings.Value;
         this.log = log.ForContext<VostokHostedService>();
     }
@@ -68,6 +71,7 @@ internal class VostokHostedService : IHostedService
         applicationLifetime.ApplicationStopped.Register(OnStopped);
 
         applicationStateObservable.ChangeStateTo(VostokApplicationState.Running);
+        initializedFlag.TrySetTrue();
     }
 
     // note (kungurtsev, 14.11.2022): is called before Kestrel and Beacon stopped

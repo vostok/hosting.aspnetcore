@@ -57,8 +57,9 @@ public static class UseVostokExtensions
     private static void UseVostokHosting(this IServiceCollection serviceCollection, IVostokHostingEnvironment environment)
     {
         serviceCollection.AddSingleton<VostokDisposables>();
-        serviceCollection.AddSingleton(_ => environment);
-
+        serviceCollection.AddSingleton(_ => environment).AddSingleton(new BuiltVostokEnvironment(environment));
+        serviceCollection.AddSingleton(new InitializedFlag());
+        
         serviceCollection.AddVostokEnvironmentComponents();
         serviceCollection.AddVostokEnvironmentHostExtensions(environment);
         serviceCollection.AddVostokHealthChecks(environment);
