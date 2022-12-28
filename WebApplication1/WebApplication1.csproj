@@ -18,18 +18,6 @@
     <Reference Include="Vostok.Applications.AspNetCore">
       <HintPath>..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore\bin\Release\net6.0\Vostok.Applications.AspNetCore.dll</HintPath>
     </Reference>
-    <Reference Include="Vostok.Hosting.Houston">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\vostok.hosting.houston\Vostok.Hosting.Houston\bin\Release\netstandard2.0\Vostok.Hosting.Houston.dll</HintPath>
-    </Reference>
-    <Reference Include="Vostok.Hosting.Houston.Abstractions">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\vostok.hosting.houston.abstractions\Vostok.Hosting.Houston.Abstractions\bin\Release\netstandard2.0\Vostok.Hosting.Houston.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Vostok.Core.App.Kontur">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\vostok.core.app.kontur\Vostok.Core.App.Kontur\bin\Release\net6.0\Vostok.Core.App.Kontur.dll</HintPath>
-    </Reference>
     <Reference Include="Vostok.ClusterClient.Context">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\vostok.clusterclient.context\Vostok.ClusterClient.Context\bin\Release\net6.0\Vostok.ClusterClient.Context.dll</HintPath>
