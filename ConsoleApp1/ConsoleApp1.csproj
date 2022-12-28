@@ -289,7 +289,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Vostok.Hosting.AspNetCore.Houston\Vostok.Hosting.AspNetCore.Houston.csproj" />
       <ProjectReference Include="..\Vostok.Hosting.AspNetCore\Vostok.Hosting.AspNetCore.csproj" />
     </ItemGroup>
 

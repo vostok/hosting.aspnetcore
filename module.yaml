@@ -31,8 +31,6 @@ notests *default:
 
 full-build > notests:
   deps:
-    - vostok.logging.formatting
-    - vostok.hosting.houston@hosting-aspnetcore
     - -vostok.applications.aspnetcore@hosting-aspnetcore/v6_0
     - vostok.applications.aspnetcore@hosting-aspnetcore/full-build
 
