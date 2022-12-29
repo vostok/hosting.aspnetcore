@@ -9,7 +9,7 @@ notests *default:
     - Vostok.Hosting.AspNetCore/bin/Release/net6.0/Vostok.Hosting.AspNetCore.dll
     - module vostok.hosting.abstractions
     - module vostok.hosting
-    - module vostok.applications.aspnetcore
+    - module vostok.applications.aspnetcore/v6_0
     - module vostok.throttling
     - module vostok.throttling.metrics
 
