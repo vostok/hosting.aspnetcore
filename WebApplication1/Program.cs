@@ -9,20 +9,12 @@ using Vostok.Hosting.Houston.Configuration;
 using Vostok.Hosting.Kontur;
 using Vostok.Hosting.Setup;
 using Vostok.Logging.File.Configuration;
+using Vostok.Throttling.Quotas;
 using WebApplication1;
 
 [assembly: HoustonEntryPoint(typeof(HoustonWebApplication))]
 
 var builder = WebApplication.CreateBuilder(args);
-// review: I'm concerned about relations between builder.Configuration and vostok environment
-//         While it looks ok-ish in non-houston scenarios as developer should themself provide configuration via json files/vault/etc..
-//         — most necessary configuration is available when environment is being configured.
-//         But in case if CC config source is needed one to create it themself
-//         
-//         In houston it looks rather hash as most of the configuration is passed as part of the environment,
-//         so as an application developer I have no way to configure my services using db connection strings etc.
-//
-//         Seems to be the only serious problem ATM. I'll think more about it later
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -36,7 +28,11 @@ builder.Services.Configure<MyOptions>(
 builder.Services
     .AddVostokMiddlewares()
     .ConfigureRequestLogging(c => c.LogQueryString = new LoggingCollectionSettings(true))
-    .ConfigureThrottling(s => s.ConfigureMiddleware(m => m.RejectionResponseCode = 503))
+    .ConfigureThrottling(s =>
+    {
+        s.RejectionResponseCode = 503;
+        s.UsePriorityQuota(() => new PropertyQuotaOptions());
+    })
     .ConfigureHttpContextTweaks(c => c.EnableResponseWriteCallSizeLimit = true)
     .ConfigureDiagnostics(d => d
         .ConfigureMiddleware(m => m.AllowOnlyLocalRequests = true)
