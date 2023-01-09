@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Reflection;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -8,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Vostok.Applications.AspNetCore;
+using Vostok.Applications.AspNetCore.Configuration;
 using Vostok.Commons.Environment;
 using Vostok.Hosting.Abstractions;
 using Vostok.Hosting.Abstractions.Diagnostics;
@@ -29,9 +29,6 @@ public static class IServiceCollectionExtensions
 
     public static IVostokMiddlewaresBuilder AddVostokMiddlewares(this IServiceCollection services)
     {
-        var environment = services.GetImplementationInstance<BuiltVostokEnvironment>().Environment;
-        var initializedFlag = services.GetImplementationInstance<InitializedFlag>();
-        
         services
             .ConfigureKestrelDefaults()
             .AddRequestTracking();
@@ -40,23 +37,30 @@ public static class IServiceCollectionExtensions
             .AddVostokHttpContextTweaks(_ => {})
             .AddVostokRequestInfo(_ => {})
             .AddVostokDistributedContext(_ => {})
-            .AddVostokTracing(tracingSettings =>
-            {
-                if (environment.ServiceBeacon.ReplicaInfo.TryGetUrl(out var url))
-                    tracingSettings.BaseUrl = url;
-            })
+            .AddVostokTracing(_ => {})
             .AddThrottling()
             .AddVostokRequestLogging(_ => {})
             .AddVostokDatacenterAwareness(_ => {})
             .AddVostokUnhandledExceptions(_ => {})
-            .AddVostokPingApi(pingApiSettings =>
-            {
-                pingApiSettings.CommitHashProvider = () => AssemblyCommitHashExtractor.ExtractFromAssembly(Assembly.GetEntryAssembly());
-                pingApiSettings.InitializationCheck = () => initializedFlag;
-                if (environment.HostExtensions.TryGet<IVostokApplicationDiagnostics>(out var diagnostics))
-                    pingApiSettings.HealthCheck = () => diagnostics.HealthTracker.CurrentStatus == HealthStatus.Healthy;
-            })
+            .AddVostokPingApi(_ => {})
             .AddVostokDiagnosticApi(_ => {});
+
+        services.AddOptions<TracingSettings>()
+            .Configure<IServiceBeacon>((settings, beacon) =>
+            {
+                if (beacon.ReplicaInfo.TryGetUrl(out var url))
+                    settings.BaseUrl = url;
+            });
+
+        services.AddOptions<PingApiSettings>()
+            .Configure<IVostokHostingEnvironment, InitializedFlag>((settings, environment, initFlag) =>
+            {
+                settings.CommitHashProvider = () => AssemblyCommitHashExtractor.ExtractFromAssembly(Assembly.GetEntryAssembly());
+                settings.InitializationCheck = () => initFlag.Value;
+
+                if (environment.HostExtensions.TryGet<IVostokApplicationDiagnostics>(out var diagnostics))
+                    settings.HealthCheck = () => diagnostics.HealthTracker.CurrentStatus == HealthStatus.Healthy;
+            });
 
         return new VostokMiddlewaresBuilder(services);
     }
@@ -83,19 +87,5 @@ public static class IServiceCollectionExtensions
             s.Limits.MaxRequestHeadersTotalSize = 64 * 1024;
             s.Limits.MaxConcurrentUpgradedConnections = 10000;
         });
-    }
-
-    private static T GetImplementationInstance<T>(this IServiceCollection services)
-        where T : class
-    {
-        var descriptor = services.FirstOrDefault(s => s.ServiceType == typeof(T));
-
-        if (descriptor == null)
-            throw new Exception($"{typeof(T)} isn't registred.");
-
-        var instance = descriptor.ImplementationInstance as T
-            ?? throw new Exception($"{typeof(T)} isn't instance.");
-        
-        return instance;
     }
 }
