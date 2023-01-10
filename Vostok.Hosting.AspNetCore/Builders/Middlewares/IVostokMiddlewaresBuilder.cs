@@ -17,4 +17,5 @@ public interface IVostokMiddlewaresBuilder
     public IVostokMiddlewaresBuilder ConfigureUnhandledExceptions(Action<UnhandledExceptionSettings> configure);
     public IVostokMiddlewaresBuilder ConfigurePingApi(Action<PingApiSettings> configure);
     public IVostokMiddlewaresBuilder ConfigureDiagnostics(Action<IHostingDiagnosticsBuilder> configure);
+    public IVostokMiddlewaresBuilder ConfigureEnabledMiddlewares(Action<EnabledVostokMiddlewaresSettings> configure);
 }
