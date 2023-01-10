@@ -48,6 +48,9 @@ internal sealed class VostokMiddlewaresBuilder : IVostokMiddlewaresBuilder
         return this;
     }
 
+    public IVostokMiddlewaresBuilder ConfigureEnabledMiddlewares(Action<EnabledVostokMiddlewaresSettings> configure) =>
+        Configure(configure);
+
     private IVostokMiddlewaresBuilder Configure<T>(Action<T> configure)
         where T : class
     {
