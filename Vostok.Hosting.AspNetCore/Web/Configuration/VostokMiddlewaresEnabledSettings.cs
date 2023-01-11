@@ -1,4 +1,4 @@
-﻿namespace Vostok.Hosting.AspNetCore.Middlewares.Configuration;
+﻿namespace Vostok.Hosting.AspNetCore.Web.Configuration;
 
 public class VostokMiddlewaresEnabledSettings
 {

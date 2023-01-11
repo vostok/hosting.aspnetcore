@@ -1,11 +1,11 @@
 using System;
 using JetBrains.Annotations;
 using Vostok.Applications.AspNetCore.Configuration;
-using Vostok.Hosting.AspNetCore.Middlewares.Configuration;
-using Vostok.Hosting.AspNetCore.Middlewares.Diagnostics;
-using ThrottlingSettings = Vostok.Hosting.AspNetCore.Middlewares.Configuration.ThrottlingSettings;
+using Vostok.Hosting.AspNetCore.Web.Configuration;
+using Vostok.Hosting.AspNetCore.Web.Diagnostics;
+using ThrottlingSettings = Vostok.Hosting.AspNetCore.Web.Configuration.ThrottlingSettings;
 
-namespace Vostok.Hosting.AspNetCore.Middlewares;
+namespace Vostok.Hosting.AspNetCore.Web;
 
 [PublicAPI]
 public interface IVostokMiddlewaresBuilder

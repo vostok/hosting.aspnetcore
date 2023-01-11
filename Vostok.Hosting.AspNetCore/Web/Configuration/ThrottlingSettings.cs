@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 using Vostok.Throttling.Config;
 using Vostok.Throttling.Metrics;
 
-namespace Vostok.Hosting.AspNetCore.Middlewares.Configuration;
+namespace Vostok.Hosting.AspNetCore.Web.Configuration;
 
 [PublicAPI]
 public class ThrottlingSettings

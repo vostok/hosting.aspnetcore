@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Builder;
 using Vostok.Applications.AspNetCore;
 using Vostok.Hosting.AspNetCore.Extensions;
-using Vostok.Hosting.AspNetCore.Middlewares.Configuration;
+using Vostok.Hosting.AspNetCore.Web.Configuration;
 
-namespace Vostok.Hosting.AspNetCore.Middlewares;
+namespace Vostok.Hosting.AspNetCore.Web;
 
 [PublicAPI]
 public static class UseVostokMiddlewaresExtensions
