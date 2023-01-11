@@ -46,7 +46,6 @@ internal static class AddMiddlewareExtensions
             AddThrottlingCpuLimits(services, builder);
             AddThrottlingErrorLogging(services, builder);
             AddThrottlingQuotas(services, builder);
-            AddEssentialSettings(services, builder);
 
             var provider = new ThrottlingProvider(builder.Build());
 
@@ -77,13 +76,6 @@ internal static class AddMiddlewareExtensions
                 foreach (var (name, valueExtractor) in throttlingSettings.Properties)
                     middlewareSettings.AdditionalProperties.Add(context => (name, valueExtractor(context)));
             });
-    }
-
-    private static void AddEssentialSettings(IServiceProvider serviceProvider, ThrottlingConfigurationBuilder builder)
-    {
-        var essentials = serviceProvider.GetRequiredService<IOptionsMonitor<ThrottlingEssentials>>();
-
-        builder.SetEssentials(() => essentials.CurrentValue);
     }
 
     private static void AddThrottlingCpuLimits(IServiceProvider serviceProvider, ThrottlingConfigurationBuilder builder)
