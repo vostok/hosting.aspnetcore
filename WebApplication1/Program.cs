@@ -1,6 +1,8 @@
 using Vostok.Applications.AspNetCore.Configuration;
 using Vostok.Hosting.AspNetCore;
 using Vostok.Hosting.AspNetCore.Extensions;
+using Vostok.Hosting.AspNetCore.Middlewares;
+using Vostok.Hosting.AspNetCore.Middlewares.Configuration;
 using Vostok.Hosting.Setup;
 using Vostok.Logging.File.Configuration;
 using Vostok.Throttling.Quotas;

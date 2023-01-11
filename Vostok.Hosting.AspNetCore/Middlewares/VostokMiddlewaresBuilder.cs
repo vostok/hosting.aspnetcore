@@ -1,10 +1,11 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using Vostok.Applications.AspNetCore.Configuration;
-using Vostok.Hosting.AspNetCore.Builders.Diagnostics;
-using Vostok.Hosting.AspNetCore.Builders.Throttling;
+using Vostok.Hosting.AspNetCore.Middlewares.Configuration;
+using Vostok.Hosting.AspNetCore.Middlewares.Diagnostics;
+using ThrottlingSettings = Vostok.Hosting.AspNetCore.Middlewares.Configuration.ThrottlingSettings;
 
-namespace Vostok.Hosting.AspNetCore.Builders.Middlewares;
+namespace Vostok.Hosting.AspNetCore.Middlewares;
 
 internal sealed class VostokMiddlewaresBuilder : IVostokMiddlewaresBuilder
 {
@@ -25,7 +26,7 @@ internal sealed class VostokMiddlewaresBuilder : IVostokMiddlewaresBuilder
     public IVostokMiddlewaresBuilder ConfigureTracing(Action<TracingSettings> configure) =>
         Configure(configure);
 
-    public IVostokMiddlewaresBuilder ConfigureThrottling(Action<NewThrottlingSettings> configure) =>
+    public IVostokMiddlewaresBuilder ConfigureThrottling(Action<ThrottlingSettings> configure) =>
         Configure(configure);
 
     public IVostokMiddlewaresBuilder ConfigureRequestLogging(Action<LoggingSettings> configure) =>
@@ -46,7 +47,7 @@ internal sealed class VostokMiddlewaresBuilder : IVostokMiddlewaresBuilder
         return this;
     }
 
-    public IVostokMiddlewaresBuilder ConfigureEnabledMiddlewares(Action<EnabledVostokMiddlewaresSettings> configure) =>
+    public IVostokMiddlewaresBuilder ConfigureEnabled(Action<VostokMiddlewaresEnabledSettings> configure) =>
         Configure(configure);
 
     private IVostokMiddlewaresBuilder Configure<T>(Action<T> configure)

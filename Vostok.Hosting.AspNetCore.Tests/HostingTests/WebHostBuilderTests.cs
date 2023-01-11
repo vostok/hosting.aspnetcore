@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using Vostok.Commons.Helpers.Network;
 using Vostok.Hosting.AspNetCore.Extensions;
+using Vostok.Hosting.AspNetCore.Middlewares;
 using Vostok.Hosting.AspNetCore.Tests.TestHelpers;
 using Vostok.Logging.Abstractions;
 using Vostok.ServiceDiscovery.Abstractions;

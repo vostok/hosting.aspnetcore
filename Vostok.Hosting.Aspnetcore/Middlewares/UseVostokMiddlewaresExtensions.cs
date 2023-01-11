@@ -1,14 +1,17 @@
+﻿using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Vostok.Applications.AspNetCore;
-using Vostok.Hosting.AspNetCore.Builders.Middlewares;
+using Vostok.Hosting.AspNetCore.Extensions;
+using Vostok.Hosting.AspNetCore.Middlewares.Configuration;
 
-namespace Vostok.Hosting.AspNetCore.Extensions;
+namespace Vostok.Hosting.AspNetCore.Middlewares;
 
-public static class IApplicationBuilderExtensions
+[PublicAPI]
+public static class UseVostokMiddlewaresExtensions
 {
     public static IApplicationBuilder UseVostokMiddlewares(this IApplicationBuilder app)
     {
-        var settings = app.ApplicationServices.GetFromOptionsOrDefault<EnabledVostokMiddlewaresSettings>();
+        var settings = app.ApplicationServices.GetFromOptionsOrDefault<VostokMiddlewaresEnabledSettings>();
 
         if (settings.EnableHttpContextTweaks)
             app.UseVostokHttpContextTweaks();
