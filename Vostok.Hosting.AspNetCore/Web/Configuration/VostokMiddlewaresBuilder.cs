@@ -1,11 +1,9 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using Vostok.Applications.AspNetCore.Configuration;
-using Vostok.Hosting.AspNetCore.Web.Configuration;
 using Vostok.Hosting.AspNetCore.Web.Diagnostics;
-using ThrottlingSettings = Vostok.Hosting.AspNetCore.Web.Configuration.ThrottlingSettings;
 
-namespace Vostok.Hosting.AspNetCore.Web;
+namespace Vostok.Hosting.AspNetCore.Web.Configuration;
 
 internal sealed class VostokMiddlewaresBuilder : IVostokMiddlewaresBuilder
 {
