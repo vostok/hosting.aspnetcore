@@ -58,6 +58,7 @@ public static class UseVostokExtensions
     {
         serviceCollection.AddSingleton<VostokDisposables>();
         serviceCollection.AddSingleton(_ => environment);
+        serviceCollection.AddSingleton(new InitializedFlag());
 
         serviceCollection.AddVostokEnvironmentComponents();
         serviceCollection.AddVostokEnvironmentHostExtensions(environment);
