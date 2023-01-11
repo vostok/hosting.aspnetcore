@@ -14,7 +14,6 @@ using Vostok.Hosting.Abstractions;
 using Vostok.Hosting.Abstractions.Diagnostics;
 using Vostok.Hosting.AspNetCore.Extensions;
 using Vostok.Hosting.AspNetCore.Helpers;
-using Vostok.Hosting.AspNetCore.Middlewares.Configuration;
 using Vostok.Logging.Abstractions;
 using Vostok.ServiceDiscovery.Abstractions;
 using Vostok.Throttling;
@@ -64,7 +63,7 @@ public static class AddVostokMiddlewaresExtensions
 
         return new VostokMiddlewaresBuilder(serviceCollection);
     }
-    
+
     private static IServiceCollection ConfigureKestrelDefaults(this IServiceCollection services)
     {
         return services.Configure<KestrelServerOptions>(s =>
@@ -124,7 +123,7 @@ public static class AddVostokMiddlewaresExtensions
         });
 
         AdaptMiddlewareSettings(serviceCollection);
-        
+
         return serviceCollection;
     }
 

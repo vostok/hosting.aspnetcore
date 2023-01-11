@@ -22,7 +22,7 @@ notests *default:
     - vostok.configuration.abstractions
     - vostok.devtools
     - vostok.hosting
-    - vostok.hosting.abstractions 
+    - vostok.hosting.abstractions
     - vostok.applications.aspnetcore@hosting-aspnetcore/v6_0
     - vostok.logging.microsoft
     - vostok.logging.abstractions
