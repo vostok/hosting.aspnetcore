@@ -27,11 +27,8 @@ internal sealed class VostokMiddlewaresBuilder : IVostokMiddlewaresBuilder
     public IVostokMiddlewaresBuilder ConfigureTracing(Action<TracingSettings> configure) =>
         Configure(configure);
 
-    public IVostokMiddlewaresBuilder ConfigureThrottling(Action<IHostingThrottlingBuilder> configure)
-    {
-        configure(new HostingThrottlingBuilder(services));
-        return this;
-    }
+    public IVostokMiddlewaresBuilder ConfigureThrottling(Action<NewThrottlingSettings> configure) =>
+        Configure(configure);
 
     public IVostokMiddlewaresBuilder ConfigureRequestLogging(Action<LoggingSettings> configure) =>
         Configure(configure);
@@ -50,6 +47,9 @@ internal sealed class VostokMiddlewaresBuilder : IVostokMiddlewaresBuilder
         configure(new HostingDiagnosticsBuilder(services));
         return this;
     }
+
+    public IVostokMiddlewaresBuilder ConfigureEnabledMiddlewares(Action<EnabledVostokMiddlewaresSettings> configure) =>
+        Configure(configure);
 
     private IVostokMiddlewaresBuilder Configure<T>(Action<T> configure)
         where T : class

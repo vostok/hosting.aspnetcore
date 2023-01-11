@@ -11,10 +11,11 @@ public interface IVostokMiddlewaresBuilder
     public IVostokMiddlewaresBuilder ConfigureRequestInfoFilling(Action<FillRequestInfoSettings> configure);
     public IVostokMiddlewaresBuilder ConfigureDistributedContext(Action<DistributedContextSettings> configure);
     public IVostokMiddlewaresBuilder ConfigureTracing(Action<TracingSettings> configure);
-    public IVostokMiddlewaresBuilder ConfigureThrottling(Action<IHostingThrottlingBuilder> configure);
+    public IVostokMiddlewaresBuilder ConfigureThrottling(Action<NewThrottlingSettings> configure);
     public IVostokMiddlewaresBuilder ConfigureRequestLogging(Action<LoggingSettings> configure);
     public IVostokMiddlewaresBuilder ConfigureDatacenterAwareness(Action<DatacenterAwarenessSettings> configure);
     public IVostokMiddlewaresBuilder ConfigureUnhandledExceptions(Action<UnhandledExceptionSettings> configure);
     public IVostokMiddlewaresBuilder ConfigurePingApi(Action<PingApiSettings> configure);
     public IVostokMiddlewaresBuilder ConfigureDiagnostics(Action<IHostingDiagnosticsBuilder> configure);
+    public IVostokMiddlewaresBuilder ConfigureEnabledMiddlewares(Action<EnabledVostokMiddlewaresSettings> configure);
 }
