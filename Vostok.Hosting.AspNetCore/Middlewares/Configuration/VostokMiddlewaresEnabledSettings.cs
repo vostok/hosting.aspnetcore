@@ -1,6 +1,6 @@
-﻿namespace Vostok.Hosting.AspNetCore.Builders.Middlewares;
+﻿namespace Vostok.Hosting.AspNetCore.Middlewares.Configuration;
 
-public class EnabledVostokMiddlewaresSettings
+public class VostokMiddlewaresEnabledSettings
 {
     public bool EnableHttpContextTweaks { get; set; } = true;
     public bool EnableRequestInfoFilling { get; set; } = true;

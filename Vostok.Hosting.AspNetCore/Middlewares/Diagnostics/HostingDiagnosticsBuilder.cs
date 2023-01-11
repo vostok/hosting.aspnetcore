@@ -2,7 +2,7 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 using Vostok.Applications.AspNetCore.Configuration;
 
-namespace Vostok.Hosting.AspNetCore.Builders.Diagnostics;
+namespace Vostok.Hosting.AspNetCore.Middlewares.Diagnostics;
 
 internal sealed class HostingDiagnosticsBuilder : IHostingDiagnosticsBuilder
 {

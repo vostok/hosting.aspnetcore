@@ -1,7 +1,7 @@
 ﻿using System;
 using Vostok.Applications.AspNetCore.Configuration;
 
-namespace Vostok.Hosting.AspNetCore.Builders.Diagnostics;
+namespace Vostok.Hosting.AspNetCore.Middlewares.Diagnostics;
 
 public interface IHostingDiagnosticsBuilder
 {
