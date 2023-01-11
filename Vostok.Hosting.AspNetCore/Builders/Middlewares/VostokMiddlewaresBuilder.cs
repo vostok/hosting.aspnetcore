@@ -10,10 +10,8 @@ internal sealed class VostokMiddlewaresBuilder : IVostokMiddlewaresBuilder
 {
     private readonly IServiceCollection services;
 
-    public VostokMiddlewaresBuilder(IServiceCollection services)
-    {
+    public VostokMiddlewaresBuilder(IServiceCollection services) =>
         this.services = services;
-    }
 
     public IVostokMiddlewaresBuilder ConfigureHttpContextTweaks(Action<HttpContextTweakSettings> configure) =>
         Configure(configure);

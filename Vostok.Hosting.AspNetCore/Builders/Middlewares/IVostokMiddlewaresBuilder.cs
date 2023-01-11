@@ -1,10 +1,12 @@
 using System;
+using JetBrains.Annotations;
 using Vostok.Applications.AspNetCore.Configuration;
 using Vostok.Hosting.AspNetCore.Builders.Diagnostics;
 using Vostok.Hosting.AspNetCore.Builders.Throttling;
 
 namespace Vostok.Hosting.AspNetCore.Builders.Middlewares;
 
+[PublicAPI]
 public interface IVostokMiddlewaresBuilder
 {
     public IVostokMiddlewaresBuilder ConfigureHttpContextTweaks(Action<HttpContextTweakSettings> configure);
