@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,10 +7,16 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Vostok.Applications.AspNetCore;
+using Vostok.Applications.AspNetCore.Configuration;
+using Vostok.Commons.Environment;
+using Vostok.Hosting.Abstractions;
+using Vostok.Hosting.Abstractions.Diagnostics;
 using Vostok.Hosting.AspNetCore.Builders.Middlewares;
+using Vostok.Hosting.AspNetCore.Helpers;
 using Vostok.Hosting.AspNetCore.MiddlewareRegistration;
 using Vostok.Logging.Abstractions;
 using Vostok.Logging.Microsoft;
+using Vostok.ServiceDiscovery.Abstractions;
 
 namespace Vostok.Hosting.AspNetCore.Extensions;
 
@@ -37,6 +44,23 @@ public static class IServiceCollectionExtensions
             .AddVostokUnhandledExceptions(_ => {})
             .AddVostokPingApi(_ => {})
             .AddVostokDiagnosticApi(_ => {});
+
+        services.AddOptions<TracingSettings>()
+            .Configure<IServiceBeacon>((settings, beacon) =>
+            {
+                if (beacon.ReplicaInfo.TryGetUrl(out var url))
+                    settings.BaseUrl = url;
+            });
+
+        services.AddOptions<PingApiSettings>()
+            .Configure<IVostokHostingEnvironment, InitializedFlag>((settings, environment, initFlag) =>
+            {
+                settings.CommitHashProvider = () => AssemblyCommitHashExtractor.ExtractFromAssembly(Assembly.GetEntryAssembly());
+                settings.InitializationCheck = () => initFlag.Value;
+
+                if (environment.HostExtensions.TryGet<IVostokApplicationDiagnostics>(out var diagnostics))
+                    settings.HealthCheck = () => diagnostics.HealthTracker.CurrentStatus == HealthStatus.Healthy;
+            });
 
         return new VostokMiddlewaresBuilder(services);
     }
