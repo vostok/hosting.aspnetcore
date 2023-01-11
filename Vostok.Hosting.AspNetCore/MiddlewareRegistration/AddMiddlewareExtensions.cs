@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
@@ -39,11 +40,11 @@ internal static class AddMiddlewareExtensions
     {
         services.TryAddSingleton<IThrottlingProvider>(sp =>
         {
-            var builder = sp.GetFromOptionsOrDefault<HostingThrottlingSettings>().ConfigurationBuilder;
+            var builder = new ThrottlingConfigurationBuilder();
 
             AddThrottlingCpuLimits(sp, builder);
             AddThrottlingErrorLogging(sp, builder);
-            AddThreadPoolOverloadQuota(sp, builder);
+            AddThrottlingQuotas(sp, builder);
             AddEssentialSettings(sp, builder);
 
             var provider = new ThrottlingProvider(builder.Build());
@@ -53,7 +54,30 @@ internal static class AddMiddlewareExtensions
             return provider;
         });
 
+        AdaptMiddlewareSettings(services);
         return services;
+    }
+
+    private static void AdaptMiddlewareSettings(IServiceCollection services)
+    {
+        services.AddOptions<ThrottlingSettings>()
+            .Configure<IOptions<NewThrottlingSettings>>((middlewareSettings, options) =>
+            {
+                var throttlingSettings = options.Value;
+
+                middlewareSettings.RejectionResponseCode = throttlingSettings.RejectionResponseCode;
+                middlewareSettings.DisableForWebSockets = throttlingSettings.DisableForWebSockets;
+
+                middlewareSettings.AddConsumerProperty = throttlingSettings.Quotas.Any(q => q.Name == WellKnownThrottlingProperties.Consumer);
+                middlewareSettings.AddMethodProperty = throttlingSettings.Quotas.Any(q => q.Name == WellKnownThrottlingProperties.Method);
+                middlewareSettings.AddPriorityProperty = throttlingSettings.Quotas.Any(q => q.Name == WellKnownThrottlingProperties.Priority);
+                middlewareSettings.AddUrlProperty = throttlingSettings.Quotas.Any(q => q.Name == WellKnownThrottlingProperties.Url);
+
+                foreach (var (name, valueExtractor) in throttlingSettings.Properties)
+                {
+                    middlewareSettings.AdditionalProperties.Add(context => (name, valueExtractor(context)));
+                }
+            });
     }
 
     private static void AddEssentialSettings(IServiceProvider serviceProvider, ThrottlingConfigurationBuilder builder)
@@ -83,14 +107,19 @@ internal static class AddMiddlewareExtensions
         builder.SetErrorCallback(ex => log.Error(ex, "Internal failure in request throttling."));
     }
 
-    private static void AddThreadPoolOverloadQuota(IServiceProvider serviceProvider, ThrottlingConfigurationBuilder builder)
+    private static void AddThrottlingQuotas(IServiceProvider serviceProvider, ThrottlingConfigurationBuilder builder)
     {
-        var settings = serviceProvider.GetFromOptionsOrDefault<HostingThrottlingSettings>();
+        var settings = serviceProvider.GetFromOptionsOrDefault<NewThrottlingSettings>();
 
         if (settings.UseThreadPoolOverloadQuota)
         {
             var threadPoolQuota = new ThreadPoolOverloadQuota(new ThreadPoolOverloadQuotaOptions());
             builder.AddCustomQuota(threadPoolQuota);
+        }
+
+        foreach (var (propertyName, quotaOptionsProvider) in settings.Quotas)
+        {
+            builder.SetPropertyQuota(propertyName, quotaOptionsProvider);
         }
     }
 
@@ -110,7 +139,7 @@ internal static class AddMiddlewareExtensions
     private static void AddThrottlingMetrics(IServiceProvider serviceProvider, ThrottlingProvider throttlingProvider)
     {
         var metrics = serviceProvider.GetService<IVostokApplicationMetrics>();
-        var settings = serviceProvider.GetFromOptionsOrDefault<HostingThrottlingSettings>();
+        var settings = serviceProvider.GetFromOptionsOrDefault<NewThrottlingSettings>();
 
         if (settings.Metrics == null || metrics == null)
             return;
