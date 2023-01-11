@@ -15,7 +15,7 @@ public class NewThrottlingSettings
     private static readonly ThrottlingEssentials DefaultEssentials = new();
 
     public ThrottlingMetricsOptions? Metrics { get; set; } = new();
-    public bool UseThreadPoolOverloadQuota { get; set; }
+    public bool UseThreadPoolOverloadQuota { get; set; } = true;
 
     public int RejectionResponseCode { get; set; } = 429;
     public bool DisableForWebSockets { get; set; } = true;
