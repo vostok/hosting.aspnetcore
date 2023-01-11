@@ -9,16 +9,20 @@ notests *default:
     - Vostok.Hosting.AspNetCore/bin/Release/net6.0/Vostok.Hosting.AspNetCore.dll
     - module vostok.hosting.abstractions
     - module vostok.hosting
-    - module vostok.applications.aspnetcore
+    - module vostok.applications.aspnetcore/v6_0
+    - module vostok.throttling
+    - module vostok.throttling.metrics
 
   deps:
+    - vostok.configuration.sources
+    - vostok.logging.context
     - vostok.configuration.microsoft
     - vostok.metrics
     - vostok.configuration
     - vostok.configuration.abstractions
     - vostok.devtools
     - vostok.hosting
-    - vostok.hosting.abstractions 
+    - vostok.hosting.abstractions
     - vostok.applications.aspnetcore@hosting-aspnetcore/v6_0
     - vostok.logging.microsoft
     - vostok.logging.abstractions
@@ -27,10 +31,9 @@ notests *default:
 
 full-build > notests:
   deps:
-    - vostok.logging.formatting
-    - vostok.hosting.houston@hosting-aspnetcore
     - -vostok.applications.aspnetcore@hosting-aspnetcore/v6_0
     - vostok.applications.aspnetcore@hosting-aspnetcore/full-build
+    - vostok.logging.formatting
 
   build:
     target: Vostok.Hosting.AspNetCore.sln

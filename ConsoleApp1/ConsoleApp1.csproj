@@ -10,18 +10,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Reference Include="Vostok.Hosting.Houston">
-            <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\vostok.hosting.houston\Vostok.Hosting.Houston\bin\Release\netstandard2.0\Vostok.Hosting.Houston.dll</HintPath>
-        </Reference>
-        <Reference Include="Vostok.Hosting.Houston.Abstractions">
-            <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\vostok.hosting.houston.abstractions\Vostok.Hosting.Houston.Abstractions\bin\Release\netstandard2.0\Vostok.Hosting.Houston.Abstractions.dll</HintPath>
-        </Reference>
-        <Reference Include="Vostok.Core.App.Kontur">
-            <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\vostok.core.app.kontur\Vostok.Core.App.Kontur\bin\Release\net6.0\Vostok.Core.App.Kontur.dll</HintPath>
-        </Reference>
         <Reference Include="Vostok.ClusterClient.Context">
             <SpecificVersion>False</SpecificVersion>
             <HintPath>..\..\vostok.clusterclient.context\Vostok.ClusterClient.Context\bin\Release\net6.0\Vostok.ClusterClient.Context.dll</HintPath>
@@ -102,14 +90,6 @@
             <SpecificVersion>False</SpecificVersion>
             <HintPath>..\..\vostok.configuration.logging\Vostok.Configuration.Logging\bin\Release\net6.0\Vostok.Configuration.Logging.dll</HintPath>
         </Reference>
-        <Reference Include="Vostok.Configuration.Placeholders">
-            <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\vostok.configuration.placeholders\Vostok.Configuration.Placeholders\bin\Release\net6.0\Vostok.Configuration.Placeholders.dll</HintPath>
-        </Reference>
-        <Reference Include="Vostok.Configuration.Placeholders.ClusterConfig">
-            <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\vostok.configuration.placeholders.clusterconfig\Vostok.Configuration.Placeholders.ClusterConfig\bin\Release\net6.0\Vostok.Configuration.Placeholders.ClusterConfig.dll</HintPath>
-        </Reference>
         <Reference Include="Vostok.Configuration.Sources">
             <SpecificVersion>False</SpecificVersion>
             <HintPath>..\..\vostok.configuration.sources\Vostok.Configuration.Sources\bin\Release\net6.0\Vostok.Configuration.Sources.dll</HintPath>
@@ -118,10 +98,6 @@
             <SpecificVersion>False</SpecificVersion>
             <HintPath>..\..\vostok.configuration.sources.cc\Vostok.Configuration.Sources.ClusterConfig\bin\Release\net6.0\Vostok.Configuration.Sources.ClusterConfig.dll</HintPath>
         </Reference>
-        <Reference Include="Vostok.Configuration.Sources.ClusterConfig.Legacy">
-            <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\vostok.configuration.sources.cc.legacy\Vostok.Configuration.Sources.ClusterConfig.Legacy\bin\Release\net6.0\Vostok.Configuration.Sources.ClusterConfig.Legacy.dll</HintPath>
-        </Reference>
         <Reference Include="Vostok.Configuration.Sources.Json">
             <SpecificVersion>False</SpecificVersion>
             <HintPath>..\..\vostok.configuration.sources.json\Vostok.Configuration.Sources.Json\bin\Release\net6.0\Vostok.Configuration.Sources.Json.dll</HintPath>
@@ -129,10 +105,6 @@
         <Reference Include="Vostok.Configuration.Sources.Vault">
             <SpecificVersion>False</SpecificVersion>
             <HintPath>..\..\vostok.configuration.sources.vault\Vostok.Configuration.Sources.Vault\bin\Release\net6.0\Vostok.Configuration.Sources.Vault.dll</HintPath>
-        </Reference>
-        <Reference Include="Vostok.Configuration.Sources.Vault.Kontur">
-            <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\vostok.configuration.sources.vault.kontur\Vostok.Configuration.Sources.Vault.Kontur\bin\Release\net6.0\Vostok.Configuration.Sources.Vault.Kontur.dll</HintPath>
         </Reference>
         <Reference Include="Vostok.Configuration.Sources.Xml">
             <SpecificVersion>False</SpecificVersion>
@@ -150,10 +122,6 @@
             <SpecificVersion>False</SpecificVersion>
             <HintPath>..\..\vostok.datacenters\Vostok.Datacenters\bin\Release\net6.0\Vostok.Datacenters.dll</HintPath>
         </Reference>
-        <Reference Include="Vostok.Datacenters.Kontur">
-            <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\vostok.datacenters.kontur\Vostok.Datacenters.Kontur\bin\Release\net6.0\Vostok.Datacenters.Kontur.dll</HintPath>
-        </Reference>
         <Reference Include="Vostok.Hercules.Client">
             <SpecificVersion>False</SpecificVersion>
             <HintPath>..\..\vostok.hercules.client\Vostok.Hercules.Client\bin\Release\net6.0\Vostok.Hercules.Client.dll</HintPath>
@@ -169,10 +137,6 @@
         <Reference Include="Vostok.Hosting.Abstractions">
             <SpecificVersion>False</SpecificVersion>
             <HintPath>..\..\vostok.hosting.abstractions\Vostok.Hosting.Abstractions\bin\Release\net6.0\Vostok.Hosting.Abstractions.dll</HintPath>
-        </Reference>
-        <Reference Include="Vostok.Hosting.Kontur">
-            <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\vostok.hosting.kontur\Vostok.Hosting.Kontur\bin\Release\net6.0\Vostok.Hosting.Kontur.dll</HintPath>
         </Reference>
         <Reference Include="Vostok.Logging.Abstractions">
             <SpecificVersion>False</SpecificVersion>
@@ -230,10 +194,6 @@
             <SpecificVersion>False</SpecificVersion>
             <HintPath>..\..\vostok.servicediscovery.extensions\Vostok.ServiceDiscovery.Extensions\bin\Release\net6.0\Vostok.ServiceDiscovery.Extensions.dll</HintPath>
         </Reference>
-        <Reference Include="Vostok.ServiceDiscovery.Kontur">
-            <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\vostok.servicediscovery.kontur\Vostok.ServiceDiscovery.Kontur\bin\Release\net6.0\Vostok.ServiceDiscovery.Kontur.dll</HintPath>
-        </Reference>
         <Reference Include="Vostok.ServiceDiscovery.Telemetry">
             <SpecificVersion>False</SpecificVersion>
             <HintPath>..\..\vostok.servicediscovery.telemetry\Vostok.ServiceDiscovery.Telemetry\bin\Release\net6.0\Vostok.ServiceDiscovery.Telemetry.dll</HintPath>
@@ -241,10 +201,6 @@
         <Reference Include="Vostok.ServiceDiscovery.Telemetry.Hercules">
             <SpecificVersion>False</SpecificVersion>
             <HintPath>..\..\vostok.servicediscovery.telemetry.hercules\Vostok.ServiceDiscovery.Telemetry.Hercules\bin\Release\net6.0\Vostok.ServiceDiscovery.Telemetry.Hercules.dll</HintPath>
-        </Reference>
-        <Reference Include="Vostok.Telemetry.Kontur">
-            <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\vostok.telemetry.kontur\Vostok.Telemetry.Kontur\bin\Release\net6.0\Vostok.Telemetry.Kontur.dll</HintPath>
         </Reference>
         <Reference Include="Vostok.Throttling">
             <SpecificVersion>False</SpecificVersion>
@@ -270,10 +226,6 @@
             <SpecificVersion>False</SpecificVersion>
             <HintPath>..\..\vostok.tracing.hercules\Vostok.Tracing.Hercules\bin\Release\net6.0\Vostok.Tracing.Hercules.dll</HintPath>
         </Reference>
-        <Reference Include="Vostok.Tracing.Kontur">
-            <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\vostok.tracing.kontur\Vostok.Tracing.Kontur\bin\Release\net6.0\Vostok.Tracing.Kontur.dll</HintPath>
-        </Reference>
         <Reference Include="Vostok.ZooKeeper.Client">
             <SpecificVersion>False</SpecificVersion>
             <HintPath>..\..\vostok.zookeeper.client\Vostok.ZooKeeper.Client\bin\Release\net6.0\Vostok.ZooKeeper.Client.dll</HintPath>
@@ -289,7 +241,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Vostok.Hosting.AspNetCore.Houston\Vostok.Hosting.AspNetCore.Houston.csproj" />
       <ProjectReference Include="..\Vostok.Hosting.AspNetCore\Vostok.Hosting.AspNetCore.csproj" />
     </ItemGroup>
 

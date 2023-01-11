@@ -1,15 +1,13 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
-using Vostok.Applications.AspNetCore.Builders;
-using Vostok.Applications.AspNetCore.Tests;
 using Vostok.Applications.AspNetCore.Tests.Extensions;
-using Vostok.Commons.Time;
-using Vostok.Hosting.Abstractions;
+using Vostok.Applications.AspNetCore.Tests.TestHelpers;
+using Vostok.Hosting.AspNetCore.Extensions;
+using Vostok.Hosting.AspNetCore.Middlewares;
 using Vostok.Hosting.Setup;
-using Vostok.Logging.Abstractions;
 
-namespace Vostok.Hosting.AspNetCore.Tests;
+namespace Vostok.Hosting.AspNetCore.Tests.TestHelpers;
 
 public class TestWebApplicationHostRunner : ITestHostRunner
 {
@@ -18,13 +16,14 @@ public class TestWebApplicationHostRunner : ITestHostRunner
     public TestWebApplicationHostRunner(VostokHostingEnvironmentSetup environmentSetup, Action<WebApplicationBuilder> webApplicationBuilderSetup, Action<WebApplication> webApplicationSetup)
     {
         var webApplicationBuilder = WebApplication.CreateBuilder();
-        
-        webApplicationBuilder.UseVostok(environmentSetup);
+
+        webApplicationBuilder.UseVostokHosting(environmentSetup);
         webApplicationBuilder.Services.ConfigureTestsDefaults();
+        webApplicationBuilder.Services.AddVostokMiddlewares();
         webApplicationBuilderSetup(webApplicationBuilder);
-        
+
         WebApplication = webApplicationBuilder.Build();
-        
+        WebApplication.UseVostokMiddlewares();
         WebApplication.ConfigureTestsDefaults();
         webApplicationSetup(WebApplication);
     }

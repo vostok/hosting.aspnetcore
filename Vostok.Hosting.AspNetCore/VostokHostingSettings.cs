@@ -1,13 +1,12 @@
 ﻿using System;
 using JetBrains.Annotations;
 using Vostok.Commons.Time;
-using Vostok.Configuration.Abstractions;
 using Vostok.Hosting.Components.ThreadPool;
 
 namespace Vostok.Hosting.AspNetCore;
 
 [PublicAPI]
-public class VostokComponentsSettings
+public class VostokHostingSettings
 {
     /// <inheritdoc cref="VostokHostSettings.ConfigureStaticProviders"/>
     public bool ConfigureStaticProviders { get; set; } = true;
@@ -17,10 +16,10 @@ public class VostokComponentsSettings
 
     /// <inheritdoc cref="VostokHostSettings.ThreadPoolTuningMultiplier"/>
     public int ThreadPoolTuningMultiplier { get; set; } = ThreadPoolConstants.DefaultThreadPoolMultiplier;
-    
+
     /// <inheritdoc cref="VostokHostingEnvironmentWarmupSettings"/>
     public VostokHostingEnvironmentWarmupSettings EnvironmentWarmupSettings { get; set; } = new();
-    
+
     /// <inheritdoc cref="VostokHostSettings.SendAnnotations"/>
     public bool SendAnnotations { get; set; } = true;
 
