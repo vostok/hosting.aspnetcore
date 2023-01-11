@@ -8,12 +8,15 @@ using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using Vostok.Applications.AspNetCore.Helpers;
+using Vostok.Hosting.Abstractions;
 using Vostok.Hosting.AspNetCore.Extensions;
 using Vostok.Logging.Abstractions;
+using Vostok.Logging.Context;
 using Vostok.ServiceDiscovery;
 using Vostok.ServiceDiscovery.Abstractions;
 
-namespace Vostok.Hosting.AspNetCore;
+namespace Vostok.Hosting.AspNetCore.HostedServices;
 
 internal class ServiceBeaconHostedService : IHostedService
 {
@@ -21,15 +24,17 @@ internal class ServiceBeaconHostedService : IHostedService
     private readonly IServiceBeacon serviceBeacon;
     private readonly IServer? server;
     private readonly IConfiguration configuration;
+    private readonly IVostokHostingEnvironment environment;
     private readonly ILog log;
-    private readonly VostokComponentsSettings settings;
+    private readonly VostokHostingSettings settings;
 
-    public ServiceBeaconHostedService(IHostApplicationLifetime applicationLifetime, IServiceBeacon serviceBeacon, IConfiguration configuration, ILog log, IOptions<VostokComponentsSettings> settings, IServer? server = null)
+    public ServiceBeaconHostedService(IHostApplicationLifetime applicationLifetime, IServiceBeacon serviceBeacon, IConfiguration configuration, ILog log, IOptions<VostokHostingSettings> settings, IVostokHostingEnvironment environment, IServer? server = null)
     {
         this.applicationLifetime = applicationLifetime;
         this.serviceBeacon = serviceBeacon;
         this.server = server;
         this.configuration = configuration;
+        this.environment = environment;
         this.log = log.ForContext<ServiceBeaconHostedService>();
         this.settings = settings.Value;
     }
@@ -46,12 +51,15 @@ internal class ServiceBeaconHostedService : IHostedService
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
-        return Task.CompletedTask; 
+        return Task.CompletedTask;
     }
 
     // note (kungurtsev, 14.11.2022): is called after Kestrel started
     private void OnStarted()
     {
+        using (new OperationContextToken("Warmup"))
+            MiddlewaresWarmup.WarmupPingApi(environment).GetAwaiter().GetResult();
+
         serviceBeacon.Start();
 
         WaitForServiceBeaconRegistrationIfNeeded();
@@ -73,17 +81,17 @@ internal class ServiceBeaconHostedService : IHostedService
         if (!convertedBeacon.WaitForInitialRegistrationAsync().Wait(settings.BeaconRegistrationTimeout))
             throw new Exception($"Service beacon hasn't registered in '{settings.BeaconRegistrationTimeout}'.");
     }
-    
+
     private void ValidateAddresses()
     {
         var addresses = server?.TryGetAddresses();
         var urls = configuration[WebHostDefaults.ServerUrlsKey]?.Split(';', StringSplitOptions.RemoveEmptyEntries);
-        
+
         if (serviceBeacon.ReplicaInfo.TryGetUrl(out var serviceBeaconUrl))
         {
             if (addresses == null)
                 throw new Exception($"Service beacon url '{serviceBeaconUrl}' is incompatible with Generic host.");
-            
+
             if (!HasAddress(addresses, serviceBeaconUrl) && !HasAddress(urls, serviceBeaconUrl))
                 addresses.Add($"{serviceBeaconUrl.Scheme}://*:{serviceBeaconUrl.Port}/");
             log.Info("Using url provided in Service beacon: '{Url}'.", serviceBeaconUrl);
@@ -98,7 +106,7 @@ internal class ServiceBeaconHostedService : IHostedService
     {
         if (urls == null)
             return false;
-        
+
         foreach (var url in urls)
         {
             if (Uri.TryCreate(url, UriKind.Absolute, out var parsed) && parsed.Port == expectedUrl.Port && parsed.Scheme == expectedUrl.Scheme)

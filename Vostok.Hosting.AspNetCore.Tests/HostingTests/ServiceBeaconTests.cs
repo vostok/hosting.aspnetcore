@@ -5,13 +5,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NUnit.Framework;
 using Vostok.Applications.AspNetCore.Tests.Extensions;
+using Vostok.Applications.AspNetCore.Tests.TestHelpers;
+using Vostok.Clusterclient.Core;
 using Vostok.Clusterclient.Core.Topology;
 using Vostok.Clusterclient.Transport;
 using Vostok.Commons.Helpers.Network;
 using Vostok.Hosting.AspNetCore.Tests.TestHelpers;
 using Vostok.Logging.Abstractions;
 
-namespace Vostok.Hosting.AspNetCore.Tests.HostTests;
+namespace Vostok.Hosting.AspNetCore.Tests.HostingTests;
 
 [TestFixture]
 internal class ServiceBeaconTests
@@ -22,11 +24,11 @@ internal class ServiceBeaconTests
         var builder = WebApplication.CreateBuilder();
         var port = FreeTcpPortFinder.GetFreePort();
 
-        builder.UseVostok(environmentBuilder =>
+        builder.UseVostokHosting(environmentBuilder =>
         {
             environmentBuilder.ApplyTestsDefaults();
-            
-            environmentBuilder.SetupServiceBeacon(beacon => 
+
+            environmentBuilder.SetupServiceBeacon(beacon =>
                 beacon.SetupReplicaInfo(replica => replica.SetPort(port)));
         });
 
@@ -36,22 +38,16 @@ internal class ServiceBeaconTests
 
         app.Start();
 
-        await EnsureOk(app.Services.GetRequiredService<ILog>(), port);
+        await EnsureOk(port, app.Services.GetRequiredService<ILog>());
 
         await app.StopAsync();
         await app.DisposeAsync();
     }
-    
-    private static async Task EnsureOk(ILog log, int port)
+
+    private static async Task EnsureOk(int port, ILog log)
     {
-        var client  = new Clusterclient.Core.ClusterClient(
-            log,
-            s =>
-            {
-                s.ClusterProvider = new FixedClusterProvider($"http://localhost:{port}");
-                s.SetupUniversalTransport();
-            });
-        
+        var client = ClusterClientHelper.Create(port, log);
+
         var response = await client.GetAsync("/");
         response.Response.IsSuccessful.Should().BeTrue();
         response.Response.Content.ToString().Should().Be("Hello World!");

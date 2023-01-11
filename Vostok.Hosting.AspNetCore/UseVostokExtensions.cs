@@ -1,5 +1,7 @@
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Vostok.Applications.AspNetCore.Helpers;
@@ -7,6 +9,7 @@ using Vostok.Commons.Threading;
 using Vostok.Hosting.Abstractions;
 using Vostok.Hosting.AspNetCore.Extensions;
 using Vostok.Hosting.AspNetCore.Helpers;
+using Vostok.Hosting.AspNetCore.HostedServices;
 using Vostok.Hosting.Components.Shutdown;
 using Vostok.Hosting.Setup;
 
@@ -15,32 +18,51 @@ namespace Vostok.Hosting.AspNetCore;
 [PublicAPI]
 public static class UseVostokExtensions
 {
-    public static void UseVostok(this WebApplicationBuilder webApplicationBuilder, VostokHostingEnvironmentSetup environmentSetup, VostokComponentsSettings? settings = null)
+    public static WebApplicationBuilder UseVostokHosting(this WebApplicationBuilder webApplicationBuilder, VostokHostingEnvironmentSetup environmentSetup, VostokHostingSettings? settings = null)
     {
         var environment = CreateEnvironment(environmentSetup, settings);
 
-        webApplicationBuilder.Configuration.AddVostokSources(environment);
-        
-        webApplicationBuilder.Services.UseVostok(environment);
+        webApplicationBuilder.Configuration.UseVostokHosting(environment);
+        webApplicationBuilder.Services.UseVostokHosting(environment);
+
+        return webApplicationBuilder;
     }
 
-    public static void UseVostok(this IHostBuilder hostBuilder, VostokHostingEnvironmentSetup environmentSetup, VostokComponentsSettings? settings = null)
+    public static IHostBuilder UseVostokHosting(this IHostBuilder hostBuilder, VostokHostingEnvironmentSetup environmentSetup, VostokHostingSettings? settings = null)
     {
         var environment = CreateEnvironment(environmentSetup, settings);
 
-        hostBuilder.ConfigureAppConfiguration(config => config.AddVostokSources(environment));
+        hostBuilder.ConfigureAppConfiguration(config => config.UseVostokHosting(environment));
+        hostBuilder.ConfigureServices(serviceCollection => { serviceCollection.UseVostokHosting(environment); });
 
-        hostBuilder.ConfigureServices(serviceCollection =>
-        {
-            serviceCollection.UseVostok(environment);
-        });
+        return hostBuilder;
     }
 
-    private static void UseVostok(this IServiceCollection serviceCollection, IVostokHostingEnvironment environment)
+    public static IWebHostBuilder UseVostokHosting(this IWebHostBuilder hostBuilder, VostokHostingEnvironmentSetup environmentSetup, VostokHostingSettings? settings = null)
     {
+        var environment = CreateEnvironment(environmentSetup, settings);
+
+        hostBuilder.ConfigureAppConfiguration(config => config.UseVostokHosting(environment));
+        hostBuilder.ConfigureServices(serviceCollection => { serviceCollection.UseVostokHosting(environment); });
+
+        return hostBuilder;
+    }
+
+    private static void UseVostokHosting(this IConfigurationBuilder configurationBuilder, IVostokHostingEnvironment environment)
+    {
+        configurationBuilder.AddVostokSources(environment);
+        configurationBuilder.AddDefaultLoggingFilters();
+    }
+
+    private static void UseVostokHosting(this IServiceCollection serviceCollection, IVostokHostingEnvironment environment)
+    {
+        serviceCollection.AddSingleton<VostokDisposables>();
         serviceCollection.AddSingleton(_ => environment);
+        serviceCollection.AddSingleton(new InitializedFlag());
 
         serviceCollection.AddVostokEnvironmentComponents();
+        serviceCollection.AddVostokEnvironmentHostExtensions(environment);
+        serviceCollection.AddVostokHealthChecks(environment);
         serviceCollection.AddSingleton<VostokApplicationStateObservable>();
         serviceCollection.AddVostokLoggerProvider();
 
@@ -52,9 +74,9 @@ public static class UseVostokExtensions
         serviceCollection.ConfigureShutdownTimeout(ShutdownConstants.DefaultShutdownTimeout);
     }
 
-    private static IVostokHostingEnvironment CreateEnvironment(VostokHostingEnvironmentSetup environmentSetup, VostokComponentsSettings? settings)
+    private static IVostokHostingEnvironment CreateEnvironment(VostokHostingEnvironmentSetup environmentSetup, VostokHostingSettings? settings)
     {
-        settings ??= new VostokComponentsSettings();
+        settings ??= new VostokHostingSettings();
 
         var environmentFactorySettings = new VostokHostingEnvironmentFactorySettings
         {
@@ -71,7 +93,7 @@ public static class UseVostokExtensions
         var environment = VostokHostingEnvironmentFactory.Create(
             environmentSetup,
             environmentFactorySettings);
-        
+
         return environment;
     }
 }

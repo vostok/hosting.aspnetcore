@@ -1,4 +1,5 @@
-﻿using Vostok.Hosting.Setup;
+﻿using Vostok.Configuration.Sources.Object;
+using Vostok.Hosting.Setup;
 using Vostok.Logging.File.Configuration;
 
 namespace Vostok.Hosting.AspNetCore.Tests.TestHelpers;
@@ -21,6 +22,21 @@ internal static class EnvironmentDefaults
             log.SetupConsoleLog();
             log.SetupFileLog(fileLog => fileLog.CustomizeSettings(
                 fileLogSettings => fileLogSettings.FileOpenMode = FileOpenMode.Rewrite));
+        });
+
+        builder.SetupConfiguration(config =>
+        {
+            config.AddSource(new ObjectSource(new
+            {
+                Logging = new
+                {
+                    LogLevel = new
+                    {
+                        Default = "Trace",
+                        Microsoft = "Trace"
+                    }
+                }
+            }));
         });
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
@@ -8,6 +9,7 @@ using Vostok.Logging.Microsoft;
 
 namespace Vostok.Hosting.AspNetCore.Extensions;
 
+[PublicAPI]
 public static class IServiceCollectionExtensions
 {
     public static void ConfigureShutdownTimeout(this IServiceCollection serviceCollection, TimeSpan timeout) =>
