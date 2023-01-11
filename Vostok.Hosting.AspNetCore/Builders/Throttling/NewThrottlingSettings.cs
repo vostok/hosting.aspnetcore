@@ -17,8 +17,8 @@ public class NewThrottlingSettings
     public int RejectionResponseCode { get; set; } = 429;
     public bool DisableForWebSockets { get; set; } = true;
 
-    public ICollection<ThrottlingQuota> Quotas { get; set; } = new List<ThrottlingQuota>();
-    public ICollection<ThrottlingProperty> Properties { get; set; } = new List<ThrottlingProperty>();
+    public List<ThrottlingQuota> Quotas { get; set; } = new();
+    public List<ThrottlingProperty> Properties { get; set; } = new();
 
     public void UseConsumerQuota(Func<PropertyQuotaOptions> quotaOptionsProvider) =>
         Quotas.Add(new ThrottlingQuota(WellKnownThrottlingProperties.Consumer, quotaOptionsProvider));
