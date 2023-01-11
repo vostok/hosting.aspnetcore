@@ -215,13 +215,16 @@ public static class AddVostokMiddlewaresExtensions
             {
                 var throttlingSettings = options.Value;
 
+                bool HasQuota(string name) =>
+                    throttlingSettings.Quotas.Any(q => q.Name == name);
+
                 middlewareSettings.RejectionResponseCode = throttlingSettings.RejectionResponseCode;
                 middlewareSettings.DisableForWebSockets = throttlingSettings.DisableForWebSockets;
 
-                middlewareSettings.AddConsumerProperty = throttlingSettings.Quotas.Any(q => q.Name == WellKnownThrottlingProperties.Consumer);
-                middlewareSettings.AddMethodProperty = throttlingSettings.Quotas.Any(q => q.Name == WellKnownThrottlingProperties.Method);
-                middlewareSettings.AddPriorityProperty = throttlingSettings.Quotas.Any(q => q.Name == WellKnownThrottlingProperties.Priority);
-                middlewareSettings.AddUrlProperty = throttlingSettings.Quotas.Any(q => q.Name == WellKnownThrottlingProperties.Url);
+                middlewareSettings.AddConsumerProperty = HasQuota(WellKnownThrottlingProperties.Consumer);
+                middlewareSettings.AddMethodProperty = HasQuota(WellKnownThrottlingProperties.Method);
+                middlewareSettings.AddPriorityProperty = HasQuota(WellKnownThrottlingProperties.Priority);
+                middlewareSettings.AddUrlProperty = HasQuota(WellKnownThrottlingProperties.Url);
 
                 foreach (var (name, valueExtractor) in throttlingSettings.Properties)
                     middlewareSettings.AdditionalProperties.Add(context => (name, valueExtractor(context)));
