@@ -5,7 +5,7 @@ using Vostok.Throttling;
 using Vostok.Throttling.Config;
 using Vostok.Throttling.Quotas;
 
-namespace Vostok.Hosting.AspNetCore.Middlewares.Configuration;
+namespace Vostok.Hosting.AspNetCore.Web.Configuration;
 
 [PublicAPI]
 public static class ThrottlingSettingsExtensions

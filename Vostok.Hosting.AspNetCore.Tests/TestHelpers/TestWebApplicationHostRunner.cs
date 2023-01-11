@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Vostok.Applications.AspNetCore.Tests.Extensions;
 using Vostok.Applications.AspNetCore.Tests.TestHelpers;
 using Vostok.Hosting.AspNetCore.Extensions;
-using Vostok.Hosting.AspNetCore.Middlewares;
+using Vostok.Hosting.AspNetCore.Web;
 using Vostok.Hosting.Setup;
 
 namespace Vostok.Hosting.AspNetCore.Tests.TestHelpers;

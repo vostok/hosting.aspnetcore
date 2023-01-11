@@ -20,9 +20,9 @@ using Vostok.Throttling;
 using Vostok.Throttling.Config;
 using Vostok.Throttling.Metrics;
 using Vostok.Throttling.Quotas;
-using ThrottlingSettings = Vostok.Hosting.AspNetCore.Middlewares.Configuration.ThrottlingSettings;
+using ThrottlingSettings = Vostok.Hosting.AspNetCore.Web.Configuration.ThrottlingSettings;
 
-namespace Vostok.Hosting.AspNetCore.Middlewares;
+namespace Vostok.Hosting.AspNetCore.Web;
 
 public static class AddVostokMiddlewaresExtensions
 {
