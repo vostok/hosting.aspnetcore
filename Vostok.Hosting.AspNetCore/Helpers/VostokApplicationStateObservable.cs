@@ -21,7 +21,7 @@ public class VostokApplicationStateObservable : IObservable<VostokApplicationSta
         if (error == null)
             log.Info("New state: {State}.", newState);
         else
-            log.Error(error, "Errror occured. New state: {State}.", newState);
+            log.Error(error, "Error occured. New state: {State}.", newState);
 
         observable.Next(newState);
 
