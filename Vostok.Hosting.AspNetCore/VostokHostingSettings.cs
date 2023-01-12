@@ -5,6 +5,9 @@ using Vostok.Hosting.Components.ThreadPool;
 
 namespace Vostok.Hosting.AspNetCore;
 
+/// <summary>
+/// Represents Vostok hosting configuration.
+/// </summary>
 [PublicAPI]
 public class VostokHostingSettings
 {

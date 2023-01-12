@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,12 +13,19 @@ using Vostok.Hosting.AspNetCore.Helpers;
 using Vostok.Hosting.AspNetCore.HostedServices;
 using Vostok.Hosting.Components.Shutdown;
 using Vostok.Hosting.Setup;
+using Vostok.ServiceDiscovery.Abstractions;
 
 namespace Vostok.Hosting.AspNetCore;
 
+/// <summary>
+/// <para>Creates <see cref="IVostokHostingEnvironment"/> instance and register all its components in DI container.</para>
+/// <para>Adds Vostok hosted services that manage application and <see cref="IServiceBeacon"/> state.</para>
+/// </summary>
 [PublicAPI]
+[SuppressMessage("ApiDesign", "RS0026:Do not add multiple public overloads with optional parameters")]
 public static class UseVostokExtensions
 {
+    /// <inheritdoc cref="UseVostokExtensions"/>
     public static WebApplicationBuilder UseVostokHosting(this WebApplicationBuilder webApplicationBuilder, VostokHostingEnvironmentSetup environmentSetup, VostokHostingSettings? settings = null)
     {
         var environment = CreateEnvironment(environmentSetup, settings);
@@ -28,6 +36,7 @@ public static class UseVostokExtensions
         return webApplicationBuilder;
     }
 
+    /// <inheritdoc cref="UseVostokExtensions"/>
     public static IHostBuilder UseVostokHosting(this IHostBuilder hostBuilder, VostokHostingEnvironmentSetup environmentSetup, VostokHostingSettings? settings = null)
     {
         var environment = CreateEnvironment(environmentSetup, settings);
@@ -38,6 +47,7 @@ public static class UseVostokExtensions
         return hostBuilder;
     }
 
+    /// <inheritdoc cref="UseVostokExtensions"/>
     public static IWebHostBuilder UseVostokHosting(this IWebHostBuilder hostBuilder, VostokHostingEnvironmentSetup environmentSetup, VostokHostingSettings? settings = null)
     {
         var environment = CreateEnvironment(environmentSetup, settings);
