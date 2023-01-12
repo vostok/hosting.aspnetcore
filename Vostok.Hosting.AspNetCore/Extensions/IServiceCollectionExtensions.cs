@@ -12,6 +12,9 @@ namespace Vostok.Hosting.AspNetCore.Extensions;
 [PublicAPI]
 public static class IServiceCollectionExtensions
 {
+    /// <summary>
+    /// Configures <see cref="HostOptions.ShutdownTimeout"/>.
+    /// </summary>
     public static void ConfigureShutdownTimeout(this IServiceCollection serviceCollection, TimeSpan timeout) =>
         serviceCollection.Configure<HostOptions>(
             opts => opts.ShutdownTimeout = timeout);

@@ -1,0 +1,37 @@
+static Vostok.Hosting.AspNetCore.Extensions.IServiceCollectionExtensions.ConfigureShutdownTimeout(this Microsoft.Extensions.DependencyInjection.IServiceCollection! serviceCollection, System.TimeSpan timeout) -> void
+static Vostok.Hosting.AspNetCore.UseVostokExtensions.UseVostokHosting(this Microsoft.AspNetCore.Builder.WebApplicationBuilder! webApplicationBuilder, Vostok.Hosting.Setup.VostokHostingEnvironmentSetup! environmentSetup, Vostok.Hosting.AspNetCore.VostokHostingSettings? settings = null) -> Microsoft.AspNetCore.Builder.WebApplicationBuilder!
+static Vostok.Hosting.AspNetCore.UseVostokExtensions.UseVostokHosting(this Microsoft.AspNetCore.Hosting.IWebHostBuilder! hostBuilder, Vostok.Hosting.Setup.VostokHostingEnvironmentSetup! environmentSetup, Vostok.Hosting.AspNetCore.VostokHostingSettings? settings = null) -> Microsoft.AspNetCore.Hosting.IWebHostBuilder!
+static Vostok.Hosting.AspNetCore.UseVostokExtensions.UseVostokHosting(this Microsoft.Extensions.Hosting.IHostBuilder! hostBuilder, Vostok.Hosting.Setup.VostokHostingEnvironmentSetup! environmentSetup, Vostok.Hosting.AspNetCore.VostokHostingSettings? settings = null) -> Microsoft.Extensions.Hosting.IHostBuilder!
+static Vostok.Hosting.AspNetCore.Web.AddVostokMiddlewaresExtensions.AddVostokMiddlewares(this Microsoft.Extensions.DependencyInjection.IServiceCollection! serviceCollection) -> Vostok.Hosting.AspNetCore.Web.Configuration.IVostokMiddlewaresBuilder!
+static Vostok.Hosting.AspNetCore.Web.Configuration.ThrottlingSettingsExtensions.UseConsumerQuota(this Vostok.Hosting.AspNetCore.Web.Configuration.ThrottlingSettings! settings, System.Func<Vostok.Throttling.Quotas.PropertyQuotaOptions!>! quotaOptionsProvider) -> Vostok.Hosting.AspNetCore.Web.Configuration.ThrottlingSettings!
+static Vostok.Hosting.AspNetCore.Web.Configuration.ThrottlingSettingsExtensions.UseCustomPropertyQuota(this Vostok.Hosting.AspNetCore.Web.Configuration.ThrottlingSettings! settings, string! propertyName, System.Func<Microsoft.AspNetCore.Http.HttpContext!, string!>! propertyValueProvider, System.Func<Vostok.Throttling.Quotas.PropertyQuotaOptions!>! quotaOptionsProvider) -> Vostok.Hosting.AspNetCore.Web.Configuration.ThrottlingSettings!
+static Vostok.Hosting.AspNetCore.Web.Configuration.ThrottlingSettingsExtensions.UseEssentials(this Vostok.Hosting.AspNetCore.Web.Configuration.ThrottlingSettings! settings, System.Func<Vostok.Throttling.Config.ThrottlingEssentials!>! essentialsProvider) -> Vostok.Hosting.AspNetCore.Web.Configuration.ThrottlingSettings!
+static Vostok.Hosting.AspNetCore.Web.Configuration.ThrottlingSettingsExtensions.UseMethodQuota(this Vostok.Hosting.AspNetCore.Web.Configuration.ThrottlingSettings! settings, System.Func<Vostok.Throttling.Quotas.PropertyQuotaOptions!>! quotaOptionsProvider) -> Vostok.Hosting.AspNetCore.Web.Configuration.ThrottlingSettings!
+static Vostok.Hosting.AspNetCore.Web.Configuration.ThrottlingSettingsExtensions.UsePriorityQuota(this Vostok.Hosting.AspNetCore.Web.Configuration.ThrottlingSettings! settings, System.Func<Vostok.Throttling.Quotas.PropertyQuotaOptions!>! quotaOptionsProvider) -> Vostok.Hosting.AspNetCore.Web.Configuration.ThrottlingSettings!
+static Vostok.Hosting.AspNetCore.Web.Configuration.ThrottlingSettingsExtensions.UseUrlQuota(this Vostok.Hosting.AspNetCore.Web.Configuration.ThrottlingSettings! settings, System.Func<Vostok.Throttling.Quotas.PropertyQuotaOptions!>! quotaOptionsProvider) -> Vostok.Hosting.AspNetCore.Web.Configuration.ThrottlingSettings!
+static Vostok.Hosting.AspNetCore.Web.UseVostokMiddlewaresExtensions.UseVostokMiddlewares(this Microsoft.AspNetCore.Builder.IApplicationBuilder! app) -> Microsoft.AspNetCore.Builder.IApplicationBuilder!
+Vostok.Hosting.AspNetCore.Extensions.IServiceCollectionExtensions
+Vostok.Hosting.AspNetCore.UseVostokExtensions
+Vostok.Hosting.AspNetCore.VostokHostingSettings
+Vostok.Hosting.AspNetCore.VostokHostingSettings.BeaconRegistrationTimeout.get -> System.TimeSpan
+Vostok.Hosting.AspNetCore.VostokHostingSettings.BeaconRegistrationTimeout.set -> void
+Vostok.Hosting.AspNetCore.VostokHostingSettings.BeaconRegistrationWaitEnabled.get -> bool
+Vostok.Hosting.AspNetCore.VostokHostingSettings.BeaconRegistrationWaitEnabled.set -> void
+Vostok.Hosting.AspNetCore.VostokHostingSettings.ConfigureStaticProviders.get -> bool
+Vostok.Hosting.AspNetCore.VostokHostingSettings.ConfigureStaticProviders.set -> void
+Vostok.Hosting.AspNetCore.VostokHostingSettings.ConfigureThreadPool.get -> bool
+Vostok.Hosting.AspNetCore.VostokHostingSettings.ConfigureThreadPool.set -> void
+Vostok.Hosting.AspNetCore.VostokHostingSettings.DiagnosticMetricsEnabled.get -> bool
+Vostok.Hosting.AspNetCore.VostokHostingSettings.DiagnosticMetricsEnabled.set -> void
+Vostok.Hosting.AspNetCore.VostokHostingSettings.DisposeComponentTimeout.get -> System.TimeSpan
+Vostok.Hosting.AspNetCore.VostokHostingSettings.DisposeComponentTimeout.set -> void
+Vostok.Hosting.AspNetCore.VostokHostingSettings.EnvironmentWarmupSettings.get -> Vostok.Hosting.VostokHostingEnvironmentWarmupSettings!
+Vostok.Hosting.AspNetCore.VostokHostingSettings.EnvironmentWarmupSettings.set -> void
+Vostok.Hosting.AspNetCore.VostokHostingSettings.SendAnnotations.get -> bool
+Vostok.Hosting.AspNetCore.VostokHostingSettings.SendAnnotations.set -> void
+Vostok.Hosting.AspNetCore.VostokHostingSettings.ThreadPoolTuningMultiplier.get -> int
+Vostok.Hosting.AspNetCore.VostokHostingSettings.ThreadPoolTuningMultiplier.set -> void
+Vostok.Hosting.AspNetCore.VostokHostingSettings.VostokHostingSettings() -> void
+Vostok.Hosting.AspNetCore.Web.AddVostokMiddlewaresExtensions
+Vostok.Hosting.AspNetCore.Web.Configuration.ThrottlingSettingsExtensions
+Vostok.Hosting.AspNetCore.Web.UseVostokMiddlewaresExtensions

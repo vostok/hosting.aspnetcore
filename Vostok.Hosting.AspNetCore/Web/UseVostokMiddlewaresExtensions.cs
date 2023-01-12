@@ -6,9 +6,13 @@ using Vostok.Hosting.AspNetCore.Web.Configuration;
 
 namespace Vostok.Hosting.AspNetCore.Web;
 
+/// <summary>
+/// <para>Adds Vostok middlewares to the specified application builder.</para>
+/// </summary>
 [PublicAPI]
 public static class UseVostokMiddlewaresExtensions
 {
+    /// <inheritdoc cref="UseVostokMiddlewaresExtensions"/>
     public static IApplicationBuilder UseVostokMiddlewares(this IApplicationBuilder app)
     {
         var settings = app.ApplicationServices.GetFromOptionsOrDefault<VostokMiddlewaresEnabledSettings>();

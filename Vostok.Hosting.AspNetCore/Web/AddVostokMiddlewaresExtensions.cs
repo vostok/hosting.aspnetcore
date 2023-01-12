@@ -25,8 +25,14 @@ using ThrottlingSettings = Vostok.Hosting.AspNetCore.Web.Configuration.Throttlin
 
 namespace Vostok.Hosting.AspNetCore.Web;
 
+/// <summary>
+/// <para>Register Vostok middlewares and their configuration in DI container.</para>
+/// <para>Use returning <see cref="IVostokMiddlewaresBuilder"/> to configure them.</para>
+/// <para>Applies reasonable Kestrel defaults.</para>
+/// </summary>
 public static class AddVostokMiddlewaresExtensions
 {
+    /// <inheritdoc cref="AddVostokMiddlewaresExtensions"/>
     public static IVostokMiddlewaresBuilder AddVostokMiddlewares(this IServiceCollection serviceCollection)
     {
         serviceCollection
@@ -217,7 +223,7 @@ public static class AddVostokMiddlewaresExtensions
                 var throttlingSettings = options.Value;
 
                 bool HasQuota(string name) =>
-                    throttlingSettings.Quotas.Any(q => q.Name == name);
+                    throttlingSettings.Quotas.Any(q => q.PropertyName == name);
 
                 middlewareSettings.RejectionResponseCode = throttlingSettings.RejectionResponseCode;
                 middlewareSettings.DisableForWebSockets = throttlingSettings.DisableForWebSockets;
