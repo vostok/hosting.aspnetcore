@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Options;
 using Vostok.Applications.AspNetCore;
 using Vostok.Applications.AspNetCore.Configuration;
 using Vostok.Applications.AspNetCore.Diagnostics;
@@ -21,19 +18,18 @@ using Vostok.Throttling;
 using Vostok.Throttling.Config;
 using Vostok.Throttling.Metrics;
 using Vostok.Throttling.Quotas;
-using ThrottlingSettings = Vostok.Hosting.AspNetCore.Web.Configuration.ThrottlingSettings;
 
 namespace Vostok.Hosting.AspNetCore.Web;
 
 /// <summary>
 /// <para>Register Vostok middlewares and their configuration in DI container.</para>
-/// <para>Use returning <see cref="IVostokMiddlewaresBuilder"/> to configure them.</para>
+/// <para>Use returning <see cref="IVostokMiddlewaresConfigurator"/> to configure them.</para>
 /// <para>Applies reasonable Kestrel defaults.</para>
 /// </summary>
 public static class AddVostokMiddlewaresExtensions
 {
     /// <inheritdoc cref="AddVostokMiddlewaresExtensions"/>
-    public static IVostokMiddlewaresBuilder AddVostokMiddlewares(this IServiceCollection serviceCollection)
+    public static IVostokMiddlewaresConfigurator AddVostokMiddlewares(this IServiceCollection serviceCollection)
     {
         serviceCollection
             .ConfigureKestrelDefaults()
@@ -68,7 +64,7 @@ public static class AddVostokMiddlewaresExtensions
                     settings.HealthCheck = () => diagnostics.HealthTracker.CurrentStatus == HealthStatus.Healthy;
             });
 
-        return new VostokMiddlewaresBuilder(serviceCollection);
+        return new VostokMiddlewaresConfigurator(serviceCollection);
     }
 
     private static IServiceCollection ConfigureKestrelDefaults(this IServiceCollection services)
@@ -100,27 +96,34 @@ public static class AddVostokMiddlewaresExtensions
         });
     }
 
-    private static void AddRequestTrackingInfo(IServiceProvider serviceProvider, RequestTracker requestTracker)
+    private static void AddRequestTrackingInfo(IServiceProvider services, RequestTracker requestTracker)
     {
-        var diagnostics = serviceProvider.GetService<IDiagnosticInfo>();
+        var diagnostics = services.GetService<IDiagnosticInfo>();
         if (diagnostics == null)
             return;
 
         var infoEntry = new DiagnosticEntry(DiagnosticConstants.Component, DiagnosticConstants.RequestsInProgressEntry);
         var infoProvider = new CurrentRequestsInfoProvider(requestTracker);
 
-        serviceProvider.RegisterDisposable(diagnostics.RegisterProvider(infoEntry, infoProvider));
+        services.RegisterDisposable(diagnostics.RegisterProvider(infoEntry, infoProvider));
     }
 
     private static IServiceCollection AddThrottling(this IServiceCollection serviceCollection)
     {
-        serviceCollection.TryAddSingleton<IThrottlingProvider>(services =>
+        serviceCollection.AddSingleton<ThrottlingConfigurationBuilder>(services =>
         {
             var builder = new ThrottlingConfigurationBuilder();
 
             AddThrottlingCpuLimits(services, builder);
             AddThrottlingErrorLogging(services, builder);
             AddThrottlingQuotas(services, builder);
+
+            return builder;
+        });
+        
+        serviceCollection.AddSingleton<IThrottlingProvider>(services =>
+        {
+            var builder = services.GetRequiredService<ThrottlingConfigurationBuilder>();
 
             var provider = new ThrottlingProvider(builder.Build());
 
@@ -129,14 +132,12 @@ public static class AddVostokMiddlewaresExtensions
             return provider;
         });
 
-        AdaptMiddlewareSettings(serviceCollection);
-
         return serviceCollection;
     }
 
-    private static void AddThrottlingCpuLimits(IServiceProvider serviceProvider, ThrottlingConfigurationBuilder builder)
+    private static void AddThrottlingCpuLimits(IServiceProvider services, ThrottlingConfigurationBuilder builder)
     {
-        var limits = serviceProvider.GetRequiredService<IVostokApplicationLimits>();
+        var limits = services.GetRequiredService<IVostokApplicationLimits>();
 
         builder.SetNumberOfCores(() =>
         {
@@ -147,94 +148,69 @@ public static class AddVostokMiddlewaresExtensions
         });
     }
 
-    private static void AddThrottlingErrorLogging(IServiceProvider serviceProvider, ThrottlingConfigurationBuilder builder)
+    private static void AddThrottlingErrorLogging(IServiceProvider services, ThrottlingConfigurationBuilder builder)
     {
-        var log = serviceProvider.GetRequiredService<ILog>().ForContext<ThrottlingMiddleware>();
+        var log = services.GetRequiredService<ILog>().ForContext<ThrottlingMiddleware>();
 
         builder.SetErrorCallback(ex => log.Error(ex, "Internal failure in request throttling."));
     }
 
-    private static void AddThrottlingQuotas(IServiceProvider serviceProvider, ThrottlingConfigurationBuilder builder)
+    private static void AddThrottlingQuotas(IServiceProvider services, ThrottlingConfigurationBuilder builder)
     {
-        var settings = serviceProvider.GetFromOptionsOrDefault<ThrottlingSettings>();
+        var configuration = services.GetFromOptionsOrThrow<VostokThrottlingConfiguration>();
 
-        if (settings.UseThreadPoolOverloadQuota)
+        if (configuration.UseThreadPoolOverloadQuota)
         {
             var threadPoolQuota = new ThreadPoolOverloadQuota(new ThreadPoolOverloadQuotaOptions());
             builder.AddCustomQuota(threadPoolQuota);
         }
-
-        foreach (var (propertyName, quotaOptionsProvider) in settings.Quotas)
-            builder.SetPropertyQuota(propertyName, quotaOptionsProvider);
     }
 
-    private static void AddThrottlingObservability(IServiceProvider serviceProvider, ThrottlingProvider throttlingProvider)
+    private static void AddThrottlingObservability(IServiceProvider services, ThrottlingProvider throttlingProvider)
     {
-        var diagnosticSettings = serviceProvider.GetFromOptionsOrDefault<DiagnosticFeaturesSettings>();
+        var diagnosticSettings = services.GetFromOptionsOrDefault<DiagnosticFeaturesSettings>();
 
-        AddThrottlingMetrics(serviceProvider, throttlingProvider);
+        AddThrottlingMetrics(services, throttlingProvider);
 
         if (diagnosticSettings.AddThrottlingInfoProvider)
-            AddThrottlingInfo(serviceProvider, throttlingProvider);
+            AddThrottlingInfo(services, throttlingProvider);
 
         if (diagnosticSettings.AddThrottlingHealthCheck)
-            AddThrottlingHealthCheck(serviceProvider, throttlingProvider);
+            AddThrottlingHealthCheck(services, throttlingProvider);
     }
 
-    private static void AddThrottlingMetrics(IServiceProvider serviceProvider, ThrottlingProvider throttlingProvider)
+    private static void AddThrottlingMetrics(IServiceProvider services, ThrottlingProvider throttlingProvider)
     {
-        var metrics = serviceProvider.GetService<IVostokApplicationMetrics>();
-        var settings = serviceProvider.GetFromOptionsOrDefault<ThrottlingSettings>();
-
-        if (settings.Metrics == null || metrics == null)
+        var configuration = services.GetFromOptionsOrDefault<VostokThrottlingConfiguration>();
+        if (!configuration.EnableMetrics)
             return;
 
-        serviceProvider.RegisterDisposable(metrics.Instance.CreateThrottlingMetrics(throttlingProvider, settings.Metrics));
+        var metrics = services.GetRequiredService<IVostokApplicationMetrics>();
+        var metricsOptions = services.GetFromOptionsOrDefault<ThrottlingMetricsOptions>();
+        
+        services.RegisterDisposable(metrics.Instance.CreateThrottlingMetrics(throttlingProvider, metricsOptions));
     }
 
-    private static void AddThrottlingInfo(IServiceProvider serviceProvider, ThrottlingProvider throttlingProvider)
+    private static void AddThrottlingInfo(IServiceProvider services, ThrottlingProvider throttlingProvider)
     {
-        var diagnostics = serviceProvider.GetService<IDiagnosticInfo>();
+        var diagnostics = services.GetService<IDiagnosticInfo>();
         if (diagnostics == null)
             return;
 
         var infoEntry = new DiagnosticEntry(DiagnosticConstants.Component, DiagnosticConstants.RequestThrottlingEntry);
         var infoProvider = new ThrottlingInfoProvider(throttlingProvider);
 
-        serviceProvider.RegisterDisposable(diagnostics.RegisterProvider(infoEntry, infoProvider));
+        services.RegisterDisposable(diagnostics.RegisterProvider(infoEntry, infoProvider));
     }
 
-    private static void AddThrottlingHealthCheck(IServiceProvider serviceProvider, ThrottlingProvider throttlingProvider)
+    private static void AddThrottlingHealthCheck(IServiceProvider services, ThrottlingProvider throttlingProvider)
     {
-        var healthTracker = serviceProvider.GetService<IHealthTracker>();
+        var healthTracker = services.GetService<IHealthTracker>();
         if (healthTracker == null)
             return;
 
         var healthCheck = new ThrottlingHealthCheck(throttlingProvider);
 
-        serviceProvider.RegisterDisposable(healthTracker.RegisterCheck("Request throttling", healthCheck));
-    }
-
-    private static void AdaptMiddlewareSettings(IServiceCollection services)
-    {
-        services.AddOptions<Applications.AspNetCore.Configuration.ThrottlingSettings>()
-            .Configure<IOptions<ThrottlingSettings>>((middlewareSettings, options) =>
-            {
-                var throttlingSettings = options.Value;
-
-                bool HasQuota(string name) =>
-                    throttlingSettings.Quotas.Any(q => q.PropertyName == name);
-
-                middlewareSettings.RejectionResponseCode = throttlingSettings.RejectionResponseCode;
-                middlewareSettings.DisableForWebSockets = throttlingSettings.DisableForWebSockets;
-
-                middlewareSettings.AddConsumerProperty = HasQuota(WellKnownThrottlingProperties.Consumer);
-                middlewareSettings.AddMethodProperty = HasQuota(WellKnownThrottlingProperties.Method);
-                middlewareSettings.AddPriorityProperty = HasQuota(WellKnownThrottlingProperties.Priority);
-                middlewareSettings.AddUrlProperty = HasQuota(WellKnownThrottlingProperties.Url);
-
-                foreach (var (name, valueExtractor) in throttlingSettings.Properties)
-                    middlewareSettings.AdditionalProperties.Add(context => (name, valueExtractor(context)));
-            });
+        services.RegisterDisposable(healthTracker.RegisterCheck("Request throttling", healthCheck));
     }
 }
