@@ -48,14 +48,14 @@ public static class UseVostokExtensions
     }
 
     /// <inheritdoc cref="UseVostokExtensions"/>
-    public static IWebHostBuilder UseVostokHosting(this IWebHostBuilder hostBuilder, VostokHostingEnvironmentSetup environmentSetup, VostokHostingSettings? settings = null)
+    public static IWebHostBuilder UseVostokHosting(this IWebHostBuilder webHostBuilder, VostokHostingEnvironmentSetup environmentSetup, VostokHostingSettings? settings = null)
     {
         var environment = CreateEnvironment(environmentSetup, settings);
 
-        hostBuilder.ConfigureAppConfiguration(config => config.UseVostokHosting(environment));
-        hostBuilder.ConfigureServices(serviceCollection => { serviceCollection.UseVostokHosting(environment); });
+        webHostBuilder.ConfigureAppConfiguration(config => config.UseVostokHosting(environment));
+        webHostBuilder.ConfigureServices(serviceCollection => { serviceCollection.UseVostokHosting(environment); });
 
-        return hostBuilder;
+        return webHostBuilder;
     }
 
     private static void UseVostokHosting(this IConfigurationBuilder configurationBuilder, IVostokHostingEnvironment environment)

@@ -21,17 +21,16 @@ builder.Services.Configure<MyOptions>(
 
 builder.Services
     .AddVostokMiddlewares()
-    .ConfigureRequestLogging(c => c.LogQueryString = new LoggingCollectionSettings(true))
-    .ConfigureThrottling(s =>
+    .ConfigureLogging(c => c.LogQueryString = new LoggingCollectionSettings(true))
+    .ConfigureThrottling(t =>
     {
-        s.RejectionResponseCode = 503;
-        s.UsePriorityQuota(() => new PropertyQuotaOptions());
+        t.ConfigureMiddleware(s => s.RejectionResponseCode = 503);
+        t.UsePriorityQuota(() => new PropertyQuotaOptions());
     })
     .ConfigureHttpContextTweaks(c => c.EnableResponseWriteCallSizeLimit = true)
-    .ConfigureDiagnostics(d => d
-        .ConfigureMiddleware(m => m.AllowOnlyLocalRequests = true)
-        .ConfigureFeatures(f => f.AddThrottlingHealthCheck = true)
-    );
+    .ConfigureDiagnosticApi(d => d.AllowOnlyLocalRequests = true)
+    .ConfigureDiagnosticFeatures(f => f.AddThrottlingHealthCheck = true)
+    ;
 
 var options = builder.Configuration.GetSection("MyOptions").Get<MyOptions>();
 

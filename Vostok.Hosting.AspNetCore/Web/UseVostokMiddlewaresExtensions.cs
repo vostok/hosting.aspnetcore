@@ -1,6 +1,8 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using System.Collections.Generic;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
-using Vostok.Applications.AspNetCore;
+using Vostok.Applications.AspNetCore.Middlewares;
 using Vostok.Hosting.AspNetCore.Extensions;
 using Vostok.Hosting.AspNetCore.Web.Configuration;
 
@@ -13,40 +15,36 @@ namespace Vostok.Hosting.AspNetCore.Web;
 public static class UseVostokMiddlewaresExtensions
 {
     /// <inheritdoc cref="UseVostokMiddlewaresExtensions"/>
-    public static IApplicationBuilder UseVostokMiddlewares(this IApplicationBuilder app)
+    public static IApplicationBuilder UseVostokMiddlewares(this IApplicationBuilder applicationBuilder)
     {
-        var settings = app.ApplicationServices.GetFromOptionsOrDefault<VostokMiddlewaresEnabledSettings>();
+        var settings = applicationBuilder.ApplicationServices.GetFromOptionsOrThrow<VostokMiddlewaresConfiguration>();
+        var middlewares = new List<Type>();
+        
+        Add<HttpContextTweakMiddleware>();
+        Add<FillRequestInfoMiddleware>();
+        Add<DistributedContextMiddleware>();
+        Add<TracingMiddleware>();
+        Add<ThrottlingMiddleware>();
+        Add<LoggingMiddleware>();
+        Add<DatacenterAwarenessMiddleware>();
+        Add<UnhandledExceptionMiddleware>();
+        Add<PingApiMiddleware>();
+        Add<DiagnosticApiMiddleware>();
 
-        if (settings.EnableHttpContextTweaks)
-            app.UseVostokHttpContextTweaks();
+        foreach (var middleware in middlewares)
+            applicationBuilder.UseMiddleware(middleware);
 
-        if (settings.EnableRequestInfoFilling)
-            app.UseVostokRequestInfo();
+        return applicationBuilder;
+        
+        void Add<TMiddleware>()
+        {
+            if (settings.PreVostokMiddlewares.TryGetValue(typeof(TMiddleware), out var injected))
+                middlewares.AddRange(injected);
 
-        if (settings.EnableDistributedContext)
-            app.UseVostokDistributedContext();
-
-        if (settings.EnableTracing)
-            app.UseVostokTracing();
-
-        if (settings.EnableThrottling)
-            app.UseVostokThrottling();
-
-        if (settings.EnableRequestLogging)
-            app.UseVostokRequestLogging();
-
-        if (settings.EnableDatacenterAwareness)
-            app.UseVostokDatacenterAwareness();
-
-        if (settings.EnableUnhandledExceptionsHandling)
-            app.UseVostokUnhandledExceptions();
-
-        if (settings.EnablePingApi)
-            app.UseVostokPingApi();
-
-        if (settings.EnableDiagnosticApi)
-            app.UseVostokDiagnosticApi();
-
-        return app;
+            if (settings.IsEnabled<TMiddleware>())
+            {
+                middlewares.Add(typeof(TMiddleware));
+            }
+        }
     }
 }
