@@ -2,6 +2,7 @@
 using System.Reflection;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Vostok.Applications.AspNetCore;
 using Vostok.Applications.AspNetCore.Configuration;
 using Vostok.Applications.AspNetCore.Diagnostics;
@@ -18,6 +19,7 @@ using Vostok.Throttling;
 using Vostok.Throttling.Config;
 using Vostok.Throttling.Metrics;
 using Vostok.Throttling.Quotas;
+// ReSharper disable UnusedMethodReturnValue.Local
 
 namespace Vostok.Hosting.AspNetCore.Web;
 
@@ -110,20 +112,17 @@ public static class AddVostokMiddlewaresExtensions
 
     private static IServiceCollection AddThrottling(this IServiceCollection serviceCollection)
     {
-        serviceCollection.AddSingleton<ThrottlingConfigurationBuilder>(services =>
+        serviceCollection.AddOptions<ThrottlingConfigurationBuilder>()
+            .Configure<IVostokHostingEnvironment, IOptions<VostokThrottlingConfiguration>>((throttlingBuilder, environment, throttlingConfiguration) =>
         {
-            var builder = new ThrottlingConfigurationBuilder();
-
-            AddThrottlingCpuLimits(services, builder);
-            AddThrottlingErrorLogging(services, builder);
-            AddThrottlingQuotas(services, builder);
-
-            return builder;
+            AddThrottlingCpuLimits(environment.ApplicationLimits, throttlingBuilder);
+            AddThrottlingErrorLogging(environment.Log, throttlingBuilder);
+            AddThrottlingQuotas(throttlingConfiguration.Value, throttlingBuilder);
         });
         
         serviceCollection.AddSingleton<IThrottlingProvider>(services =>
         {
-            var builder = services.GetRequiredService<ThrottlingConfigurationBuilder>();
+            var builder = services.GetFromOptionsOrDefault<ThrottlingConfigurationBuilder>();
 
             var provider = new ThrottlingProvider(builder.Build());
 
@@ -135,31 +134,27 @@ public static class AddVostokMiddlewaresExtensions
         return serviceCollection;
     }
 
-    private static void AddThrottlingCpuLimits(IServiceProvider services, ThrottlingConfigurationBuilder builder)
+    private static void AddThrottlingCpuLimits(IVostokApplicationLimits applicationLimits, ThrottlingConfigurationBuilder builder)
     {
-        var limits = services.GetRequiredService<IVostokApplicationLimits>();
-
         builder.SetNumberOfCores(() =>
         {
-            if (limits.CpuUnits is {} cpuUnits)
+            if (applicationLimits.CpuUnits is {} cpuUnits)
                 return (int)Math.Ceiling(cpuUnits);
 
             return Environment.ProcessorCount;
         });
     }
 
-    private static void AddThrottlingErrorLogging(IServiceProvider services, ThrottlingConfigurationBuilder builder)
+    private static void AddThrottlingErrorLogging(ILog log, ThrottlingConfigurationBuilder builder)
     {
-        var log = services.GetRequiredService<ILog>().ForContext<ThrottlingMiddleware>();
+        log = log.ForContext<ThrottlingMiddleware>();
 
         builder.SetErrorCallback(ex => log.Error(ex, "Internal failure in request throttling."));
     }
 
-    private static void AddThrottlingQuotas(IServiceProvider services, ThrottlingConfigurationBuilder builder)
+    private static void AddThrottlingQuotas(VostokThrottlingConfiguration throttlingConfiguration, ThrottlingConfigurationBuilder builder)
     {
-        var configuration = services.GetFromOptionsOrThrow<VostokThrottlingConfiguration>();
-
-        if (configuration.UseThreadPoolOverloadQuota)
+        if (throttlingConfiguration.UseThreadPoolOverloadQuota)
         {
             var threadPoolQuota = new ThreadPoolOverloadQuota(new ThreadPoolOverloadQuotaOptions());
             builder.AddCustomQuota(threadPoolQuota);
