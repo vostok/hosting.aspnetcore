@@ -1,10 +1,13 @@
 using Vostok.Applications.AspNetCore.Configuration;
+using Vostok.Configuration.Sources;
+using Vostok.Hosting.Abstractions;
 using Vostok.Hosting.AspNetCore;
 using Vostok.Hosting.AspNetCore.Extensions;
 using Vostok.Hosting.AspNetCore.Web;
 using Vostok.Hosting.AspNetCore.Web.Configuration;
 using Vostok.Hosting.Setup;
 using Vostok.Logging.File.Configuration;
+using Vostok.Throttling.Config;
 using Vostok.Throttling.Quotas;
 using WebApplication1;
 
@@ -31,6 +34,23 @@ builder.Services
     .ConfigureDiagnosticApi(d => d.AllowOnlyLocalRequests = true)
     .ConfigureDiagnosticFeatures(f => f.AddThrottlingHealthCheck = true)
     ;
+
+Action<IVostokThrottlingConfigurator, IVostokHostingEnvironment> configureThrottling = (throttlingBuilder, environment) =>
+{
+    var configSource = environment.ConfigurationSource;
+    var configProvider = environment.ConfigurationProvider;
+
+    var essentialsSource = configSource.ScopeTo("throttling", "essentials");
+    var consumerQuotaSource = configSource.ScopeTo("throttling", "consumer");
+    var customQuotaSource = configSource.ScopeTo("throttling", "custom");
+    throttlingBuilder.UseEssentials(() => configProvider.Get<ThrottlingEssentials>(essentialsSource));
+    throttlingBuilder.UseConsumerQuota(() => configProvider.Get<PropertyQuotaOptions>(consumerQuotaSource));
+    throttlingBuilder.UseCustomPropertyQuota("custom", context => context.Request.Headers["custom"], () => configProvider.Get<PropertyQuotaOptions>(customQuotaSource));
+};
+
+builder.Services
+    .AddOptions<IVostokThrottlingConfigurator>()
+    .Configure<IVostokHostingEnvironment>(configureThrottling);
 
 var options = builder.Configuration.GetSection("MyOptions").Get<MyOptions>();
 
