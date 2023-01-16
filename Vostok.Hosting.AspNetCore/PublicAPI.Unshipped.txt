@@ -33,6 +33,8 @@ static Vostok.Hosting.AspNetCore.Web.Configuration.ThrottlingSettingsExtensions.
 static Vostok.Hosting.AspNetCore.Web.Configuration.ThrottlingSettingsExtensions.UseUrlQuota(this Vostok.Applications.AspNetCore.Configuration.ThrottlingSettings! settings) -> Vostok.Applications.AspNetCore.Configuration.ThrottlingSettings!
 static Vostok.Hosting.AspNetCore.Web.UseVostokMiddlewaresExtensions.UseVostokMiddlewares(this Microsoft.AspNetCore.Builder.IApplicationBuilder! applicationBuilder) -> Microsoft.AspNetCore.Builder.IApplicationBuilder!
 Vostok.Hosting.AspNetCore.Extensions.IServiceCollectionExtensions
+Vostok.Hosting.AspNetCore.Helpers.VostokApplicationStateObservable
+Vostok.Hosting.AspNetCore.Helpers.VostokApplicationStateObservable.Subscribe(System.IObserver<Vostok.Hosting.Models.VostokApplicationState>! observer) -> System.IDisposable!
 Vostok.Hosting.AspNetCore.UseVostokExtensions
 Vostok.Hosting.AspNetCore.VostokHostingSettings
 Vostok.Hosting.AspNetCore.VostokHostingSettings.BeaconRegistrationTimeout.get -> System.TimeSpan

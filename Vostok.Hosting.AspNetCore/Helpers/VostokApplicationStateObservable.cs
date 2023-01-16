@@ -1,22 +1,24 @@
 ﻿using System;
+using JetBrains.Annotations;
 using Vostok.Commons.Helpers.Observable;
 using Vostok.Hosting.Models;
 using Vostok.Logging.Abstractions;
 
 namespace Vostok.Hosting.AspNetCore.Helpers;
 
+[PublicAPI]
 public class VostokApplicationStateObservable : IObservable<VostokApplicationState>
 {
     private readonly ILog log;
     private readonly CachingObservable<VostokApplicationState> observable = new(VostokApplicationState.NotInitialized);
 
-    public VostokApplicationStateObservable(ILog log) =>
+    internal VostokApplicationStateObservable(ILog log) =>
         this.log = log.ForContext<VostokApplicationStateObservable>();
 
     public IDisposable Subscribe(IObserver<VostokApplicationState> observer) =>
         observable.Subscribe(observer);
 
-    public void ChangeStateTo(VostokApplicationState newState, Exception? error = null)
+    internal void ChangeStateTo(VostokApplicationState newState, Exception? error = null)
     {
         if (error == null)
             log.Info("New state: {State}.", newState);
