@@ -67,9 +67,9 @@ public static class AddVostokMiddlewaresExtensions
         return new VostokMiddlewaresConfigurator(serviceCollection);
     }
 
-    private static IServiceCollection ConfigureKestrelDefaults(this IServiceCollection services)
+    private static IServiceCollection ConfigureKestrelDefaults(this IServiceCollection serviceCollection)
     {
-        return services.Configure<KestrelServerOptions>(s =>
+        return serviceCollection.Configure<KestrelServerOptions>(s =>
         {
             s.AddServerHeader = false;
 
