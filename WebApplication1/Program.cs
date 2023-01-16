@@ -70,7 +70,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthorization();
 
-app.MapControllers();
+app.UseRouting()
+    .UseEndpoints(endpoints => endpoints.MapControllers());
 
 app.Run();
 
@@ -93,4 +94,5 @@ void SetupVostok(IVostokHostingEnvironmentBuilder builder)
     });
 
     builder.SetPort(5134);
+    builder.SetupServiceBeacon(b => b.SetupReplicaInfo(i => i.SetUrlPath("hello")));
 }

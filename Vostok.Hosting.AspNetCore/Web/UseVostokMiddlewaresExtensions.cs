@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using Vostok.Applications.AspNetCore.Middlewares;
 using Vostok.Hosting.AspNetCore.Extensions;
 using Vostok.Hosting.AspNetCore.Web.Configuration;
+using Vostok.ServiceDiscovery.Abstractions;
 
 namespace Vostok.Hosting.AspNetCore.Web;
 
@@ -14,11 +16,15 @@ namespace Vostok.Hosting.AspNetCore.Web;
 [PublicAPI]
 public static class UseVostokMiddlewaresExtensions
 {
+    private const string Slash = "/";
+
     /// <inheritdoc cref="UseVostokMiddlewaresExtensions"/>
     public static IApplicationBuilder UseVostokMiddlewares(this IApplicationBuilder applicationBuilder)
     {
         var settings = applicationBuilder.ApplicationServices.GetFromOptionsOrThrow<VostokMiddlewaresConfiguration>();
         var middlewares = new List<Type>();
+
+        applicationBuilder.UseBeaconPathBase();
         
         Add<HttpContextTweakMiddleware>();
         Add<FillRequestInfoMiddleware>();
@@ -46,5 +52,18 @@ public static class UseVostokMiddlewaresExtensions
                 middlewares.Add(typeof(TMiddleware));
             }
         }
+    }
+    
+    private static void UseBeaconPathBase(this IApplicationBuilder applicationBuilder)
+    {
+        var serviceBeacon = applicationBuilder.ApplicationServices.GetRequiredService<IServiceBeacon>();
+        if (!serviceBeacon.ReplicaInfo.TryGetUrl(out var url))
+            return;
+            
+        var urlPath = url.AbsolutePath;
+        if (string.IsNullOrEmpty(urlPath) || urlPath == Slash)
+            return;
+
+        applicationBuilder.UsePathBase(urlPath);
     }
 }
