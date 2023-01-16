@@ -8,10 +8,10 @@ namespace Vostok.Hosting.AspNetCore.Web.Configuration;
 
 internal sealed class VostokMiddlewaresConfigurator : IVostokMiddlewaresConfigurator
 {
-    private readonly IServiceCollection services;
+    private readonly IServiceCollection serviceCollection;
 
-    public VostokMiddlewaresConfigurator(IServiceCollection services) =>
-        this.services = services;
+    public VostokMiddlewaresConfigurator(IServiceCollection serviceCollection) =>
+        this.serviceCollection = serviceCollection;
 
     public IVostokMiddlewaresConfigurator DisableVostokMiddleware<TMiddleware>()
         => Configure(config => config.MiddlewareDisabled[typeof(TMiddleware)] = true);
@@ -45,7 +45,7 @@ internal sealed class VostokMiddlewaresConfigurator : IVostokMiddlewaresConfigur
 
     public IVostokMiddlewaresConfigurator ConfigureThrottling(Action<IVostokThrottlingConfigurator> configure)
     {
-        configure(new VostokThrottlingConfigurator(services));
+        configure(new VostokThrottlingConfigurator(serviceCollection));
         return this;
     }
 
@@ -73,7 +73,7 @@ internal sealed class VostokMiddlewaresConfigurator : IVostokMiddlewaresConfigur
     private IVostokMiddlewaresConfigurator Configure<T>(Action<T> configure)
         where T : class
     {
-        services.Configure(configure);
+        serviceCollection.Configure(configure);
 
         return this;
     }

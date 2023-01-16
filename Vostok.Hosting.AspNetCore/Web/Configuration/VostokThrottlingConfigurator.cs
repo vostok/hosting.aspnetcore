@@ -9,10 +9,10 @@ namespace Vostok.Hosting.AspNetCore.Web.Configuration;
 
 internal sealed class VostokThrottlingConfigurator : IVostokThrottlingConfigurator
 {
-    private readonly IServiceCollection services;
+    private readonly IServiceCollection serviceCollection;
 
-    public VostokThrottlingConfigurator(IServiceCollection services) =>
-        this.services = services;
+    public VostokThrottlingConfigurator(IServiceCollection serviceCollection) =>
+        this.serviceCollection = serviceCollection;
 
     public bool UseThreadPoolOverloadQuota
     {
@@ -48,7 +48,7 @@ internal sealed class VostokThrottlingConfigurator : IVostokThrottlingConfigurat
     private IVostokThrottlingConfigurator Configure<T>(Action<T> configure)
         where T : class
     {
-        services.Configure(configure);
+        serviceCollection.Configure(configure);
 
         return this;
     }
