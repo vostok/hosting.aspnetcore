@@ -15,23 +15,19 @@ namespace Vostok.Hosting.AspNetCore.Web.Configuration;
 [PublicAPI]
 public interface IVostokThrottlingConfigurator
 {
-    /// <inheritdoc cref="IVostokThrottlingBuilder.UseThreadPoolOverloadQuota"/>
-    bool UseThreadPoolOverloadQuota { set; }
-    
-    internal bool EnableMetrics { set; }
-    
+    /// <summary>
+    /// Allows to customize <see cref="VostokThrottlingConfiguration"/>.
+    /// </summary>
+    internal IVostokThrottlingConfigurator ConfigureOptions(Action<VostokThrottlingConfiguration> configure);
+
     /// <inheritdoc cref="IVostokThrottlingBuilder.Metrics"/>
     IVostokThrottlingConfigurator ConfigureMetrics(Action<ThrottlingMetricsOptions> configure);
     
-    /// <inheritdoc cref="IVostokThrottlingBuilder.UseEssentials"/>
-    IVostokThrottlingConfigurator UseEssentials(Func<ThrottlingEssentials> essentialsProvider);
-    
-    /// <inheritdoc cref="IVostokThrottlingBuilder.UsePropertyQuota"/>
-    IVostokThrottlingConfigurator UsePropertyQuota(string propertyName, Func<PropertyQuotaOptions> quotaOptionsProvider);
-    
-    /// <inheritdoc cref="IVostokThrottlingBuilder.UseCustomQuota"/>
-    IVostokThrottlingConfigurator UseCustomQuota(IThrottlingQuota quota);
-    
     /// <inheritdoc cref="IVostokThrottlingBuilder.CustomizeMiddleware"/>
     IVostokThrottlingConfigurator ConfigureMiddleware(Action<ThrottlingSettings> configure);
+
+    /// <summary>
+    /// Allows to customize <see cref="ThrottlingConfigurationBuilder"/>.
+    /// </summary>
+    IVostokThrottlingConfigurator ConfigureBuilder(Action<ThrottlingConfigurationBuilder> configure);
 }

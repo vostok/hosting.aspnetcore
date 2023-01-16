@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Vostok.Hosting.AspNetCore.Web.Configuration;
 
+/// <summary>
+/// Represents additional configuration of Vostok middlewares.
+/// </summary>
 internal class VostokMiddlewaresConfiguration
 {
     public readonly Dictionary<Type, bool> MiddlewareDisabled = new();
