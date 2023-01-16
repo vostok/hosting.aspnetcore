@@ -13,24 +13,6 @@ internal sealed class VostokMiddlewaresConfigurator : IVostokMiddlewaresConfigur
     public VostokMiddlewaresConfigurator(IServiceCollection serviceCollection) =>
         this.serviceCollection = serviceCollection;
 
-    public IVostokMiddlewaresConfigurator DisableVostokMiddleware<TMiddleware>()
-        => Configure(config => config.MiddlewareDisabled[typeof(TMiddleware)] = true);
-
-    public IVostokMiddlewaresConfigurator EnableVostokMiddleware<TMiddleware>()
-        => Configure(config => config.MiddlewareDisabled[typeof(TMiddleware)] = false);
-
-    public IVostokMiddlewaresConfigurator InjectPreVostokMiddleware<TMiddleware>()
-        => InjectPreVostokMiddleware<TMiddleware, FillRequestInfoMiddleware>();
-
-    public IVostokMiddlewaresConfigurator InjectPreVostokMiddleware<TMiddleware, TBefore>() =>
-        Configure(config =>
-        {
-            if (!config.PreVostokMiddlewares.TryGetValue(typeof(TBefore), out var injected))
-                config.PreVostokMiddlewares[typeof(TBefore)] = injected = new List<Type>();
-
-            injected.Add(typeof(TMiddleware));
-        });
-
     public IVostokMiddlewaresConfigurator ConfigureHttpContextTweaks(Action<HttpContextTweakSettings> configure) =>
         Configure(configure);
 
@@ -67,8 +49,8 @@ internal sealed class VostokMiddlewaresConfigurator : IVostokMiddlewaresConfigur
     public IVostokMiddlewaresConfigurator ConfigureDiagnosticFeatures(Action<DiagnosticFeaturesSettings> configure) =>
         Configure(configure);
 
-    private IVostokMiddlewaresConfigurator Configure(Action<VostokMiddlewaresConfiguration> configure) =>
-        Configure<VostokMiddlewaresConfiguration>(configure);
+    public IVostokMiddlewaresConfigurator ConfigureOptions(Action<VostokMiddlewaresConfiguration> configure) =>
+        Configure(configure);
     
     private IVostokMiddlewaresConfigurator Configure<T>(Action<T> configure)
         where T : class
