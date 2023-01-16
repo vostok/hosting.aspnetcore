@@ -35,6 +35,7 @@ static Vostok.Hosting.AspNetCore.Web.UseVostokMiddlewaresExtensions.UseVostokMid
 Vostok.Hosting.AspNetCore.Extensions.IServiceCollectionExtensions
 Vostok.Hosting.AspNetCore.Helpers.VostokApplicationStateObservable
 Vostok.Hosting.AspNetCore.Helpers.VostokApplicationStateObservable.Subscribe(System.IObserver<Vostok.Hosting.Models.VostokApplicationState>! observer) -> System.IDisposable!
+Vostok.Hosting.AspNetCore.Helpers.VostokApplicationStateObservable.VostokApplicationStateObservable(Vostok.Logging.Abstractions.ILog! log) -> void
 Vostok.Hosting.AspNetCore.UseVostokExtensions
 Vostok.Hosting.AspNetCore.VostokHostingSettings
 Vostok.Hosting.AspNetCore.VostokHostingSettings.BeaconRegistrationTimeout.get -> System.TimeSpan

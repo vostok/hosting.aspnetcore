@@ -12,7 +12,7 @@ public class VostokApplicationStateObservable : IObservable<VostokApplicationSta
     private readonly ILog log;
     private readonly CachingObservable<VostokApplicationState> observable = new(VostokApplicationState.NotInitialized);
 
-    internal VostokApplicationStateObservable(ILog log) =>
+    public VostokApplicationStateObservable(ILog log) =>
         this.log = log.ForContext<VostokApplicationStateObservable>();
 
     public IDisposable Subscribe(IObserver<VostokApplicationState> observer) =>
