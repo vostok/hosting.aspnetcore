@@ -23,7 +23,7 @@ notests *default:
     - vostok.devtools
     - vostok.hosting
     - vostok.hosting.abstractions
-    - vostok.applications.aspnetcore@hosting-aspnetcore/v6_0
+    - vostok.applications.aspnetcore/v6_0
     - vostok.logging.microsoft
     - vostok.logging.abstractions
     - vostok.servicediscovery.abstractions
@@ -31,8 +31,8 @@ notests *default:
 
 full-build > notests:
   deps:
-    - -vostok.applications.aspnetcore@hosting-aspnetcore/v6_0
-    - vostok.applications.aspnetcore@hosting-aspnetcore/full-build
+    - -vostok.applications.aspnetcore/v6_0
+    - vostok.applications.aspnetcore/full-build
     - vostok.logging.formatting
 
   build:
