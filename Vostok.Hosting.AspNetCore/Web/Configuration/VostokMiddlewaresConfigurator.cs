@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using Vostok.Applications.AspNetCore.Configuration;
-using Vostok.Applications.AspNetCore.Middlewares;
 
 namespace Vostok.Hosting.AspNetCore.Web.Configuration;
 
@@ -51,7 +49,7 @@ internal sealed class VostokMiddlewaresConfigurator : IVostokMiddlewaresConfigur
 
     public IVostokMiddlewaresConfigurator ConfigureOptions(Action<VostokMiddlewaresConfiguration> configure) =>
         Configure(configure);
-    
+
     private IVostokMiddlewaresConfigurator Configure<T>(Action<T> configure)
         where T : class
     {

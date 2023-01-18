@@ -19,6 +19,7 @@ using Vostok.Throttling;
 using Vostok.Throttling.Config;
 using Vostok.Throttling.Metrics;
 using Vostok.Throttling.Quotas;
+
 // ReSharper disable UnusedMethodReturnValue.Local
 
 namespace Vostok.Hosting.AspNetCore.Web;
@@ -114,12 +115,12 @@ public static class AddVostokMiddlewaresExtensions
     {
         serviceCollection.AddOptions<ThrottlingConfigurationBuilder>()
             .Configure<IVostokHostingEnvironment, IOptions<VostokThrottlingConfiguration>>((throttlingBuilder, environment, throttlingConfiguration) =>
-        {
-            AddThrottlingCpuLimits(environment.ApplicationLimits, throttlingBuilder);
-            AddThrottlingErrorLogging(environment.Log, throttlingBuilder);
-            AddThrottlingQuotas(throttlingConfiguration.Value, throttlingBuilder);
-        });
-        
+            {
+                AddThrottlingCpuLimits(environment.ApplicationLimits, throttlingBuilder);
+                AddThrottlingErrorLogging(environment.Log, throttlingBuilder);
+                AddThrottlingQuotas(throttlingConfiguration.Value, throttlingBuilder);
+            });
+
         serviceCollection.AddSingleton<IThrottlingProvider>(services =>
         {
             var builder = services.GetFromOptionsOrDefault<ThrottlingConfigurationBuilder>();
@@ -182,7 +183,7 @@ public static class AddVostokMiddlewaresExtensions
 
         var metrics = services.GetRequiredService<IVostokApplicationMetrics>();
         var metricsOptions = services.GetFromOptionsOrDefault<ThrottlingMetricsOptions>();
-        
+
         services.RegisterDisposable(metrics.Instance.CreateThrottlingMetrics(throttlingProvider, metricsOptions));
     }
 

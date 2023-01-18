@@ -10,15 +10,15 @@ namespace Vostok.Hosting.AspNetCore.Web.Configuration;
 public static class IVostokMiddlewaresConfiguratorExtensions
 {
     /// <inheritdoc cref="IVostokAspNetCoreApplicationBuilder.DisableVostokMiddleware{TMiddleware}"/>
-    public static IVostokMiddlewaresConfigurator DisableVostokMiddleware<TMiddleware>(this IVostokMiddlewaresConfigurator configurator) => 
+    public static IVostokMiddlewaresConfigurator DisableVostokMiddleware<TMiddleware>(this IVostokMiddlewaresConfigurator configurator) =>
         configurator.ConfigureOptions(config => config.MiddlewareDisabled[typeof(TMiddleware)] = true);
 
     /// <inheritdoc cref="IVostokAspNetCoreApplicationBuilder.EnableVostokMiddleware{TMiddleware}"/>
-    public static IVostokMiddlewaresConfigurator EnableVostokMiddleware<TMiddleware>(this IVostokMiddlewaresConfigurator configurator) => 
+    public static IVostokMiddlewaresConfigurator EnableVostokMiddleware<TMiddleware>(this IVostokMiddlewaresConfigurator configurator) =>
         configurator.ConfigureOptions(config => config.MiddlewareDisabled[typeof(TMiddleware)] = false);
 
     /// <inheritdoc cref="IVostokAspNetCoreApplicationBuilder.InjectPreVostokMiddleware{TMiddleware,TBefore}"/>
-    public static IVostokMiddlewaresConfigurator InjectPreVostokMiddleware<TMiddleware>(this IVostokMiddlewaresConfigurator configurator) => 
+    public static IVostokMiddlewaresConfigurator InjectPreVostokMiddleware<TMiddleware>(this IVostokMiddlewaresConfigurator configurator) =>
         configurator.InjectPreVostokMiddleware<TMiddleware, FillRequestInfoMiddleware>();
 
     /// <inheritdoc cref="IVostokAspNetCoreApplicationBuilder.InjectPreVostokMiddleware{TMiddleware,TBefore}"/>

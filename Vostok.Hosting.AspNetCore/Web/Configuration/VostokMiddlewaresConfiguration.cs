@@ -10,7 +10,7 @@ internal class VostokMiddlewaresConfiguration
 {
     public readonly Dictionary<Type, bool> MiddlewareDisabled = new();
     public readonly Dictionary<Type, List<Type>> PreVostokMiddlewares = new();
-    
+
     public bool IsEnabled<TMiddleware>()
     {
         if (MiddlewareDisabled.TryGetValue(typeof(TMiddleware), out var d))

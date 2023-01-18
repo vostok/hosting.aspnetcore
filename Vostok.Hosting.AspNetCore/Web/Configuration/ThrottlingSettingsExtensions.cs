@@ -18,7 +18,7 @@ public static class ThrottlingSettingsExtensions
         settings.AddConsumerProperty = true;
         return settings;
     }
-    
+
     /// <summary>
     /// <inheritdoc cref="IVostokThrottlingBuilderExtensions.UsePriorityQuota"/>
     /// Also call <see cref="ThrottlingConfigurationBuilderExtensions.UsePriorityQuota"/>.
@@ -28,7 +28,7 @@ public static class ThrottlingSettingsExtensions
         settings.AddPriorityProperty = true;
         return settings;
     }
-    
+
     /// <summary>
     /// <inheritdoc cref="IVostokThrottlingBuilderExtensions.UseMethodQuota"/>
     /// Also call <see cref="ThrottlingConfigurationBuilderExtensions.UseMethodQuota"/>.
@@ -38,7 +38,7 @@ public static class ThrottlingSettingsExtensions
         settings.AddMethodProperty = true;
         return settings;
     }
-    
+
     /// <summary>
     /// <inheritdoc cref="IVostokThrottlingBuilderExtensions.UseUrlQuota"/>
     /// Also call <see cref="ThrottlingConfigurationBuilderExtensions.UseUrlQuota"/>.
@@ -48,7 +48,7 @@ public static class ThrottlingSettingsExtensions
         settings.AddUrlProperty = true;
         return settings;
     }
-    
+
     /// <summary>
     /// <inheritdoc cref="IVostokThrottlingBuilderExtensions.UseCustomPropertyQuota"/>
     /// Also call <see cref="ThrottlingConfigurationBuilderExtensions.UseCustomPropertyQuota"/>.
