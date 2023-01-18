@@ -13,7 +13,7 @@ public static class ThrottlingConfigurationBuilderExtensions
     /// <inheritdoc cref="IVostokThrottlingBuilder.UseEssentials"/>
     public static ThrottlingConfigurationBuilder UseEssentials(this ThrottlingConfigurationBuilder builder, Func<ThrottlingEssentials> essentialsProvider) =>
         builder.SetEssentials(essentialsProvider);
-    
+
     /// <summary>
     /// <inheritdoc cref="IVostokThrottlingBuilder.UsePropertyQuota"/>
     /// Also call <see cref="ThrottlingConfigurationBuilderExtensions.UsePropertyQuota"/>.

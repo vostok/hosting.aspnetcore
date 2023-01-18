@@ -11,11 +11,6 @@ namespace Vostok.Hosting.AspNetCore.Web.Configuration;
 [PublicAPI]
 public interface IVostokMiddlewaresConfigurator
 {
-    /// <summary>
-    /// Allows to customize <see cref="VostokMiddlewaresConfiguration"/>.
-    /// </summary>
-    internal IVostokMiddlewaresConfigurator ConfigureOptions(Action<VostokMiddlewaresConfiguration> configure);
-
     /// <inheritdoc cref="IVostokAspNetCoreApplicationBuilder.SetupHttpContextTweaks"/>
     IVostokMiddlewaresConfigurator ConfigureHttpContextTweaks(Action<HttpContextTweakSettings> configure);
 
@@ -48,4 +43,9 @@ public interface IVostokMiddlewaresConfigurator
 
     /// <inheritdoc cref="IVostokAspNetCoreApplicationBuilder.SetupDiagnosticFeatures"/>
     IVostokMiddlewaresConfigurator ConfigureDiagnosticFeatures(Action<DiagnosticFeaturesSettings> configure);
+
+    /// <summary>
+    /// Allows to customize <see cref="VostokMiddlewaresConfiguration"/>.
+    /// </summary>
+    internal IVostokMiddlewaresConfigurator ConfigureOptions(Action<VostokMiddlewaresConfiguration> configure);
 }

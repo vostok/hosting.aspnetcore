@@ -18,9 +18,9 @@ internal class CheckingLog : ILog
     {
         if (@event == null)
             return;
-        
+
         var str = LogEventFormatter.Format(@event, OutputTemplate.Default);
-        
+
         lock (expectedMessages)
             if (expectedMessages.Any() && str.Contains(expectedMessages.First()))
                 expectedMessages.RemoveFirst();

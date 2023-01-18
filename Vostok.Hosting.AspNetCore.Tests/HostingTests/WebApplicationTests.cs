@@ -7,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NUnit.Framework;
 using Vostok.Commons.Helpers.Network;
-using Vostok.Hosting.AspNetCore.Extensions;
 using Vostok.Hosting.AspNetCore.Tests.TestHelpers;
 using Vostok.Hosting.AspNetCore.Web;
 using Vostok.Logging.Abstractions;
@@ -32,7 +31,7 @@ internal class WebApplicationTests
     {
         url = $"http://localhost:{FreeTcpPortFinder.GetFreePort()}";
     }
-    
+
     [TearDown]
     public void TearDown()
     {
@@ -91,7 +90,7 @@ internal class WebApplicationTests
 
         if (middlewares)
             app.UseVostokMiddlewares();
-        
+
         app.Start();
 
         Thread.Sleep(5.Seconds());

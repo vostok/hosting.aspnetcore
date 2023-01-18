@@ -13,11 +13,11 @@ internal class FakeServiceBeacon : IServiceBeacon
         this.log = log.ForContext<FakeServiceBeacon>();
     }
 
+    public IReplicaInfo ReplicaInfo { get; }
+
     public void Start() =>
         log.Info("Start.");
 
     public void Stop() =>
         log.Info("Stop.");
-
-    public IReplicaInfo ReplicaInfo { get; }
 }

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-    <Import Project="..\..\vostok.devtools\library-common-props\Main-Project.props" />
-    <Import Project="..\..\vostok.devtools\git-commit-to-assembly-title\Vostok.Tools.GitCommit2AssemblyTitle.props" />
+    <Import Project="..\..\vostok.devtools\library-common-props\Main-Project.props"/>
+    <Import Project="..\..\vostok.devtools\git-commit-to-assembly-title\Vostok.Tools.GitCommit2AssemblyTitle.props"/>
     <PropertyGroup>
         <TargetFrameworks>net6.0</TargetFrameworks>
         <Configurations>Debug;Release</Configurations>
@@ -22,19 +22,19 @@
         <RepositoryUrl>https://github.com/vostok/hosting.aspnetcore.git</RepositoryUrl>
     </PropertyGroup>
     <ItemGroup>
-        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+        <FrameworkReference Include="Microsoft.AspNetCore.App"/>
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="..\..\vostok.commons.threading\Vostok.Commons.Threading\AtomicBoolean.cs" Link="Commons\AtomicBoolean.cs" />
-        <Compile Include="..\..\vostok.commons.threading\Vostok.Commons.Threading\ThreadPoolState.cs" Link="Commons\ThreadPoolState.cs" />
-        <Compile Include="..\..\vostok.commons.threading\Vostok.Commons.Threading\ThreadPoolUtility.cs" Link="Commons\ThreadPoolUtility.cs" />
-        <Compile Include="..\..\vostok.commons.time\Vostok.Commons.Time\TimeBudget.cs" Link="Commons\TimeBudget.cs" />
-        <Compile Include="..\..\vostok.commons.time\Vostok.Commons.Time\TimeSpanArithmetics.cs" Link="Commons\TimeSpanArithmetics.cs" />
-        <Compile Include="..\..\vostok.commons.time\Vostok.Commons.Time\TimeSpanConversions.cs" Link="Commons\TimeSpanConversions.cs" />
-        <Compile Include="..\..\vostok.commons.time\Vostok.Commons.Time\TimeSpanFormatting.cs" Link="Commons\TimeSpanFormatting.cs" />
-        <Compile Include="..\..\vostok.commons.helpers\Vostok.Commons.Helpers\Observable\CachingObservable.cs" Link="Commons\CachingObservable.cs" />
-        <Compile Include="..\..\vostok.commons.environment\Vostok.Commons.Environment\AssemblyCommitHashExtractor.cs" Link="Commons\AssemblyCommitHashExtractor.cs" />
-        <Compile Include="..\..\vostok.commons.environment\Vostok.Commons.Environment\AssemblyTitleParser.cs" Link="Commons\AssemblyTitleParser.cs" />
+        <Compile Include="..\..\vostok.commons.threading\Vostok.Commons.Threading\AtomicBoolean.cs" Link="Commons\AtomicBoolean.cs"/>
+        <Compile Include="..\..\vostok.commons.threading\Vostok.Commons.Threading\ThreadPoolState.cs" Link="Commons\ThreadPoolState.cs"/>
+        <Compile Include="..\..\vostok.commons.threading\Vostok.Commons.Threading\ThreadPoolUtility.cs" Link="Commons\ThreadPoolUtility.cs"/>
+        <Compile Include="..\..\vostok.commons.time\Vostok.Commons.Time\TimeBudget.cs" Link="Commons\TimeBudget.cs"/>
+        <Compile Include="..\..\vostok.commons.time\Vostok.Commons.Time\TimeSpanArithmetics.cs" Link="Commons\TimeSpanArithmetics.cs"/>
+        <Compile Include="..\..\vostok.commons.time\Vostok.Commons.Time\TimeSpanConversions.cs" Link="Commons\TimeSpanConversions.cs"/>
+        <Compile Include="..\..\vostok.commons.time\Vostok.Commons.Time\TimeSpanFormatting.cs" Link="Commons\TimeSpanFormatting.cs"/>
+        <Compile Include="..\..\vostok.commons.helpers\Vostok.Commons.Helpers\Observable\CachingObservable.cs" Link="Commons\CachingObservable.cs"/>
+        <Compile Include="..\..\vostok.commons.environment\Vostok.Commons.Environment\AssemblyCommitHashExtractor.cs" Link="Commons\AssemblyCommitHashExtractor.cs"/>
+        <Compile Include="..\..\vostok.commons.environment\Vostok.Commons.Environment\AssemblyTitleParser.cs" Link="Commons\AssemblyTitleParser.cs"/>
     </ItemGroup>
     <ItemGroup>
         <Reference Include="Vostok.Hosting">

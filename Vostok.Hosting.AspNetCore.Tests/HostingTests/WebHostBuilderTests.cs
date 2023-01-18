@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using Vostok.Commons.Helpers.Network;
-using Vostok.Hosting.AspNetCore.Extensions;
 using Vostok.Hosting.AspNetCore.Tests.TestHelpers;
 using Vostok.Hosting.AspNetCore.Web;
 using Vostok.Logging.Abstractions;
@@ -33,7 +32,7 @@ internal class WebHostBuilderTests
     {
         url = $"http://localhost:{FreeTcpPortFinder.GetFreePort()}";
     }
-    
+
     [TearDown]
     public void TearDown()
     {
@@ -85,7 +84,7 @@ internal class WebHostBuilderTests
         builder.UseStartup(_ => new Startup(middlewares));
 
         var app = builder.Build();
-        
+
         await app.StartAsync();
 
         await Task.Delay(5.Seconds());
@@ -96,7 +95,7 @@ internal class WebHostBuilderTests
 
     private string? IfMiddlewares(string? messageYes = null, string? messageNo = null) =>
         middlewares ? messageYes : messageNo;
-    
+
     private class Startup
     {
         private readonly bool middlewares;
@@ -114,7 +113,7 @@ internal class WebHostBuilderTests
         {
             if (middlewares)
                 app.UseVostokMiddlewares();
-            
+
             app.Run(c => c.Response.WriteAsync("Hello world!"));
         }
     }

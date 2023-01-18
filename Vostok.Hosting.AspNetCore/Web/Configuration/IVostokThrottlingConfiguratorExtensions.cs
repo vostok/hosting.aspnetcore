@@ -11,17 +11,17 @@ namespace Vostok.Hosting.AspNetCore.Web.Configuration;
 public static class IVostokThrottlingConfiguratorExtensions
 {
     /// <inheritdoc cref="IVostokThrottlingBuilderExtensions.DisableThrottling"/>
-    public static IVostokThrottlingConfigurator DisableThrottling(this IVostokThrottlingConfigurator configurator) => 
+    public static IVostokThrottlingConfigurator DisableThrottling(this IVostokThrottlingConfigurator configurator) =>
         configurator.ConfigureMiddleware(settings => settings.Enabled = _ => false);
 
     /// <inheritdoc cref="IVostokThrottlingBuilderExtensions.DisableMetrics"/>
-    public static IVostokThrottlingConfigurator DisableMetrics(this IVostokThrottlingConfigurator configurator) => 
+    public static IVostokThrottlingConfigurator DisableMetrics(this IVostokThrottlingConfigurator configurator) =>
         configurator.ConfigureOptions(s => s.EnableMetrics = false);
-    
+
     /// <inheritdoc cref="IVostokThrottlingBuilder.UseThreadPoolOverloadQuota"/>
-    public static IVostokThrottlingConfigurator DisableThreadPoolOverloadQuota(this IVostokThrottlingConfigurator configurator) => 
+    public static IVostokThrottlingConfigurator DisableThreadPoolOverloadQuota(this IVostokThrottlingConfigurator configurator) =>
         configurator.ConfigureOptions(s => s.UseThreadPoolOverloadQuota = false);
-    
+
     /// <inheritdoc cref="IVostokThrottlingBuilder.UseEssentials"/>
     public static IVostokThrottlingConfigurator UseEssentials(this IVostokThrottlingConfigurator configurator, Func<ThrottlingEssentials> essentialsProvider) =>
         configurator.ConfigureBuilder(builder => builder.UseEssentials(essentialsProvider));

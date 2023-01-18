@@ -25,7 +25,7 @@ public static class UseVostokMiddlewaresExtensions
         var middlewares = new List<Type>();
 
         applicationBuilder.UseBeaconPathBase();
-        
+
         Add<HttpContextTweakMiddleware>();
         Add<FillRequestInfoMiddleware>();
         Add<DistributedContextMiddleware>();
@@ -41,7 +41,7 @@ public static class UseVostokMiddlewaresExtensions
             applicationBuilder.UseMiddleware(middleware);
 
         return applicationBuilder;
-        
+
         void Add<TMiddleware>()
         {
             if (settings.PreVostokMiddlewares.TryGetValue(typeof(TMiddleware), out var injected))
@@ -53,13 +53,13 @@ public static class UseVostokMiddlewaresExtensions
             }
         }
     }
-    
+
     private static void UseBeaconPathBase(this IApplicationBuilder applicationBuilder)
     {
         var serviceBeacon = applicationBuilder.ApplicationServices.GetRequiredService<IServiceBeacon>();
         if (!serviceBeacon.ReplicaInfo.TryGetUrl(out var url))
             return;
-            
+
         var urlPath = url.AbsolutePath;
         if (string.IsNullOrEmpty(urlPath) || urlPath == Slash)
             return;
