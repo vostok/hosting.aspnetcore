@@ -7,12 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vostok.Hosting.AspNetCore",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vostok.Hosting.AspNetCore.Tests", "Vostok.Hosting.AspNetCore.Tests\Vostok.Hosting.AspNetCore.Tests.csproj", "{87C54CC1-C3B8-4730-B55D-5DB6F9C3ABA3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication1", "WebApplication1\WebApplication1.csproj", "{E0F6309F-30D4-4E8A-9D42-174DA8CD8E13}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestApps", "TestApps", "{F4B78862-E026-4566-BB09-71BBE43442DB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{B76876FC-9BE4-4DF4-AF3B-98C1ABB1A2B3}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,16 +25,6 @@ Global
 		{87C54CC1-C3B8-4730-B55D-5DB6F9C3ABA3}.NoTests|Any CPU.ActiveCfg = Release|Any CPU
 		{87C54CC1-C3B8-4730-B55D-5DB6F9C3ABA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87C54CC1-C3B8-4730-B55D-5DB6F9C3ABA3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E0F6309F-30D4-4E8A-9D42-174DA8CD8E13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E0F6309F-30D4-4E8A-9D42-174DA8CD8E13}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E0F6309F-30D4-4E8A-9D42-174DA8CD8E13}.NoTests|Any CPU.ActiveCfg = Debug|Any CPU
-		{E0F6309F-30D4-4E8A-9D42-174DA8CD8E13}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E0F6309F-30D4-4E8A-9D42-174DA8CD8E13}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B76876FC-9BE4-4DF4-AF3B-98C1ABB1A2B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B76876FC-9BE4-4DF4-AF3B-98C1ABB1A2B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B76876FC-9BE4-4DF4-AF3B-98C1ABB1A2B3}.NoTests|Any CPU.ActiveCfg = Debug|Any CPU
-		{B76876FC-9BE4-4DF4-AF3B-98C1ABB1A2B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B76876FC-9BE4-4DF4-AF3B-98C1ABB1A2B3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -49,7 +33,5 @@ Global
 		SolutionGuid = {579E5AB3-D57F-47D7-A3C3-6B25E63085D7}
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{E0F6309F-30D4-4E8A-9D42-174DA8CD8E13} = {F4B78862-E026-4566-BB09-71BBE43442DB}
-		{B76876FC-9BE4-4DF4-AF3B-98C1ABB1A2B3} = {F4B78862-E026-4566-BB09-71BBE43442DB}
 	EndGlobalSection
 EndGlobal
