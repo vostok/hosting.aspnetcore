@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NUnit.Framework;
@@ -29,6 +30,31 @@ internal class ServiceBeaconTests
                 beacon.SetupReplicaInfo(replica => replica.SetPort(port)));
         });
 
+        var app = builder.Build();
+
+        app.MapGet("/", () => "Hello World!");
+
+        app.Start();
+
+        await EnsureOk(port, app.Services.GetRequiredService<ILog>());
+
+        await app.StopAsync();
+        await app.DisposeAsync();
+    }
+    
+    [Test]
+    public async Task Should_listen_port_provided_in_run_if_beacon_disabled()
+    {
+        var builder = WebApplication.CreateBuilder();
+        var port = FreeTcpPortFinder.GetFreePort();
+
+        builder.UseVostokHosting(environmentBuilder =>
+        {
+            environmentBuilder.ApplyTestsDefaults();
+        });
+
+        builder.WebHost.UseUrls($"http://*:{port}/");
+        
         var app = builder.Build();
 
         app.MapGet("/", () => "Hello World!");

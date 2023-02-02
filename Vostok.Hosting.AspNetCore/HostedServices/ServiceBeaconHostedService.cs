@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -30,6 +31,7 @@ internal class ServiceBeaconHostedService : IHostedService
     private readonly IVostokHostingEnvironment environment;
     private readonly ILog log;
     private readonly VostokHostingSettings settings;
+    private Uri? warmupUrl;
 
     public ServiceBeaconHostedService(IHostApplicationLifetime applicationLifetime, IServiceBeacon serviceBeacon, IConfiguration configuration, ILog log, IOptions<VostokHostingSettings> settings, IVostokHostingEnvironment environment, IServer? server = null, IOptions<VostokMiddlewaresConfiguration>? middlewaresConfiguration = null)
     {
@@ -63,8 +65,8 @@ internal class ServiceBeaconHostedService : IHostedService
     {
         using (new OperationContextToken("Warmup"))
         {
-            if (middlewaresConfiguration?.IsEnabled<PingApiMiddleware>() == true)
-                MiddlewaresWarmup.WarmupPingApi(environment).GetAwaiter().GetResult();
+            if (warmupUrl != null && middlewaresConfiguration?.IsEnabled<PingApiMiddleware>() == true)
+                MiddlewaresWarmup.WarmupPingApi(environment, warmupUrl).GetAwaiter().GetResult();
         }
 
         serviceBeacon.Start();
@@ -102,6 +104,15 @@ internal class ServiceBeaconHostedService : IHostedService
             if (!HasAddress(addresses, serviceBeaconUrl) && !HasAddress(urls, serviceBeaconUrl))
                 addresses.Add($"{serviceBeaconUrl.Scheme}://*:{serviceBeaconUrl.Port}/");
             log.Info("Using url provided in Service beacon: '{Url}'.", serviceBeaconUrl);
+            warmupUrl = serviceBeaconUrl;
+            return;
+        }
+
+        if (serviceBeacon is not ServiceBeacon)
+        {
+            var url = addresses?.FirstOrDefault() ?? urls?.FirstOrDefault();
+            if (url != null && TryParseUrl(url, out var parsed))
+                warmupUrl = parsed;
             return;
         }
 
@@ -116,10 +127,16 @@ internal class ServiceBeaconHostedService : IHostedService
 
         foreach (var url in urls)
         {
-            if (Uri.TryCreate(url, UriKind.Absolute, out var parsed) && parsed.Port == expectedUrl.Port && parsed.Scheme == expectedUrl.Scheme)
+            if (TryParseUrl(url, out var parsed) && parsed.Port == expectedUrl.Port && parsed.Scheme == expectedUrl.Scheme)
                 return true;
         }
 
         return false;
+    }
+
+    private static bool TryParseUrl(string url, [NotNullWhen(true)] out Uri? parsed)
+    {
+        url = url.Replace("://*:", "://localhost:");
+        return Uri.TryCreate(url, UriKind.Absolute, out parsed);
     }
 }
