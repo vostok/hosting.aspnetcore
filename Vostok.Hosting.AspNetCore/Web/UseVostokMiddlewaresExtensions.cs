@@ -22,6 +22,8 @@ public static class UseVostokMiddlewaresExtensions
     public static IApplicationBuilder UseVostokMiddlewares(this IApplicationBuilder applicationBuilder)
     {
         var settings = applicationBuilder.ApplicationServices.GetFromOptionsOrThrow<VostokMiddlewaresConfiguration>();
+        settings.MiddlewaresAdded = true;
+        
         var middlewares = new List<Type>();
 
         applicationBuilder.UseBeaconPathBase();
