@@ -1,3 +1,7 @@
+## 0.1.3 (16-03-2023):
+
+Fixed using right `AddVostokEnvironmentComponents` overload.
+
 ## 0.1.1 (02-02-2023):
 
 - Fixed validation when Service Beacon is disabled

@@ -13,6 +13,7 @@ using Vostok.Hosting.AspNetCore.Helpers;
 using Vostok.Hosting.AspNetCore.HostedServices;
 using Vostok.Hosting.Components.Shutdown;
 using Vostok.Hosting.Setup;
+using Vostok.Logging.Abstractions;
 using Vostok.ServiceDiscovery.Abstractions;
 
 namespace Vostok.Hosting.AspNetCore;
@@ -66,12 +67,13 @@ public static class UseVostokExtensions
 
     private static void UseVostokHosting(this IServiceCollection serviceCollection, IVostokHostingEnvironment environment)
     {
-        serviceCollection.AddSingleton<VostokDisposables>();
         serviceCollection.AddSingleton(_ => environment);
         serviceCollection.AddSingleton(new InitializedFlag());
+        serviceCollection.AddSingleton<VostokDisposables>(services => new VostokDisposables(services.GetRequiredService<IVostokHostingEnvironment>().Log));
 
         serviceCollection.AddVostokEnvironmentComponents(environment);
         serviceCollection.AddVostokEnvironmentHostExtensions(environment);
+
         serviceCollection.AddVostokHealthChecks(environment);
         serviceCollection.AddSingleton<VostokApplicationStateObservable>();
         serviceCollection.AddVostokLoggerProvider();
