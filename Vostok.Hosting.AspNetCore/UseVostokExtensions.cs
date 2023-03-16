@@ -70,7 +70,7 @@ public static class UseVostokExtensions
         serviceCollection.AddSingleton(_ => environment);
         serviceCollection.AddSingleton(new InitializedFlag());
 
-        serviceCollection.AddVostokEnvironmentComponents();
+        serviceCollection.AddVostokEnvironmentComponents(environment);
         serviceCollection.AddVostokEnvironmentHostExtensions(environment);
         serviceCollection.AddVostokHealthChecks(environment);
         serviceCollection.AddSingleton<VostokApplicationStateObservable>();
