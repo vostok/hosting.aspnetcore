@@ -1,3 +1,7 @@
+## 0.1.4 (25-06-2024):
+
+Update dependencies.
+
 ## 0.1.3 (16-03-2023):
 
 Fixed using right `AddVostokEnvironmentComponents` overload.
