@@ -1,3 +1,7 @@
+## 0.1.6 (29-10-2024):
+
+Rebuild nuget package to use new version of Hercules.Client.Abstractions.
+
 ## 0.1.5 (04-09-2024):
 
 Updated dependencies.
