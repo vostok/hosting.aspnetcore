@@ -1,3 +1,7 @@
+## 0.1.7 (21-11-2024):
+
+Update ClusterClient library.
+
 ## 0.1.6 (29-10-2024):
 
 Rebuild nuget package to use new version of Hercules.Client.Abstractions.
