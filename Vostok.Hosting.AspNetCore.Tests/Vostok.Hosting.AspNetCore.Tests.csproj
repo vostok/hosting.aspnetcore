@@ -3,7 +3,7 @@
     <Import Project="..\..\vostok.devtools\library-common-props\Test-Project.props"/>
     <Import Project="..\..\vostok.devtools\git-commit-to-assembly-title\Vostok.Tools.GitCommit2AssemblyTitle.props"/>
     <PropertyGroup>
-        <TargetFrameworks>net6.0</TargetFrameworks>
+        <TargetFrameworks>net8.0</TargetFrameworks>
         <DefineConstants>ASPNTCORE_HOSTING</DefineConstants>
         <Nullable>enable</Nullable>
     </PropertyGroup>
@@ -27,7 +27,7 @@
     <ItemGroup>
         <Reference Include="Vostok.Applications.AspNetCore">
             <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore\bin\Release\$(ReferencesFramework)\Vostok.Applications.AspNetCore.dll</HintPath>
+            <HintPath>..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore\bin\Release\net6.0\Vostok.Applications.AspNetCore.dll</HintPath>
         </Reference>
         <Reference Include="Vostok.ClusterClient.Core">
             <SpecificVersion>False</SpecificVersion>

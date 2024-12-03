@@ -3,7 +3,7 @@
     <Import Project="..\..\vostok.devtools\library-common-props\Main-Project.props" />
     <Import Project="..\..\vostok.devtools\git-commit-to-assembly-title\Vostok.Tools.GitCommit2AssemblyTitle.props" />
     <PropertyGroup>
-        <TargetFrameworks>net6.0</TargetFrameworks>
+        <TargetFrameworks>net8.0</TargetFrameworks>
         <Configurations>Debug;Release</Configurations>
         <Nullable>enable</Nullable>
     </PropertyGroup>
@@ -43,7 +43,7 @@
         </Reference>
         <Reference Include="Vostok.Applications.AspNetCore">
             <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore\bin\Release\$(ReferencesFramework)\Vostok.Applications.AspNetCore.dll</HintPath>
+            <HintPath>..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore\bin\Release\net6.0\Vostok.Applications.AspNetCore.dll</HintPath>
         </Reference>
         <Reference Include="Vostok.Hosting.Abstractions">
             <SpecificVersion>False</SpecificVersion>
@@ -97,5 +97,8 @@
             <SpecificVersion>False</SpecificVersion>
             <HintPath>..\..\vostok.configuration.sources\Vostok.Configuration.Sources\bin\Release\$(ReferencesFramework)\Vostok.Configuration.Sources.dll</HintPath>
         </Reference>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.10.0" />
     </ItemGroup>
 </Project>
