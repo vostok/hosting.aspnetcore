@@ -1,3 +1,7 @@
+## 0.1.8 (09-12-2024):
+
+Rebuild nuget package to use new version of Vostok.Applications.AspNetCore.
+
 ## 0.1.7 (21-11-2024):
 
 Update ClusterClient library.
