@@ -31,7 +31,6 @@ public static class UseVostokMiddlewaresExtensions
         Add<HttpContextTweakMiddleware>();
         Add<FillRequestInfoMiddleware>();
         Add<DistributedContextMiddleware>();
-        Add<TracingMiddleware>();
         Add<ThrottlingMiddleware>();
         Add<LoggingMiddleware>();
         Add<DatacenterAwarenessMiddleware>();

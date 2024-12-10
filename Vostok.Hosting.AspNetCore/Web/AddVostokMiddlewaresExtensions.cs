@@ -42,20 +42,12 @@ public static class AddVostokMiddlewaresExtensions
             .AddVostokHttpContextTweaks(_ => {})
             .AddVostokRequestInfo(_ => {})
             .AddVostokDistributedContext(_ => {})
-            .AddVostokTracing(_ => {})
             .AddThrottling()
             .AddVostokRequestLogging(_ => {})
             .AddVostokDatacenterAwareness(_ => {})
             .AddVostokUnhandledExceptions(_ => {})
             .AddVostokPingApi(_ => {})
             .AddVostokDiagnosticApi(_ => {});
-
-        serviceCollection.AddOptions<TracingSettings>()
-            .Configure<IServiceBeacon>((settings, beacon) =>
-            {
-                if (beacon.ReplicaInfo.TryGetUrl(out var url))
-                    settings.BaseUrl = url;
-            });
 
         serviceCollection.AddOptions<PingApiSettings>()
             .Configure<IVostokHostingEnvironment, InitializedFlag>((settings, environment, initFlag) =>

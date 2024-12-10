@@ -13,7 +13,6 @@ using Vostok.Hosting.AspNetCore.Helpers;
 using Vostok.Hosting.AspNetCore.HostedServices;
 using Vostok.Hosting.Components.Shutdown;
 using Vostok.Hosting.Setup;
-using Vostok.Logging.Abstractions;
 using Vostok.ServiceDiscovery.Abstractions;
 
 namespace Vostok.Hosting.AspNetCore;
@@ -102,10 +101,20 @@ public static class UseVostokExtensions
         if (settings.ConfigureThreadPool)
             ThreadPoolUtility.Setup(settings.ThreadPoolTuningMultiplier);
 
+        environmentSetup = SetupEnvironmentDefaults(environmentSetup);
+
         var environment = VostokHostingEnvironmentFactory.Create(
             environmentSetup,
             environmentFactorySettings);
 
         return environment;
     }
+
+    private static VostokHostingEnvironmentSetup SetupEnvironmentDefaults(VostokHostingEnvironmentSetup environmentSetup) =>
+        builder =>
+        {
+            builder.SetupTracer(tracer => tracer.UseActivitySourceTracer = true);
+
+            environmentSetup(builder);
+        };
 }
