@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,10 +7,7 @@ using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using Vostok.Applications.AspNetCore.OpenTelemetry;
-using Vostok.Commons.Environment;
-using Vostok.Hosting.Abstractions;
-using Vostok.ServiceDiscovery.Abstractions;
+using Vostok.Hosting.AspNetCore.OpenTelemetry.ResourceDetectors;
 
 namespace Vostok.Hosting.AspNetCore.OpenTelemetry;
 
@@ -19,128 +15,70 @@ namespace Vostok.Hosting.AspNetCore.OpenTelemetry;
 [SuppressMessage("ApiDesign", "RS0016")]
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection ConfigureOpenTelemetryTracerProviderForVostok(this IServiceCollection serviceCollection)
+    public static IServiceCollection ConfigureOpenTelemetryTracerProviderForVostok(this IServiceCollection services)
     {
-        serviceCollection.ConfigureOpenTelemetryTracerProvider((services, tracing) =>
-            tracing.ConfigureResource(resourceBuilder =>
-                resourceBuilder.Clear()
-                               .AddTelemetrySdk()
-                               .ConfigureVostokTracerResource(services)));
+        services.ConfigureOpenTelemetryTracerProvider(tracing =>
+        {
+            tracing.ConfigureResource(ConfigureVostokTracingResource);
+        });
 
-        return serviceCollection;
+        return services;
     }
 
     public static IServiceCollection ConfigureOpenTelemetryMeterProviderForVostok(
-        this IServiceCollection serviceCollection,
-        Action<VostokOpenTelemetryMeterProviderOptions>? configure = null)
+        this IServiceCollection services,
+        Action<VostokOpenTelemetryMeterResourceOptions>? configureResourceOptions = null)
     {
-        if (configure != null)
-            serviceCollection.Configure(configure);
+        if (configureResourceOptions != null)
+            services.Configure(configureResourceOptions);
 
-        serviceCollection.ConfigureOpenTelemetryMeterProvider((services, metrics) =>
-            metrics.ConfigureResource(resourceBuilder =>
-                resourceBuilder.Clear()
-                               .ConfigureMeterResource(services)));
-
-        return serviceCollection;
-    }
-
-    public static IServiceCollection ConfigureOpenTelemetryLoggingProviderForVostok(this IServiceCollection serviceCollection)
-    {
-        serviceCollection.ConfigureOpenTelemetryLoggerProvider((services, logging) =>
-            logging.ConfigureResource(resourceBuilder =>
-                resourceBuilder.Clear()
-                               .AddTelemetrySdk()
-                               .ConfigureLoggingResource(services)));
-
-        return serviceCollection;
-    }
-
-    private static void ConfigureVostokTracerResource(this ResourceBuilder resourceBuilder, IServiceProvider services)
-    {
-        var host = EnvironmentInfo.Host;
-
-        // todo (ponomaryovigor, 03.12.2024):  ClusterClientDefaults.ClientApplicationName;
-        var application = EnvironmentInfo.Application;
-        string? environment = null;
-
-        var serviceBeacon = services.GetService<IServiceBeacon>();
-        if (serviceBeacon != null)
+        services.ConfigureOpenTelemetryMeterProvider(metrics =>
         {
-            application = serviceBeacon.ReplicaInfo.Application;
-            environment = serviceBeacon.ReplicaInfo.Environment;
-        }
+            metrics.ConfigureResource(ConfigureVostokMetricsResource);
+        });
 
-        resourceBuilder.AddService(application, autoGenerateServiceInstanceId: false);
-        List<KeyValuePair<string, object>> vostokTags = [new(SemanticConventions.AttributeHostName, host)];
-        if (environment != null)
-            vostokTags.Add(new(SemanticConventions.AttributeDeploymentEnvironmentName, environment));
-
-        resourceBuilder.AddAttributes(vostokTags);
+        return services;
     }
 
-    private static void ConfigureMeterResource(this ResourceBuilder resourceBuilder, IServiceProvider services)
+    public static IServiceCollection ConfigureOpenTelemetryLoggingProviderForVostok(this IServiceCollection services)
     {
-        var options = services.GetRequiredService<IOptionsMonitor<VostokOpenTelemetryMeterProviderOptions>>().CurrentValue;
-
-        var identity = services.GetRequiredService<IVostokApplicationIdentity>();
-        var vostokTags = new List<KeyValuePair<string, object>>();
-        if (options.AddProject)
-            vostokTags.Add(new(WellKnownApplicationIdentityProperties.Project, identity.Project));
-        if (options.AddSubproject && identity.Subproject != null)
-            vostokTags.Add(new(WellKnownApplicationIdentityProperties.Subproject, identity.Subproject));
-        if (options.AddEnvironment)
-            vostokTags.Add(new(WellKnownApplicationIdentityProperties.Environment, identity.Environment));
-        if (options.AddApplication)
-            vostokTags.Add(new(WellKnownApplicationIdentityProperties.Application, identity.Application));
-
-        if (options.AddInstance)
+        services.ConfigureOpenTelemetryLoggerProvider(logging =>
         {
-            var instance = identity.Instance;
-            if (string.Equals(instance, EnvironmentInfo.Host, StringComparison.InvariantCultureIgnoreCase))
-                instance = instance.ToLowerInvariant();
-            vostokTags.Add(new(WellKnownApplicationIdentityProperties.Instance, instance));
-        }
+            logging.ConfigureResource(ConfigureVostokLoggingResource);
+        });
 
-        resourceBuilder.AddAttributes(vostokTags);
+        return services;
     }
 
-    private static void ConfigureLoggingResource(this ResourceBuilder resourceBuilder, IServiceProvider services)
+    private static void ConfigureVostokTracingResource(ResourceBuilder resourceBuilder) =>
+        resourceBuilder.Clear()
+                       .AddTelemetrySdk()
+                       .AddDetector(provider => new ServiceResourceDetector(provider));
+
+    private static void ConfigureVostokMetricsResource(ResourceBuilder resourceBuilder)
     {
-        var host = EnvironmentInfo.Host;
-        
-        // todo (ponomaryovigor, 03.12.2024):  ClusterClientDefaults.ClientApplicationName;
-        var application = EnvironmentInfo.Application;
-        string? environment = null;
+        resourceBuilder.Clear()
+                       .AddDetector(provider =>
+                       {
+                           var options = provider.GetRequiredService<IOptions<VostokOpenTelemetryMeterResourceOptions>>();
+                           return new VostokIdentityResourceDetector(provider, ToDetectorOptions(options.Value));
+                       });
+        return;
 
-        var serviceBeacon = services.GetService<IServiceBeacon>();
-        if (serviceBeacon != null)
-        {
-            application = serviceBeacon.ReplicaInfo.Application;
-            environment = serviceBeacon.ReplicaInfo.Environment;
-        }
-
-        resourceBuilder.AddService(application, autoGenerateServiceInstanceId: false);
-        var vostokTags = new List<KeyValuePair<string, object>>
-        {
-            new(SemanticConventions.AttributeHostName, host)
-        };
-        if (environment != null)
-            vostokTags.Add(new(SemanticConventions.AttributeDeploymentEnvironmentName, environment));
-
-        var identity = services.GetRequiredService<IVostokApplicationIdentity>();
-
-        vostokTags.Add(new(WellKnownApplicationIdentityProperties.Project, identity.Project));
-        if (identity.Subproject is {} subproject)
-            vostokTags.Add(new(WellKnownApplicationIdentityProperties.Subproject, subproject));
-        vostokTags.Add(new(WellKnownApplicationIdentityProperties.Environment, identity.Environment));
-        vostokTags.Add(new(WellKnownApplicationIdentityProperties.Application, identity.Application));
-
-        var instance = identity.Instance;
-        if (string.Equals(instance, EnvironmentInfo.Host, StringComparison.InvariantCultureIgnoreCase))
-            instance = instance.ToLowerInvariant();
-        vostokTags.Add(new(WellKnownApplicationIdentityProperties.Instance, instance));
-
-        resourceBuilder.AddAttributes(vostokTags);
+        static VostokIdentityResourceDetector.AttributesOptions ToDetectorOptions(VostokOpenTelemetryMeterResourceOptions options) =>
+            new()
+            {
+                AddProject = options.AddProject,
+                AddSubproject = options.AddSubproject,
+                AddEnvironment = options.AddEnvironment,
+                AddApplication = options.AddApplication,
+                AddInstance = options.AddInstance
+            };
     }
+
+    private static void ConfigureVostokLoggingResource(ResourceBuilder resourceBuilder) =>
+        resourceBuilder.Clear()
+                       .AddTelemetrySdk()
+                       .AddDetector(provider => new ServiceResourceDetector(provider))
+                       .AddDetector(provider => new VostokIdentityResourceDetector(provider));
 }
