@@ -19,7 +19,8 @@ public static class VostokOpenTelemetryServicesExtensions
     {
         services.ConfigureOpenTelemetryTracerProvider(tracing =>
         {
-            tracing.ConfigureResource(ConfigureVostokTracingResource);
+            tracing.AddSource("Vostok.Tracer")
+                   .ConfigureResource(ConfigureVostokTracingResource);
         });
 
         return services;

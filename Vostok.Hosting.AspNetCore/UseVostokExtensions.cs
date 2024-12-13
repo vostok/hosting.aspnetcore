@@ -11,6 +11,7 @@ using Vostok.Hosting.Abstractions;
 using Vostok.Hosting.AspNetCore.Extensions;
 using Vostok.Hosting.AspNetCore.Helpers;
 using Vostok.Hosting.AspNetCore.HostedServices;
+using Vostok.Hosting.AspNetCore.OpenTelemetry;
 using Vostok.Hosting.Components.Shutdown;
 using Vostok.Hosting.Setup;
 using Vostok.ServiceDiscovery.Abstractions;
@@ -83,6 +84,8 @@ public static class UseVostokExtensions
         serviceCollection.AddHealthChecks();
 
         serviceCollection.ConfigureShutdownTimeout(ShutdownConstants.DefaultShutdownTimeout);
+
+        serviceCollection.ConfigureOpenTelemetry();
     }
 
     private static IVostokHostingEnvironment CreateEnvironment(VostokHostingEnvironmentSetup environmentSetup, VostokHostingSettings? settings)
@@ -117,4 +120,10 @@ public static class UseVostokExtensions
 
             environmentSetup(builder);
         };
+
+    private static void ConfigureOpenTelemetry(this IServiceCollection services)
+    {
+        services.ConfigureOpenTelemetryTracerProviderForVostok()
+                .ConfigureOpenTelemetryMeterProviderForVostok();
+    }
 }
