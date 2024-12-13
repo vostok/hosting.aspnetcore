@@ -13,7 +13,7 @@ namespace Vostok.Hosting.AspNetCore.OpenTelemetry;
 
 [PublicAPI]
 [SuppressMessage("ApiDesign", "RS0016")]
-public static class ServiceCollectionExtensions
+public static class VostokOpenTelemetryServicesExtensions
 {
     public static IServiceCollection ConfigureOpenTelemetryTracerProviderForVostok(this IServiceCollection services)
     {
@@ -40,7 +40,7 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection ConfigureOpenTelemetryLoggingProviderForVostok(this IServiceCollection services)
+    public static IServiceCollection ConfigureOpenTelemetryLoggerProviderForVostok(this IServiceCollection services)
     {
         services.ConfigureOpenTelemetryLoggerProvider(logging =>
         {
