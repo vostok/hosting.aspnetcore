@@ -99,8 +99,13 @@
             <SpecificVersion>False</SpecificVersion>
             <HintPath>..\..\vostok.configuration.sources\Vostok.Configuration.Sources\bin\Release\$(ReferencesFramework)\Vostok.Configuration.Sources.dll</HintPath>
         </Reference>
+        <Reference Include="Vostok.ClusterClient.Core">
+            <SpecificVersion>False</SpecificVersion>
+            <HintPath>..\..\vostok.clusterclient.core\Vostok.ClusterClient.Core\bin\Release\$(ReferencesFramework)\Vostok.ClusterClient.Core.dll</HintPath>
+        </Reference>
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.10.0" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.10.0" />
     </ItemGroup>
 </Project>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry.Resources;
+using Vostok.Clusterclient.Core;
 using Vostok.Commons.Environment;
 using Vostok.ServiceDiscovery.Abstractions;
 
@@ -9,19 +10,12 @@ namespace Vostok.Hosting.AspNetCore.OpenTelemetry.ResourceDetectors;
 
 internal sealed class ServiceResourceDetector(IServiceProvider provider) : IResourceDetector
 {
-    private readonly IServiceBeacon? beacon = provider.GetService<IServiceBeacon>();
+    private readonly IReplicaInfo? replicaInfo = provider.GetService<IServiceBeacon>()?.ReplicaInfo;
 
     public Resource Detect()
     {
-        // todo (ponomaryovigor, 03.12.2024):  ClusterClientDefaults.ClientApplicationName;
-        var service = EnvironmentInfo.Application;
-        string? environment = null;
-
-        if (beacon != null)
-        {
-            service = beacon.ReplicaInfo.Application;
-            environment = beacon.ReplicaInfo.Environment;
-        }
+        var service = replicaInfo?.Application ?? ClusterClientDefaults.ClientApplicationName;
+        var environment = replicaInfo?.Environment;
 
         List<KeyValuePair<string, object>> attributes = [new(SemanticConventions.AttributeHostName, EnvironmentInfo.Host)];
         if (environment != null)

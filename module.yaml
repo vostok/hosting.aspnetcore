@@ -28,6 +28,7 @@ notests *default:
     - vostok.logging.abstractions
     - vostok.servicediscovery.abstractions
     - vostok.servicediscovery
+    - vostok.clusterclient.core
 
 full-build > notests:
   deps:
