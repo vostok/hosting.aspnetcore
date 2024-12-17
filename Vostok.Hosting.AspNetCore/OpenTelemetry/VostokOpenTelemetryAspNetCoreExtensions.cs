@@ -3,8 +3,10 @@ using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using OpenTelemetry.Instrumentation.AspNetCore;
+using OpenTelemetry.Trace;
 using Vostok.Applications.AspNetCore.OpenTelemetry;
 using Vostok.Clusterclient.Core.Model;
+using Vostok.ServiceDiscovery.Abstractions;
 
 namespace Vostok.Hosting.AspNetCore.OpenTelemetry;
 
@@ -13,34 +15,54 @@ namespace Vostok.Hosting.AspNetCore.OpenTelemetry;
 public static class OpenTelemetryVostokAspNetCoreExtensions
 {
     public static IServiceCollection ConfigureAspNetCoreInstrumentationForVostok(
-        this IServiceCollection serviceCollection,
+        this IServiceCollection services,
         string? name = null)
+    {
+        services.ConfigureOpenTelemetryTracerProvider(tracing => tracing.AddAspNetCoreInstrumentation());
+
+        name ??= Options.DefaultName;
+        services.AddOptions<AspNetCoreTraceInstrumentationOptions>(name)
+                .Configure<IServiceBeacon>(Configure);
+
+        return services;
+    }
+
+    private static void Configure(AspNetCoreTraceInstrumentationOptions options, IServiceBeacon beacon)
     {
         VostokContextPropagator.Use();
 
-        name ??= Options.DefaultName;
-        serviceCollection.Configure<AspNetCoreTraceInstrumentationOptions>(name, ConfigureOptions);
-        return serviceCollection;
+        var serverAddress = GetAddress(beacon);
 
-        static void ConfigureOptions(AspNetCoreTraceInstrumentationOptions options)
+        options.EnrichWithHttpRequest += (activity, request) =>
         {
-            options.EnrichWithHttpRequest += (activity, request) =>
+            if (serverAddress is var (host, port))
             {
-                activity.SetTag(SemanticConventions.AttributeClientAddress, request.HttpContext.Connection.RemoteIpAddress);
+                activity.SetTag(SemanticConventions.AttributeServerAddress, host);
+                activity.SetTag(SemanticConventions.AttributeServerPort, port);
+            }
 
-                var clientName = request.Headers[HeaderNames.ApplicationIdentity].ToString();
-                if (!string.IsNullOrEmpty(clientName))
-                    activity.SetTag("http.client.name", clientName);
+            activity.SetTag(SemanticConventions.AttributeClientAddress, request.HttpContext.Connection.RemoteIpAddress);
 
-                if (request.ContentLength.HasValue)
-                    activity.SetTag(SemanticConventions.AttributeHttpRequestContentLength, request.ContentLength.Value);
-            };
+            var clientName = request.Headers[HeaderNames.ApplicationIdentity].ToString();
+            if (!string.IsNullOrEmpty(clientName))
+                activity.SetTag(SemanticConventions.HttpClientName, clientName);
 
-            options.EnrichWithHttpResponse += (activity, response) =>
-            {
-                if (response.ContentLength.HasValue)
-                    activity.SetTag(SemanticConventions.AttributeHttpResponseContentLength, response.ContentLength.Value);
-            };
-        }
+            if (request.ContentLength.HasValue)
+                activity.SetTag(SemanticConventions.AttributeHttpRequestContentLength, request.ContentLength.Value);
+        };
+
+        options.EnrichWithHttpResponse += (activity, response) =>
+        {
+            if (response.ContentLength.HasValue)
+                activity.SetTag(SemanticConventions.AttributeHttpResponseContentLength, response.ContentLength.Value);
+        };
+    }
+
+    private static (string host, int port)? GetAddress(IServiceBeacon beacon)
+    {
+        if (!beacon.ReplicaInfo.TryGetUrl(out var url))
+            return null;
+
+        return (url.Host, url.Port);
     }
 }

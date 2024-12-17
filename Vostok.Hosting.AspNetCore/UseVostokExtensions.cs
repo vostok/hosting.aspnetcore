@@ -85,7 +85,7 @@ public static class UseVostokExtensions
 
         serviceCollection.ConfigureShutdownTimeout(ShutdownConstants.DefaultShutdownTimeout);
 
-        serviceCollection.ConfigureOpenTelemetry();
+        serviceCollection.ConfigureOpenTelemetryDefaults();
     }
 
     private static IVostokHostingEnvironment CreateEnvironment(VostokHostingEnvironmentSetup environmentSetup, VostokHostingSettings? settings)
@@ -121,9 +121,12 @@ public static class UseVostokExtensions
             environmentSetup(builder);
         };
 
-    private static void ConfigureOpenTelemetry(this IServiceCollection services)
+    private static void ConfigureOpenTelemetryDefaults(this IServiceCollection services)
     {
         services.ConfigureOpenTelemetryTracerProviderForVostok()
-                .ConfigureOpenTelemetryMeterProviderForVostok();
+                .ConfigureOpenTelemetryMeterProviderForVostok()
+                .ConfigureOpenTelemetryLoggerProviderForVostok();
+
+        services.ConfigureAspNetCoreInstrumentationForVostok();
     }
 }
