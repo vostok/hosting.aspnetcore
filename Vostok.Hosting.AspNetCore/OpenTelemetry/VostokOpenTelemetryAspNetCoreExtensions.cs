@@ -1,31 +1,16 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry.Instrumentation.AspNetCore;
-using OpenTelemetry.Trace;
 using Vostok.Applications.AspNetCore.OpenTelemetry;
 using Vostok.Clusterclient.Core.Model;
 using Vostok.ServiceDiscovery.Abstractions;
 
 namespace Vostok.Hosting.AspNetCore.OpenTelemetry;
 
-[PublicAPI]
-[SuppressMessage("ApiDesign", "RS0016")]
-public static class OpenTelemetryVostokAspNetCoreExtensions
+internal static class OpenTelemetryVostokAspNetCoreExtensions
 {
-    public static IServiceCollection ConfigureAspNetCoreInstrumentationForVostok(
-        this IServiceCollection services,
-        string? name = null)
-    {
-        services.ConfigureOpenTelemetryTracerProvider(tracing => tracing.AddAspNetCoreInstrumentation());
-
-        name ??= Options.DefaultName;
-        services.AddOptions<AspNetCoreTraceInstrumentationOptions>(name)
+    public static void ConfigureAspNetCoreInstrumentationForVostok(this IServiceCollection services) =>
+        services.AddOptions<AspNetCoreTraceInstrumentationOptions>()
                 .Configure<IServiceBeacon>(Configure);
-
-        return services;
-    }
 
     private static void Configure(AspNetCoreTraceInstrumentationOptions options, IServiceBeacon beacon)
     {

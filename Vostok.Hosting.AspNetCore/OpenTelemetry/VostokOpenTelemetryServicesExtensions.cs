@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
@@ -11,45 +8,24 @@ using Vostok.Hosting.AspNetCore.OpenTelemetry.ResourceDetectors;
 
 namespace Vostok.Hosting.AspNetCore.OpenTelemetry;
 
-[PublicAPI]
-[SuppressMessage("ApiDesign", "RS0016")]
-public static class VostokOpenTelemetryServicesExtensions
+internal static class VostokOpenTelemetryServicesExtensions
 {
-    public static IServiceCollection ConfigureOpenTelemetryTracerProviderForVostok(this IServiceCollection services)
-    {
-        services.ConfigureOpenTelemetryTracerProvider(tracing =>
-        {
-            tracing.AddSource("Vostok.Tracer")
-                   .ConfigureResource(ConfigureVostokTracingResource);
-        });
+    public static void ConfigureOpenTelemetryForVostok(this IServiceCollection services) =>
+        services.ConfigureOpenTelemetryTracerProvider(ConfigureForVostok)
+                .ConfigureOpenTelemetryMeterProvider(ConfigureForVostok)
+                .ConfigureOpenTelemetryLoggerProvider(ConfigureForVostok);
 
-        return services;
-    }
+    private static void ConfigureForVostok(TracerProviderBuilder tracing) =>
+        tracing.AddSource("Vostok.Tracer")
+               .AddAspNetCoreInstrumentation()
+               .ConfigureServices(services => services.ConfigureAspNetCoreInstrumentationForVostok())
+               .ConfigureResource(ConfigureVostokTracingResource);
 
-    public static IServiceCollection ConfigureOpenTelemetryMeterProviderForVostok(
-        this IServiceCollection services,
-        Action<VostokOpenTelemetryMeterResourceOptions>? configureResourceOptions = null)
-    {
-        if (configureResourceOptions != null)
-            services.Configure(configureResourceOptions);
+    private static void ConfigureForVostok(MeterProviderBuilder metrics) =>
+        metrics.ConfigureResource(ConfigureVostokMetricsResource);
 
-        services.ConfigureOpenTelemetryMeterProvider(metrics =>
-        {
-            metrics.ConfigureResource(ConfigureVostokMetricsResource);
-        });
-
-        return services;
-    }
-
-    public static IServiceCollection ConfigureOpenTelemetryLoggerProviderForVostok(this IServiceCollection services)
-    {
-        services.ConfigureOpenTelemetryLoggerProvider(logging =>
-        {
-            logging.ConfigureResource(ConfigureVostokLoggingResource);
-        });
-
-        return services;
-    }
+    public static void ConfigureForVostok(LoggerProviderBuilder logging) =>
+        logging.ConfigureResource(ConfigureVostokLoggingResource);
 
     private static void ConfigureVostokTracingResource(ResourceBuilder resourceBuilder) =>
         resourceBuilder.Clear()
