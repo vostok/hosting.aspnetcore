@@ -8,7 +8,7 @@ namespace Vostok.Hosting.AspNetCore.OpenTelemetry;
 
 internal static class OpenTelemetryVostokAspNetCoreExtensions
 {
-    public static void ConfigureAspNetCoreInstrumentationForVostok(this IServiceCollection services) =>
+    public static void ConfigureAspNetCoreInstrumentation(this IServiceCollection services) =>
         services.AddOptions<AspNetCoreTraceInstrumentationOptions>()
                 .Configure<IServiceBeacon>(Configure);
 

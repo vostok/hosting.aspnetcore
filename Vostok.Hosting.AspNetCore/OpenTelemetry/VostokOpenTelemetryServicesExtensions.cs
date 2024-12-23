@@ -11,28 +11,28 @@ namespace Vostok.Hosting.AspNetCore.OpenTelemetry;
 internal static class VostokOpenTelemetryServicesExtensions
 {
     public static void ConfigureOpenTelemetryForVostok(this IServiceCollection services) =>
-        services.ConfigureOpenTelemetryTracerProvider(ConfigureForVostok)
-                .ConfigureOpenTelemetryMeterProvider(ConfigureForVostok)
-                .ConfigureOpenTelemetryLoggerProvider(ConfigureForVostok);
+        services.ConfigureOpenTelemetryTracerProvider(Configure)
+                .ConfigureOpenTelemetryMeterProvider(Configure)
+                .ConfigureOpenTelemetryLoggerProvider(Configure);
 
-    private static void ConfigureForVostok(TracerProviderBuilder tracing) =>
+    private static void Configure(TracerProviderBuilder tracing) =>
         tracing.AddSource("Vostok.Tracer")
                .AddAspNetCoreInstrumentation()
-               .ConfigureServices(services => services.ConfigureAspNetCoreInstrumentationForVostok())
-               .ConfigureResource(ConfigureVostokTracingResource);
+               .ConfigureServices(services => services.ConfigureAspNetCoreInstrumentation())
+               .ConfigureResource(ConfigureTracingResource);
 
-    private static void ConfigureForVostok(MeterProviderBuilder metrics) =>
-        metrics.ConfigureResource(ConfigureVostokMetricsResource);
+    private static void Configure(MeterProviderBuilder metrics) =>
+        metrics.ConfigureResource(ConfigureMetricsResource);
 
-    public static void ConfigureForVostok(LoggerProviderBuilder logging) =>
-        logging.ConfigureResource(ConfigureVostokLoggingResource);
+    private static void Configure(LoggerProviderBuilder logging) =>
+        logging.ConfigureResource(ConfigureLoggingResource);
 
-    private static void ConfigureVostokTracingResource(ResourceBuilder resourceBuilder) =>
+    private static void ConfigureTracingResource(ResourceBuilder resourceBuilder) =>
         resourceBuilder.Clear()
                        .AddTelemetrySdk()
                        .AddDetector(provider => new ServiceResourceDetector(provider));
 
-    private static void ConfigureVostokMetricsResource(ResourceBuilder resourceBuilder)
+    private static void ConfigureMetricsResource(ResourceBuilder resourceBuilder)
     {
         resourceBuilder.Clear()
                        .AddDetector(provider =>
@@ -53,7 +53,7 @@ internal static class VostokOpenTelemetryServicesExtensions
             };
     }
 
-    private static void ConfigureVostokLoggingResource(ResourceBuilder resourceBuilder) =>
+    private static void ConfigureLoggingResource(ResourceBuilder resourceBuilder) =>
         resourceBuilder.Clear()
                        .AddTelemetrySdk()
                        .AddDetector(provider => new ServiceResourceDetector(provider))
