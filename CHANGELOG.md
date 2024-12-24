@@ -1,3 +1,7 @@
+## 0.1.10 (24-12-2024):
+
+Rebuild nuget package to use new version of Vostok.Applications.AspNetCore.
+
 ## 0.1.9 (09-12-2024):
 
 Rebuild nuget package to use new version of Vostok.Applications.AspNetCore.
