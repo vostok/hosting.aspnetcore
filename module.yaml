@@ -1,15 +1,11 @@
-notests *default:
+base:
   build:
-    target: Vostok.Hosting.AspNetCore.sln
-    configuration: NoTests
-    tool:
-      name: dotnet
+    target: none
+    configuration: none
 
   install:
-    - Vostok.Hosting.AspNetCore/bin/Release/net6.0/Vostok.Hosting.AspNetCore.dll
     - module vostok.hosting.abstractions
     - module vostok.hosting
-    - module vostok.applications.aspnetcore/v6_0
     - module vostok.throttling
     - module vostok.throttling.metrics
 
@@ -23,18 +19,63 @@ notests *default:
     - vostok.devtools
     - vostok.hosting
     - vostok.hosting.abstractions
-    - vostok.applications.aspnetcore/v6_0
     - vostok.logging.microsoft
     - vostok.logging.abstractions
     - vostok.servicediscovery.abstractions
     - vostok.servicediscovery
 
-full-build > notests:
+notests > base:
+  build:
+    target: Vostok.Hosting.AspNetCore.sln
+    configuration: NoTests
+    parameters: build -property:TargetFrameworks=net6.0
+    tool:
+      name: dotnet
+
+  install:
+    - Vostok.Hosting.AspNetCore/bin/Release/net6.0/Vostok.Hosting.AspNetCore.dll
+    - module vostok.applications.aspnetcore/v6_0
+
   deps:
-    - -vostok.applications.aspnetcore/v6_0
+    - vostok.applications.aspnetcore/v6_0
+
+v6_0 > base *default:
+  build:
+    target: Vostok.Hosting.AspNetCore.sln
+    configuration: NoTests
+    parameters: build -property:TargetFrameworks=net6.0
+    tool:
+      name: dotnet
+
+  install:
+    - Vostok.Hosting.AspNetCore/bin/Release/net6.0/Vostok.Hosting.AspNetCore.dll
+    - module vostok.applications.aspnetcore/v6_0
+
+  deps:
+    - vostok.applications.aspnetcore/v6_0
+
+v8_0 > base:
+  build:
+    target: Vostok.Hosting.AspNetCore.sln
+    configuration: NoTests
+    parameters: build -property:TargetFrameworks=net8.0
+    tool:
+      name: dotnet
+
+  install:
+    - Vostok.Hosting.AspNetCore/bin/Release/net8.0/Vostok.Hosting.AspNetCore.dll
+    - module vostok.applications.aspnetcore/v8_0
+
+  deps:
+    - vostok.applications.aspnetcore/v8_0
+
+full-build > base:
+  deps:
     - vostok.applications.aspnetcore/full-build
     - vostok.logging.formatting
 
   build:
     target: Vostok.Hosting.AspNetCore.sln
     configuration: Release
+    tool:
+      name: dotnet

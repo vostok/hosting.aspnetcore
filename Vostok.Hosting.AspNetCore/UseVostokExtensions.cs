@@ -26,6 +26,19 @@ namespace Vostok.Hosting.AspNetCore;
 [SuppressMessage("ApiDesign", "RS0026:Do not add multiple public overloads with optional parameters")]
 public static class UseVostokExtensions
 {
+#if NET8_0_OR_GREATER
+    /// <inheritdoc cref="UseVostokExtensions"/>
+    public static IHostApplicationBuilder UseVostokHosting(this IHostApplicationBuilder webApplicationBuilder, VostokHostingEnvironmentSetup environmentSetup, VostokHostingSettings? settings = null)
+    {
+        var environment = CreateEnvironment(environmentSetup, settings);
+
+        webApplicationBuilder.Configuration.UseVostokHosting(environment);
+        webApplicationBuilder.Services.UseVostokHosting(environment);
+
+        return webApplicationBuilder;
+    }
+#endif
+
     /// <inheritdoc cref="UseVostokExtensions"/>
     public static WebApplicationBuilder UseVostokHosting(this WebApplicationBuilder webApplicationBuilder, VostokHostingEnvironmentSetup environmentSetup, VostokHostingSettings? settings = null)
     {
