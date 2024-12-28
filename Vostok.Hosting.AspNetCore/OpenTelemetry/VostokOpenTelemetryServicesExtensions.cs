@@ -17,6 +17,7 @@ internal static class VostokOpenTelemetryServicesExtensions
 
     private static void Configure(TracerProviderBuilder tracing) =>
         tracing.AddSource("Vostok.Tracer")
+               .SetSampler(new AlwaysOnSampler())
                .AddAspNetCoreInstrumentation()
                .ConfigureServices(services => services.ConfigureAspNetCoreInstrumentation())
                .ConfigureResource(ConfigureTracingResource);
