@@ -25,10 +25,6 @@
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="OpenTelemetry" Version="1.9.0"/>
-        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.9.0"/>
-    </ItemGroup>
-    <ItemGroup>
         <Compile Include="..\..\vostok.commons.threading\Vostok.Commons.Threading\AtomicBoolean.cs" Link="Commons\AtomicBoolean.cs" />
         <Compile Include="..\..\vostok.commons.threading\Vostok.Commons.Threading\ThreadPoolState.cs" Link="Commons\ThreadPoolState.cs" />
         <Compile Include="..\..\vostok.commons.threading\Vostok.Commons.Threading\ThreadPoolUtility.cs" Link="Commons\ThreadPoolUtility.cs" />
@@ -41,13 +37,13 @@
         <Compile Include="..\..\vostok.commons.environment\Vostok.Commons.Environment\AssemblyTitleParser.cs" Link="Commons\AssemblyTitleParser.cs" />
     </ItemGroup>
     <ItemGroup>
-        <Reference Include="Vostok.Applications.AspNetCore">
-            <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore\bin\Release\$(ReferencesFramework)\Vostok.Applications.AspNetCore.dll</HintPath>
-        </Reference>
         <Reference Include="Vostok.Hosting">
             <SpecificVersion>False</SpecificVersion>
             <HintPath>..\..\vostok.hosting\Vostok.Hosting\bin\Release\$(ReferencesFramework)\Vostok.Hosting.dll</HintPath>
+        </Reference>
+        <Reference Include="Vostok.Applications.AspNetCore">
+            <SpecificVersion>False</SpecificVersion>
+            <HintPath>..\..\vostok.applications.aspnetcore\Vostok.Applications.AspNetCore\bin\Release\$(ReferencesFramework)\Vostok.Applications.AspNetCore.dll</HintPath>
         </Reference>
         <Reference Include="Vostok.Hosting.Abstractions">
             <SpecificVersion>False</SpecificVersion>
