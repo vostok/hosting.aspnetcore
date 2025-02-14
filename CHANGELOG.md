@@ -1,3 +1,7 @@
+## 0.1.12 (14-02-2025):
+
+Rebuild nuget package to use new version of Vostok.Applications.AspNetCore.
+
 ## 0.1.11 (16-01-2025):
 Add `net8.0` 
 
