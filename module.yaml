@@ -39,6 +39,29 @@ notests > base:
   deps:
     - vostok.applications.aspnetcore/v6_0
 
+mtf > base:
+  build:
+    target: Vostok.Hosting.AspNetCore.sln
+    configuration: NoTests
+    tool:
+      name: dotnet
+
+  install:
+    - groups:
+        - target-framework: "net6.0"
+          libraries:
+            - Vostok.Hosting.AspNetCore/bin/Release/net6.0/Vostok.Hosting.AspNetCore.dll
+          modules:
+            - name: vostok.applications.aspnetcore
+        - target-framework: "net8.0"
+          libraries:
+            - Vostok.Hosting.AspNetCore/bin/Release/net8.0/Vostok.Hosting.AspNetCore.dll
+          modules:
+            - name: vostok.applications.aspnetcore
+
+  deps:
+    - vostok.applications.aspnetcore
+
 v6_0 > base *default:
   build:
     target: Vostok.Hosting.AspNetCore.sln
