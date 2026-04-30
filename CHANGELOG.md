@@ -1,3 +1,7 @@
+## 0.1.15 (30-04-2026)
+
+Fix serialization issues with Vostok.Hosting.Houston.Communication.Models.ZooKeeperAuthSettings
+
 ## 0.1.14 (17-06-2025):
 
 Update ClusterConfig.Client library
