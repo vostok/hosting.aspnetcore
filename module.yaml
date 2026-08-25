@@ -34,10 +34,10 @@ notests > base:
 
   install:
     - Vostok.Hosting.AspNetCore/bin/Release/net6.0/Vostok.Hosting.AspNetCore.dll
-    - module vostok.applications.aspnetcore/v6_0
+    - module vostok.applications.aspnetcore/v6_0@bump-opentelemetry
 
   deps:
-    - vostok.applications.aspnetcore/v6_0
+    - vostok.applications.aspnetcore/v6_0@bump-opentelemetry
 
 mtf > base:
   build:
@@ -52,15 +52,15 @@ mtf > base:
           libraries:
             - Vostok.Hosting.AspNetCore/bin/Release/net6.0/Vostok.Hosting.AspNetCore.dll
           modules:
-            - name: vostok.applications.aspnetcore
+            - name: vostok.applications.aspnetcore@bump-opentelemetry
         - target-framework: "net8.0"
           libraries:
             - Vostok.Hosting.AspNetCore/bin/Release/net8.0/Vostok.Hosting.AspNetCore.dll
           modules:
-            - name: vostok.applications.aspnetcore
+            - name: vostok.applications.aspnetcore@bump-opentelemetry
 
   deps:
-    - vostok.applications.aspnetcore
+    - vostok.applications.aspnetcore@bump-opentelemetry
 
 v6_0 > base *default:
   build:
@@ -72,10 +72,10 @@ v6_0 > base *default:
 
   install:
     - Vostok.Hosting.AspNetCore/bin/Release/net6.0/Vostok.Hosting.AspNetCore.dll
-    - module vostok.applications.aspnetcore/v6_0
+    - module vostok.applications.aspnetcore/v6_0@bump-opentelemetry
 
   deps:
-    - vostok.applications.aspnetcore/v6_0
+    - vostok.applications.aspnetcore/v6_0@bump-opentelemetry
 
 v8_0 > base:
   build:
@@ -87,14 +87,14 @@ v8_0 > base:
 
   install:
     - Vostok.Hosting.AspNetCore/bin/Release/net8.0/Vostok.Hosting.AspNetCore.dll
-    - module vostok.applications.aspnetcore/v8_0
+    - module vostok.applications.aspnetcore/v8_0@bump-opentelemetry
 
   deps:
-    - vostok.applications.aspnetcore/v8_0
+    - vostok.applications.aspnetcore/v8_0@bump-opentelemetry
 
 full-build > base:
   deps:
-    - vostok.applications.aspnetcore/full-build
+    - vostok.applications.aspnetcore/full-build@bump-opentelemetry
     - vostok.logging.formatting
 
   build:
