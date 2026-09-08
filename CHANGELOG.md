@@ -1,3 +1,7 @@
+## 0.1.16 (07-09-2026)
+
+Rebuild nuget package to use new version of Vostok.Applications.AspNetCore.
+
 ## 0.1.15 (30-04-2026)
 
 Fix serialization issues with Vostok.Hosting.Houston.Communication.Models.ZooKeeperAuthSettings
